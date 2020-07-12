@@ -1,0 +1,40 @@
+input#startbutton, input#stopbutton{
+	width:10em;
+	}
+
+h2{
+	font-size:1.2em;
+	font-weight:bold;
+	background-color:#cccccc;
+	}
+
+button#startstop{
+font-size:2em;
+font-weight:bold;
+width: 100%;
+box-shadow: 2px 2px 3px 1px #666;
+25
+-moz-box-shadow: 2px 2px 3px 1px #666;
+26
+-webkit-box-shadow: 2px 2px 3px 1px #666;
+
+box-shadow: 2px 2px 3px 1px #666;
+28
+-moz-box-shadow: 2px 2px 3px 1px #666;
+29
+-webkit-box-shadow: 2px 2px 3px 1px #666;
+
+}
+
+a#download{
+border-radius: 20px;
+-webkit-border-radius: 20px;
+-moz-border-radius: 20px;
+
+background-color:#006633;
+padding:0.3em;
+font-size:2em;
+color:#ffffff;
+font-weight:bold;
+text-decoration:none;
+}

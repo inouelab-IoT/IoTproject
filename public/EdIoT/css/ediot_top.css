@@ -1,0 +1,21 @@
+textarea#news{
+	width:80%;
+}
+
+button#menu{
+	font-size:2em;
+	font-weight:bold;
+	width: 90%;
+	box-shadow: 2px 2px 3px 1px #666;
+
+	-moz-box-shadow: 2px 2px 3px 1px #666;
+
+	-webkit-box-shadow: 2px 2px 3px 1px #666;
+
+	box-shadow: 2px 2px 3px 1px #666;
+
+	-moz-box-shadow: 2px 2px 3px 1px #666;
+
+	-webkit-box-shadow: 2px 2px 3px 1px #666;
+
+}

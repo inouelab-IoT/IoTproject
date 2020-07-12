@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Login</title>
+    <!--
+    authentificationに必要なライブラリを読み込む
+    参考：https://firebase.google.com/docs/web/setup#available-libraries
+    -->
+    
+    <script src="/__/firebase/6.2.0/firebase-app.js"></script>
+    <script src="/__/firebase/6.2.0/firebase-auth.js"></script>
+
+    <script>
+        // Your web app's Firebase configuration
+        var firebaseConfig = {
+            apiKey: "AIzaSyBpLH2BZss_Y89cClQ-yydTyDr0GbIKwWI",
+            authDomain: "ediotwebserver.firebaseapp.com",
+            databaseURL: "https://ediotwebserver.firebaseio.com",
+            projectId: "ediotwebserver",
+            storageBucket: "ediotwebserver.appspot.com",
+            messagingSenderId: "912743111383",
+            appId: "1:912743111383:web:f5ba9e7195d6edcd17ee92",
+            measurementId: "G-9PXKR293NL"
+        };
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+    </script>
+
+    <!--firebase UIの読み込み-->
+    <script src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css" />
+
+    <script type="text/javascript">
+        var uiConfig = {
+          /*
+          callbacks: {
+            signInSuccessWithAuthResult: function(authResult, redirectUrl) {
+              //trueにするとsignInSuccessUrlで定めた場所にリダイレクトされる
+              //falseにするとページは遷移しない
+              return true;
+            },
+            uiShown: function() {
+              // ログイン画面が出たときに行う作業
+            }
+          },
+          */
+          //signInFlow: 'popup',
+          //認証成功後のページ
+          signInSuccessUrl: '/',
+          signInOptions: [
+            //firebase.auth.EmailAuthProvider.PROVIDER_ID,
+            firebase.auth.GoogleAuthProvider.PROVIDER_ID
+          ],
+          // 利用規約のページ
+          tosUrl: './terms-of-services.html',
+          // プライバシーポリシーのページ
+          privacyPolicyUrl: './privacy-pocily.html'
+        };
+
+        // FirebaseUI ウィジェットの初期化と上のConfigの登録
+        // headでauthentification用のライブラリを読み込まないとfirebase.auth()でエラーが出ます。
+        var ui = new firebaseui.auth.AuthUI(firebase.auth());
+        ui.start('#firebaseui-auth-container', uiConfig);
+    </script>
+</head>
+<body>
+    <h1>Welcome inouelab-IoT Sign In</h1>
+    <div id="firebaseui-auth-container"></div>
+</body>
+</html>

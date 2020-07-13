@@ -21,4 +21,4 @@ FrontDeploy:
         # ↑ buildが違うコマンドなら、適宜変更して下さい
     - name: deploy to Firebase Hosting
         run: |
-        yarn deploy --token=${{ secrets.FIREBASE_TOKEN }}
+        firebase deploy --token=${{ secrets.FIREBASE_TOKEN }}

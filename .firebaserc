@@ -1,5 +1,6 @@
 {
   "projects": {
-    "default": "ediotwebserver"
+    "default": "ediotwebserver",
+    "IoTproject": "ediotwebserver"
   }
 }

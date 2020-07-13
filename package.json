@@ -8,5 +8,8 @@
     "deploy": "firebase deploy"
   },
   "author": "kazuki",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "firebase-tools": "^8.5.0"
+  }
 }

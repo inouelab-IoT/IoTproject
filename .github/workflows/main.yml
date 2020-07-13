@@ -6,57 +6,22 @@ on:
       - master
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [12.x]
-    steps:
-    - uses: actions/checkout@v1
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-    - name: npm install, build, and test
-      run: |
-        npm install
-        npm run build
-        npm run build --prefix ./functions
-    - name: Archive Production Artifact Dist
-      uses: actions/upload-artifact@master
-      with:
-        name: dist
-        path: functions/ssr/dist
-    - name: Archive Production Artifact Lib
-      uses: actions/upload-artifact@master
-      with:
-        name: lib
-        path: functions/lib
-
-  deploy:
-    needs: build
+FrontDeploy:
+    name: FrontDeploy
     runs-on: ubuntu-latest
     steps:
     - name: Checkout Repo
-      uses: actions/checkout@master
-    - name: Download Artifact
-      uses: actions/download-artifact@master
-      with:
-        name: dist
-        path: functions/ssr/dist
-    - name: Download Artifact
-      uses: actions/download-artifact@master
-      with:
-        name: lib
-        path: functions/lib
-    - name: npm install
-      run: |
-        npm install
-        npm --prefix ./functions install ./functions
-    - name: Deploy to Firebase
-      uses: w9jds/firebase-action@master
-      with:
-        args: deploy
-      env:
-        FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
-        #PROJECT_ID: <projectid>
+        uses: actions/checkout@master
+    - name: setup Node
+        uses: actions/setup-node@v1
+        with:
+        node-version: 10.x
+        registry-url: 'https://registry.npmjs.org'
+    - name: Install Dependencies
+        run: npm install
+    #- name: Build
+        #run: npm run build
+        # ↑ buildが違うコマンドなら、適宜変更して下さい
+    - name: deploy to Firebase Hosting
+        run: |
+        firebase deploy --token=${{ secrets.FIREBASE_TOKEN }}

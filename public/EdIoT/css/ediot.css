@@ -1,0 +1,16 @@
+body {
+	margin: 0;
+	padding: 0;
+  }
+  header {
+	background: #f99;
+	padding: 10px;
+	text-align: right;
+  }
+/*  #input_form {
+	padding: 10px;
+  }
+  #user_icon {
+	height: 60px;
+  }
+*/

@@ -1,71 +1,74 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        
-        <!-- site infomation -->
-		<meta name="author" content="kazuki" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"> 
-		<meta name="apple-mobile-web-app-capable" content="yes"> 
-        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-        <link rel="icon" type="image/png" href="/img/icon.png">
-		<link rel="shortcut icon" href="/img/icon.png" />
-		<link rel="apple-touch-icon" href="/img/icon.png" />
-        <title>inouelab_IoT</title>
-        
-        <!-- firebase_SDK -->
-        <script src="/__/firebase/6.2.0/firebase-app.js"></script>
-        <script src="/__/firebase/6.2.0/firebase-auth.js"></script>
-        <script type="text/javascript" src="/js/signin_state.js"></script>  
 
-		<script src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js"></script>
-		<link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css" />
+<head>
+    <meta charset="UTF-8">
 
-   		<!-- js & css -->
-    </head>
+    <!-- site infomation -->
+    <meta name="author" content="kazuki" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="icon" type="image/png" href="/img/icon.png">
+    <link rel="shortcut icon" href="/img/icon.png" />
+    <link rel="apple-touch-icon" href="/img/icon.png" />
+    <title>inouelab_IoT</title>
 
-    <body>
-        <header>
-            <div align="right">
-                <button id="sign_button" onclick="sign_button()">Sign in</button>
-                <img id="user_icon"  src="/img/no_login_icon.png" width="30" height="30" /><br>
-                <div id="user_name">ユーザ名：ゲスト</div>
-                <div id="user_name">所属グループ : 未所属</div>
-            </div>
-            <h1>Download</h1>
-            <center>
-                <a href="/">
+    <!-- firebase_SDK -->
+    <script src="/__/firebase/6.2.0/firebase-app.js"></script>
+    <script src="/__/firebase/6.2.0/firebase-auth.js"></script>
+    <script type="text/javascript" src="/js/signin_state.js"></script>
+
+    <script src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css" />
+
+    <!-- js & css -->
+    <link rel="stylesheet" type="text/css" href="css/ediot.css">
+
+</head>
+
+<body>
+    <header>
+        <div align="right">
+            <button id="sign_button" onclick="sign_button()">Sign in</button>
+            <img id="user_icon" src="/img/no_login_icon.png" width="30" height="30" /><br>
+            <div id="user_name">ユーザ名：ゲスト</div>
+            <div id="user_name">所属グループ : 未所属</div>
+        </div>
+        <h1>Download</h1>
+        <center>
+            <a href="/">
                 <img src="/img/top.jpg" alt="title" width="100%" height="100">
-                </a>
-            </center>
-        </header>
-        <main>
-			IoTシステム開発に有用なソフトウェアをまとめています。<br>
-			随時更新！！<br>
+            </a>
+        </center>
+    </header>
+    <main>
+        IoTシステム開発に有用なソフトウェアをまとめています。<br>
+        随時更新！！<br>
 
-			<span style="background-color:#ffcc99">
-			<font size="4">■ダウンロード■</font><br>
-			</span>
-			ダウンロードコンテンツはサイズが大きすぎる場合があります。
-			パソコン以外でのダウンロードには注意してください。
+        <span style="background-color:#ffcc99">
+            <font size="4">■ダウンロード■</font><br>
+        </span>
+        ダウンロードコンテンツはサイズが大きすぎる場合があります。
+        パソコン以外でのダウンロードには注意してください。
 
-			<hr>
-			<p>
-			<a name="emb_list">
-			・<a href="https://code.visualstudio.com/" target="_blank">Visual Studio Code</a><br>
-			説明<br>
-			Visual Studio Codeは、Microsoft社が開発したオープンソースのテキストエディタです。
-			Windows、Linux、macOS上で動作し、デバッグやGitクライアントの統合、シンタックスハイライト、インテリセンス、スニペット、リファクタリングなどの機能を持つ。
-			<br><br>
-			インストール方法や拡張機能のインストールは<a href="/?page=game_emb_list.html" target="_blank">こちら</a>をクリック！
-			</p>
-        </main>
-		<hr>
-        <footer>
-            <a name="map">■サイトマップ■</a><br>
-            <a href="/EdIoT/ediot_top.html">トップ</a><br>
-            <a href="/EdIoT/ediot_chat.html">問い合わせ</a><br>
-        </footer>
-	</body>
+        <hr>
+        <p>
+            <a name="emb_list">
+                ・<a href="https://code.visualstudio.com/" target="_blank">Visual Studio Code</a><br>
+                説明<br>
+                Visual Studio Codeは、Microsoft社が開発したオープンソースのテキストエディタです。
+                Windows、Linux、macOS上で動作し、デバッグやGitクライアントの統合、シンタックスハイライト、インテリセンス、スニペット、リファクタリングなどの機能を持つ。
+                <br><br>
+                インストール方法や拡張機能のインストールは<a href="/?page=game_emb_list.html" target="_blank">こちら</a>をクリック！
+        </p>
+    </main>
+    <hr>
+    <footer>
+        <a name="map">■サイトマップ■</a><br>
+        <a href="/EdIoT/ediot_top.html">トップ</a><br>
+        <a href="/EdIoT/ediot_chat.html">問い合わせ</a><br>
+    </footer>
+</body>
+
 </html>
-

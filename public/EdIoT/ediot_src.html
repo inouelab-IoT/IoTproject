@@ -6,10 +6,10 @@
 
     <!-- site infomation -->
     <meta name="author" content="kazuki" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="icon" type="image/png" href="/img/icon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <link rel="icon" type="image/png" href="/img/icon.png" />
     <link rel="shortcut icon" href="/img/icon.png" />
     <link rel="apple-touch-icon" href="/img/icon.png" />
     <title>inouelab_IoT</title>
@@ -17,42 +17,45 @@
     <!-- firebase_SDK -->
     <script src="/__/firebase/6.2.0/firebase-app.js"></script>
     <script src="/__/firebase/6.2.0/firebase-auth.js"></script>
-    <script type="text/javascript" src="/js/sign_state.js"></script>
+    <script type="text/javascript" src="/js/signin_state.js"></script>
+    <script src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css" />
 
     <!-- js & css -->
     <link rel="stylesheet" type="text/css" href="css/ediot.css">
-
+    <link rel="stylesheet" type="text/css" href="css/ediot_src.css">
+    <script src="/__/firebase/6.2.0/firebase-storage.js"></script>
 
 </head>
 
 <body>
     <header>
+        <div id=title>
+            <h1>プログラミング</h1>
+        </div>
         <div align="right">
             <button id="sign_button" onclick="sign_button()">Sign in</button>
             <img id="user_icon" src="/img/no_login_icon.png" width="30" height="30" /><br>
             <div id="user_name">ユーザ名：ゲスト</div>
             <div id="user_name">所属グループ : 未所属</div>
         </div>
-        <h1>プログラミング</h1>
+        <center>
+            <a href="/">
+                <img src="./img/top.jpg" alt="title" width="100%" height="100">
+            </a>
+        </center>
     </header>
     <hr>
     <main>
-        <font size="5">ソースコードde</font>
+        <font size="3">アップロード</font><br>
 
         <input type="file" id="file" />
         <button id="upload" type="button">アップロード</button>
 
-        <script>
-            document.getElementById('upload').addEventListener('click', function () {
-                var files = document.getElementById('file').files;
-                var image = files[0];
+        <hr>
+        <p>Storageファイル一覧</p>
+        <div id="table"></div>
 
-                var ref = firebase.storage().ref().child(image.name);
-                ref.put(image).then(function (snapshot) {
-                    alert('アップロードしました');
-                });
-            });
-        </script>
     </main>
     <hr>
     <footer>

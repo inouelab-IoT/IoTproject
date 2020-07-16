@@ -13,7 +13,7 @@ $(function(){
 		name: name,
 		text: text,
 		user_id: uid,   // ←5.セキュリティルールで変更
-		photo_url: $("#user_icon").attr("src") // ←6.ストレージで変更
+		photo_url: photoURL // ←6.ストレージで変更
 	  }).catch(function(error) {
 		alert(error.message);
 	  });
@@ -38,7 +38,7 @@ $(function(){
 			//↓↓5.セキュリティルールで変更↓↓
 			var photoUrl = logs[key].photo_url; // 6.ストレージで変更
 			if (!photoUrl) photoUrl = "";　　　　 // 6.ストレージで変更
-			if (logs[key].user_id == userId) {
+			if (logs[key].user_id == uid) {
 			   // 6.ストレージで変更
 			  logHtml = '<p><img src="' + photoUrl + '" height="40px">' + logs[key].name + '：<input type="text" class="update_text" size="50" value="' + logs[key].text + '" data-key="' + key + '"/></p><hr>'
 			} else {
@@ -60,102 +60,4 @@ $(function(){
 		//↑↑5.セキュリティルールで変更↑↑
 
 	});
-
-	//↓↓4.認証で追加↓↓
-	firebase.auth().onAuthStateChanged(function(user) {
-	  if (user) {
-		$("#login_info").hide();
-		$("#logout_info").show();
-		if (user.displayName) {
-		  $("#name").val(user.displayName);
-		}
-		//↓↓6.ストレージで追加↓↓
-		if (user.photoURL) {
-		  $("#user_icon").attr("src", user.photoURL);
-		}
-		//↑↑6.ストレージで追加↑↑
-		userId = user.uid;
-	  } else {
-		$("#logout_info").hide();
-		$("#login_info").show();
-		$("#name").val("");
-	  }
-	});
-
-	// ユーザー登録
-	$("#user_regist_btn").click(function(){
-	  var email = $("#email").val();
-	  var password = $("#password").val();
-	  firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
-		// Handle Errors here.
-		var errorCode = error.code;
-		var errorMessage = error.message;
-		alert(errorMessage);
-	  });
-	});
-
-	// ログイン
-	$("#login_btn").click(function(){
-	  var email = $("#email").val();
-	  var password = $("#password").val();
-	  firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
-		// Handle Errors here.
-		var errorCode = error.code;
-		var errorMessage = error.message;
-		alert(errorMessage);
-	  });
-	});
-
-	// ログアウト
-	$("#logout_btn").click(function(){
-	  firebase.auth().signOut().then(function() {
-		// Sign-out successful.
-	  }, function(error) {
-		// An error happened.
-	  });
-	});
-
-	// 名前が変更されたらプロフィールを変更
-	$("#name").change(function(){
-	  var user = firebase.auth().currentUser;
-	  if (user) {
-		user.updateProfile({
-		  displayName: $("#name").val()
-		});
-	  }
-	});
-
-	//↑↑4.認証で追加↑↑
-
-	//↓↓6.ストレージで追加↓↓
-	$("#icon_up_btn").click(function(){
-	  var file = $('#icon_file')[0].files[0];
-	  if (!file) return false;
-
-	  var storageRef = firebase.storage().ref();
-	  var uploadTask = storageRef.child('images/' + userId + '/' + file.name).put(file);
-
-	  uploadTask.on('state_changed', function(snapshot){
-		// アップロード中のステータスが変わったときに何かする場所
-	  }, function(error) {
-		alert("アップロードに失敗しました");
-	  }, function() {
-		var iconURL = uploadTask.snapshot.downloadURL;
-		console.log(iconURL);
-		$('#icon_file').val("");
-		alert("アップロード完了");
-
-		// ユーザーのアイコン画像に設定
-		var user = firebase.auth().currentUser;
-		if (user) {
-		  user.updateProfile({
-			photoURL: iconURL
-		  });
-		}
-		$("#user_icon").attr("src", iconURL);
-
-	  });
-	});
-	//↑↑6.ストレージで追加↑↑
-
-  });
+});

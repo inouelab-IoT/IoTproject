@@ -1,6 +1,10 @@
 {
   "rules": {
-    ".read": "auth != null",
-    ".write": "auth != null"
+    "chat": {
+      ".read": true,
+      "$message": {
+        ".write": "data.child('user_id').val() == auth.uid || !data.exists()"
+      }
+    }
   }
 }

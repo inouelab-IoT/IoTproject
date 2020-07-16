@@ -18,6 +18,7 @@ firebase.initializeApp(firebaseConfig);
 var displayName = "Guest";
 var email = "@gmail.com";
 var uid = "guest";
+var photoURL = ""
 
 initApp = function() {
     firebase.auth().onAuthStateChanged(function(user) {
@@ -26,7 +27,7 @@ initApp = function() {
         displayName = user.displayName;
         email = user.email;
         var emailVerified = user.emailVerified;
-        var photoURL = user.photoURL;
+        photoURL = user.photoURL;
         uid = user.uid;
         var phoneNumber = user.phoneNumber;
         var providerData = user.providerData;

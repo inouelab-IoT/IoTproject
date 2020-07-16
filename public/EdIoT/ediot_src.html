@@ -39,9 +39,20 @@
     <main>
         <font size="5">ソースコードde</font>
 
-        <div id="sign-in-status"></div>
-        <div id="sign-in"></div>
-        <pre id="account-details"></pre>
+        <input type="file" id="file" />
+        <button id="upload" type="button">アップロード</button>
+
+        <script>
+            document.getElementById('upload').addEventListener('click', function () {
+                var files = document.getElementById('file').files;
+                var image = files[0];
+
+                var ref = firebase.storage().ref().child(image.name);
+                ref.put(image).then(function (snapshot) {
+                    alert('アップロードしました');
+                });
+            });
+        </script>
     </main>
     <hr>
     <footer>

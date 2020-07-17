@@ -6,7 +6,6 @@ body {
 header {
     background: #88f;
     padding: 10px;
-    text-align: right;
 }
 
 footer {
@@ -16,4 +15,9 @@ footer {
 
 #title {
     float: left;
+}
+
+#labsign {
+    float: right;
+    width: 60%;
 }

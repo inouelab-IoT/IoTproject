@@ -30,16 +30,15 @@
 <body>
     <header>
         <div id=title>
-            組込みネットワークシステム研究室
             <h1>Infomation</h1>
         </div>
+        <div align="right">
+            <button id="sign_button" onclick="sign_button()">Sign in</button>
+            <img id="user_icon" src="/img/no_login_icon.png" width="30" height="30" /><br>
+            <div id="user_name">ユーザ名：ゲスト</div>
+            <div id="user_name">所属グループ : 未所属</div>
+        </div>
     </header>
-    <div align="right">
-        <button id="sign_button" onclick="sign_button()">Sign in</button>
-        <img id="user_icon" src="/img/no_login_icon.png" width="30" height="30" /><br>
-        <div id="user_name">ユーザ名：ゲスト</div>
-        <div id="user_name">所属グループ : 未所属</div>
-    </div>
     <center>
         <a href="/">
             <img src="./img/top.jpg" alt="title" width="100%" height="100">
@@ -54,10 +53,17 @@
     </main>
     <hr>
     <footer>
+        <div id=labsign align="right">
+            <a href="https://www.shibaura-it.ac.jp/" target="_blank">
+                <img src="/img/footer.png" alt="schoolsign" height="60">
+            </a><br> 組込みネットワークシステム研究室
+        </div>
+
         <a name="map">■サイトマップ■</a><br>
         <a href="/EdIoT/ediot_top.html">トップ</a><br>
         <a href="/EdIoT/ediot_chat.html">問い合わせ</a><br>
     </footer>
+
 </body>
 
 </html>

@@ -16,15 +16,17 @@ function removeConfig() {
     console.log("削除しました");
 }
 
+
 // Newsを更新
 function news_uppdate() {
-    writeNewsData(document.getElementById('news').innerHTML);
-    Firebase.database().ref("news").once("value", function(snapshot) {
+    //    writeNewsData(document.getElementById('news').innerHTML);
+    firebase.database().ref("news").on("value", function(snapshot) {
         var logs = snapshot.val();
-        document.getElementById('news').innerHTML = logs[key].text;
-
+        console.log(logs);
+        for (key in logs) {
+            document.getElementById('news').innerHTML = logs[key].text;
+        }
     });
-
 }
 
 function writeNewsData(text) {

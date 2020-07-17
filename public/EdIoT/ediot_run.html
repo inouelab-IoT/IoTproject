@@ -1,76 +1,79 @@
 <html>
-    <head>
-        <meta charset="UTF-8">
-        
-        <!-- site infomation -->
-		<meta name="author" content="kazuki" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"> 
-		<meta name="apple-mobile-web-app-capable" content="yes"> 
-        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-        <link rel="icon" type="image/png" href="/img/icon.png">
-		<link rel="shortcut icon" href="/img/icon.png" />
-		<link rel="apple-touch-icon" href="/img/icon.png" />
-        <title>inouelab_IoT</title>
-        
-        <!-- firebase_SDK -->
-        <script src="/__/firebase/6.2.0/firebase-app.js"></script>
-        <script src="/__/firebase/6.2.0/firebase-auth.js"></script>
-        <script type="text/javascript" src="/js/signin_state.js"></script>  
 
-		<script src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js"></script>
-		<link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css" />
+<head>
+    <meta charset="UTF-8">
 
-   		<!-- js & css -->
-	   <script type="text/javascript" src="js/ediot_run.js"></script>
-	   <link rel="stylesheet" type="text/css" href="css/ediot.css">
-	   <link rel="stylesheet" type="text/css" href="css/run.css">
-	</head>  
-	  
-	<body>
-		<header>
-            <div align="right">
-                <button id="sign_button" onclick="sign_button()">Sign in</button>
-                <img id="user_icon"  src="/img/no_login_icon.png" width="30" height="30" /><br>
-                <div id="user_name">ユーザ名：ゲスト</div>
-                <div id="user_name">所属グループ : 未所属</div>
-            </div>
+    <!-- site infomation -->
+    <meta name="author" content="kazuki" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="icon" type="image/png" href="/img/icon.png">
+    <link rel="shortcut icon" href="/img/icon.png" />
+    <link rel="apple-touch-icon" href="/img/icon.png" />
+    <title>inouelab_IoT</title>
+
+    <!-- firebase_SDK -->
+    <script src="/__/firebase/6.2.0/firebase-app.js"></script>
+    <script src="/__/firebase/6.2.0/firebase-auth.js"></script>
+    <script type="text/javascript" src="/js/signin_state.js"></script>
+
+    <script src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css" />
+
+    <!-- js & css -->
+    <script type="text/javascript" src="js/ediot_run.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/ediot.css">
+    <link rel="stylesheet" type="text/css" href="css/run.css">
+</head>
+
+<body>
+    <header>
+        <div align="right">
+            <button id="sign_button" onclick="sign_button()">Sign in</button>
+            <img id="user_icon" src="/img/no_login_icon.png" width="30" height="30" /><br>
+            <div id="user_name">ユーザ名：ゲスト</div>
+            <div id="user_name">所属グループ : 未所属</div>
+        </div>
+        <div id=title>
             <h1>実行</h1>
-			<center>
-				<a href="/">
-				<img src="./img/top.jpg" alt="title" width="100%" height="100">
-				</a>
-			</center>
-        </header>
-		<hr>
-		<main>
-			<br>
-			〜デバイスリスト〜<br>
+        </div>
+        <center>
+            <a href="/">
+                <img src="./img/top.jpg" alt="title" width="100%" height="100">
+            </a>
+        </center>
+    </header>
+    <hr>
+    <main>
+        <br> 〜デバイスリスト〜
+        <br>
 
-			<!--Firestore -->
+        <!--Firestore -->
 
 
 
 
-			<button id="startstop" onclick="startstop()">測定開始</button>
-			<br>
+        <button id="startstop" onclick="startstop()">測定開始</button>
+        <br>
 
-			<br>console log<br>
-			<textarea readonly id = "console_log" cols="50" rows="5"　width="60%"></textarea>
-			<input type="button" value="クリア" onclick="console_clear()">
+        <br>console log<br>
+        <textarea readonly id="console_log" cols="50" rows="5" 　width="60%"></textarea>
+        <input type="button" value="クリア" onclick="console_clear()">
 
-			<hr>
-			<a name="other-webapp">
-			<font size="4">■その他アプリ■</font><br>
-			
-			・<a href="/EdIoT/device-motion.html">モーションキャプチャ</a><br>
+        <hr>
+        <a name="other-webapp">
+            <font size="4">■その他アプリ■</font><br> ・
 
-		</main>
-		<hr>
-        <footer>
-            <a name="map">■サイトマップ■</a><br>
-            <a href="/EdIoT/ediot_top.html">トップ</a><br>
-            <a href="/EdIoT/ediot_chat.html">問い合わせ</a><br>
-        </footer>
-	</body>
+            <a href="/EdIoT/device-motion.html">モーションキャプチャ</a><br>
+
+    </main>
+    <hr>
+    <footer>
+        <a name="map">■サイトマップ■</a><br>
+        <a href="/EdIoT/ediot_top.html">トップ</a><br>
+        <a href="/EdIoT/ediot_chat.html">問い合わせ</a><br>
+    </footer>
+</body>
+
 </html>
-

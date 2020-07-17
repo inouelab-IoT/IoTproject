@@ -1,10 +1,14 @@
 {
-  "rules": {
-    "chat": {
-      ".read": true,
-      "$message": {
-        ".write": "data.child('user_id').val() == auth.uid || !data.exists()"
-      }
+    "rules": {
+        "chat": {
+            ".read": true,
+            "$message": {
+                ".write": "data.child('user_id').val() == auth.uid || !data.exists()"
+            }
+        },
+        "news": {
+            ".read": true,
+            ".write": "root.child('admin-users').child(auth.uid).exists()"
+        }
     }
-  }
 }

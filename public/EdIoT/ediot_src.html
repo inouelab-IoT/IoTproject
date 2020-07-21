@@ -17,6 +17,7 @@
     <!-- firebase_SDK -->
     <script src="/__/firebase/6.2.0/firebase-app.js"></script>
     <script src="/__/firebase/6.2.0/firebase-auth.js"></script>
+    <script src="/__/firebase/6.2.0/firebase-database.js"></script>
     <script type="text/javascript" src="/js/signin_state.js"></script>
     <script src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js"></script>
     <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css" />
@@ -37,7 +38,7 @@
             <button id="sign_button" onclick="sign_button()">Sign in</button>
             <img id="user_icon" src="/img/no_login_icon.png" width="30" height="30" /><br>
             <div id="user_name">ユーザ名：ゲスト</div>
-            <div id="user_name">所属グループ : 未所属</div>
+            <div id="group_name">所属グループ : 未所属</div>
         </div>
         <center>
             <a href="/">
@@ -48,14 +49,43 @@
     <hr>
     <main>
         <font size="3">アップロード</font><br>
-
+        <select id="up_dir">
+            <option value="user">user</option>
+            <option value="group">group</option>
+        </select>
         <input type="file" id="file" />
         <button id="upload" type="button">アップロード</button>
 
         <hr>
-        <p>Storageファイル一覧</p>
         <div id="table"></div>
-
+        <table width=100%>
+            <thead>
+                <tr class="header" id="theader">
+                    <th id="fileColumnHeader" tabindex=0 role="button">folder一欄</th>
+                    <th id="editColumnHeader" tabindex=1 role="button">text_editer</th>
+                </tr>
+            </thead>
+            <tr height=70%>
+                <td class="src_tbody" width=20%>
+                    <select id="src_dir" onchange="open_srclist()">
+                        <option value="">----</option>
+                        <option value="sample">sample</option>
+                        <option value="user">user</option>
+                        <option value="group">group</option>
+                    </select><br>
+                    <ul id="src_list"></ul>
+                </td>
+                <td class="src_tbody" , width=80%>
+                    <p>ファイルの場所：
+                        <span id="file_place"></span>/<input type="text" id="input_srcname" size="10"></p>
+                    <textarea id="source_edit"></textarea><br>
+                    <input type="button" value="保存" onclick="file_uppdate()">
+                    <input type="button" value="削除" onclick="file_delete()">
+                    <input type="button" value="download" onclick="file_download()">
+                </td>
+            </tr>
+            <br />
+        </table>
     </main>
     <hr>
     <footer>
@@ -70,5 +100,6 @@
         <a href="/EdIoT/ediot_chat.html">問い合わせ</a><br>
     </footer>
 </body>
+<script type="text/javascript" src="js/ediot_src.js"></script>
 
 </html>

@@ -16,10 +16,8 @@ var firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 
 var displayName = "Guest";
-var displayGroup = "Guest";
 var email = "@gmail.com";
 var uid = "guest";
-var gid = "noAffiliation";
 var photoURL = ""
 
 initApp = function() {
@@ -37,17 +35,6 @@ initApp = function() {
             user.getIdToken().then(function(accessToken) {
                 document.getElementById("sign_button").textContent = 'Sign out';
                 document.getElementById("user_name").textContent = "ユーザ名：" + displayName;
-                firebase.database().ref("groups").once("value", function(snapshot) {
-                    if (!snapshot) {
-                        displayGroup = "見所属";
-                    } else {
-                        var groups = snapshot.val();
-                        console.log(groups)
-                        var key_id = groups[0];
-                        displayGroup = groups[key_id].g_name;
-                        gid = key_id;
-                    }
-                });
                 document.getElementById("group_name").textContent = "所属グループ : " + displayGroup;
                 user_img.src = photoURL
                     /*

@@ -16,14 +16,15 @@
     <!-- firebase_SDK -->
     <script src="/__/firebase/6.2.0/firebase-app.js"></script>
     <script src="/__/firebase/6.2.0/firebase-auth.js"></script>
+    <script src="/__/firebase/6.2.0/firebase-database.js"></script>
+    <script src="/__/firebase/6.2.0/firebase-storage.js"></script>
     <script type="text/javascript" src="/js/signin_state.js"></script>
-
     <script src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js"></script>
     <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css" />
 
     <!-- js & css -->
     <script type="text/javascript" src="js/ediot_run.js"></script>
-    <script src="/__/firebase/6.2.0/firebase-database.js"></script>
+
     <link rel="stylesheet" type="text/css" href="css/ediot.css">
     <link rel="stylesheet" type="text/css" href="css/run.css">
 </head>
@@ -47,20 +48,39 @@
     </header>
     <hr>
     <main>
-        <br> 〜デバイスリスト〜
-        <br>
-
-        <!--Firestore -->
-
-
+        <br> javascript ファイルのみ実行可<br> 測定開始ボタンを押すとsensor_loop()が
+        <input type="number" id="loop_time" size="1" value=1>秒ごとに呼び出される<br>
+        <h3> 〜デバイスリスト〜</h3>
+        <select id="src_dir" onchange="open_srclist()">
+            <option value="">----</option>
+            <option value="sample">sample</option>
+            <option value="user">user</option>
+        </select><br>
+        <ul id="src_list"></ul>
 
 
         <button id="startstop" onclick="startstop()">測定開始</button>
         <br>
 
-        <br>console log<br>
-        <textarea readonly id="console_log" cols="50" rows="5" 　width="60%"></textarea>
+        <h4>console log</h4>
+        <textarea readonly id="console_log" cols="50" rows="5" 　width="100%"></textarea>
         <input type="button" value="クリア" onclick="console_clear()">
+
+        <br>
+
+        <br>
+        <h4>input area</h4>
+        （&lt;div id = "input_area"&gt;&lt;/div&gt;） この要素を使って入力<br>
+        <div id="input_area"></div>
+
+        <br>
+
+        <br>
+        <h4>output area</h4>
+        （&lt;div id = "output_area"&gt;&lt;/div&gt;） この要素を使って出力<br>
+        <div id="output_area"></div>
+
+        <br>
 
         <hr>
         <a name="other-webapp">
@@ -75,7 +95,7 @@
     <footer>
         <div id=labsign align="right">
             <a href="https://www.shibaura-it.ac.jp/" target="_blank">
-                <img src="/img/footer.png" alt="schoolsign" height="60">
+                <img src="/img/footer.png" alt="schoolsign" width="60">
             </a><br> 組込みネットワークシステム研究室
         </div>
 

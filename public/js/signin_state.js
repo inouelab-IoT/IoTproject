@@ -35,7 +35,6 @@ initApp = function() {
             user.getIdToken().then(function(accessToken) {
                 document.getElementById("sign_button").textContent = 'Sign out';
                 document.getElementById("user_name").textContent = "ユーザ名：" + displayName;
-                document.getElementById("group_name").textContent = "所属グループ : " + displayGroup;
                 user_img.src = photoURL
                     /*
                     document.getElementById('sign-in-status').textContent = 'Signed in';

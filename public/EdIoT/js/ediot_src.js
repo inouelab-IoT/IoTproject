@@ -6,12 +6,7 @@ document.getElementById('upload').addEventListener('click', function() {
     var files = obj.files;
     var upfile = files[0];
 
-    if (value == user)
-        var uploadTask = storageRef.child('/source_code/users/' + uid + '/' + upfile.name).put(upfile).then(function(snapshot) {
-            alert('アップロードしました');
-            obj.value = "";
-        });
-    else if (value == group)
+    if (value == "user")
         var uploadTask = storageRef.child('/source_code/users/' + uid + '/' + upfile.name).put(upfile).then(function(snapshot) {
             alert('アップロードしました');
             obj.value = "";
@@ -24,32 +19,23 @@ function open_srclist() {
     var value = document.getElementById("src_dir").value;
     //document.getElementById("src_list").innerHTML = value;
     removeChildren(document.getElementById("src_list"))
+
     if (value == "sample") {
+        document.getElementById("file_place").innerText = "source_code/all";
         storageRef.child("source_code/all").listAll().then(function(result) {
             result.items.forEach(function(itemRef) {
-                addli(itemRef.name, "src_list", itemRef.fullPath)
-                document.getElementById("file_place").innerText = itemRef.parent.fullPath
+                addli(itemRef.name, "src_list", itemRef.fullPath);
             });
         }).catch(function(error) {
             console.error(error);
         })
     } else if (value == "user") {
-        storageRef.child("users/" + uid).listAll().then(function(result) {
+        document.getElementById("file_place").innerText = "source_code/users/";
+        storageRef.child("source_code/users" + uid).listAll().then(function(result) {
             result.items.forEach(function(itemRef) {
-                addli(itemRef.name, "src_list", itemRef.fullPath)
-                document.getElementById("file_place").innerText = itemRef.parent.fullPath
+                addli(itemRef.name, "src_list", itemRef.fullPath);
             });
         }).catch(function(error) {
-            console.error(error);
-        })
-    } else if (value == "group") {
-        storageRef.child("group/" + gid).listAll().then(function(result) {
-            result.items.forEach(function(itemRef) {
-                addli(itemRef.name, "src_list", itemRef.fullPath)
-                document.getElementById("file_place").innerText = itemRef.parent.fullPath
-            });
-        }).catch(function(error) {
-            removeChildren(document.getElementById("src_list"))
             console.error(error);
         })
     }
@@ -81,6 +67,65 @@ function display_srctxt(fullpath, name) {
     });
 }
 
+
+function file_uppdate() {
+    var filepath = document.getElementById("file_place").innerHTML;
+    var filename = document.getElementById("input_srcname").value;
+
+    const txt = document.getElementById('source_edit').value;
+    const blob = new Blob([txt], { type: 'text/plain' });
+    const upfile = new File([blob], filename, { type: "text/plain" })
+    console.log(filepath + '/' + filename)
+    var uploadTask = storageRef.child(filepath + '/' + filename).put(upfile).then(function(snapshot) {
+        alert('アップロードしました');
+    });
+}
+
+function file_delete() {
+    var filepath = document.getElementById("file_place").innerHTML;
+    var filename = document.getElementById("input_srcname").value;
+
+    var desertRef = storageRef.child(filepath + '/' + filename);
+
+    // Delete the file
+    desertRef.delete().then(function() {
+        alert('File deleted successfully');
+        // File deleted successfully
+    }).catch(function(error) {
+        alert('Uh-oh, an error occurred!');
+        // Uh-oh, an error occurred!
+    });
+}
+
+function file_download() {
+    var filepath = document.getElementById("file_place").innerHTML;
+    var filename = document.getElementById("input_srcname").value;
+
+    storageRef.child(filepath + '/' + filename).getDownloadURL().then(function(url) {
+        // `url` is the download URL for 'images/stars.jpg'
+
+        // This can be downloaded directly:
+        var xhr = new XMLHttpRequest();
+        xhr.responseType = 'blob';
+        xhr.onload = function(event) {
+            var blob = xhr.response;
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            document.body.appendChild(a);
+            a.download = filename;
+            a.href = url;
+            a.click();
+            a.remove();
+            URL.revokeObjectURL(url);
+        };
+        xhr.open('GET', url);
+        xhr.send();
+
+        // Or inserted into an <img> element:
+    }).catch(function(error) {
+        // Handle any errors
+    });
+}
 
 function addli(name, ul_id, fullpath) {
     var newLi = document.createElement("li");

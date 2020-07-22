@@ -27,15 +27,17 @@ function open_srclist() {
                 addli(itemRef.name, "src_list", itemRef.fullPath);
             });
         }).catch(function(error) {
+            alert('アクセス拒否');
             console.error(error);
         })
     } else if (value == "user") {
-        document.getElementById("file_place").innerText = "source_code/users";
+        document.getElementById("file_place").innerText = "source_code/users/" + uid;
         storageRef.child("source_code/users/" + uid).listAll().then(function(result) {
             result.items.forEach(function(itemRef) {
                 addli(itemRef.name, "src_list", itemRef.fullPath);
             });
         }).catch(function(error) {
+            alert('アクセス拒否');
             console.error(error);
         })
     }

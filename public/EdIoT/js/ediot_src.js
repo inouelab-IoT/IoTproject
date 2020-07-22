@@ -30,8 +30,8 @@ function open_srclist() {
             console.error(error);
         })
     } else if (value == "user") {
-        document.getElementById("file_place").innerText = "source_code/users/";
-        storageRef.child("source_code/users" + uid).listAll().then(function(result) {
+        document.getElementById("file_place").innerText = "source_code/users";
+        storageRef.child("source_code/users/" + uid).listAll().then(function(result) {
             result.items.forEach(function(itemRef) {
                 addli(itemRef.name, "src_list", itemRef.fullPath);
             });

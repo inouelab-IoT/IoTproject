@@ -53,7 +53,7 @@ function open_srclist() {
             console.error(error);
         })
     } else if (value == "user") {
-        storageRef.child("source_code/users" + uid).listAll().then(function(result) {
+        storageRef.child("source_code/users/" + uid).listAll().then(function(result) {
             result.items.forEach(function(itemRef) {
                 addli(itemRef.name, "src_list", itemRef.fullPath);
             });

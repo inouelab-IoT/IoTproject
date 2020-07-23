@@ -19,7 +19,6 @@ function removeConfig() {
 
 // Newsを更新
 function news_uppdate() {
-    //    writeNewsData(document.getElementById('news').innerHTML);
     firebase.database().ref("news").on("value", function(snapshot) {
         var logs = snapshot.val();
         console.log(logs);
@@ -29,7 +28,8 @@ function news_uppdate() {
     });
 }
 
-function writeNewsData(text) {
+function writeNewsData() {
+    var text = document.getElementById('news').innerHTML;
     var date = new Date();
     var time_unix = date.getTime();
     firebase.database().ref('news').push({

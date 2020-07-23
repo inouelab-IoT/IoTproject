@@ -149,7 +149,7 @@ console.log = function(log) {
 
 console.error = function(error) {
     var obj = document.getElementById('console_log');
-    obj.innerHTML += error + "\n";
+    obj.innerHTML += error.message + "\n";
     obj.scrollTop = obj.scrollHeight;
 }
 

@@ -33,7 +33,7 @@ function writeNewsData() {
     var text = document.getElementById('news').value;
     var date = new Date();
     var time_unix = date.getTime();
-
+    news_uppdate();
     firebase.database().ref('news').push({
         text: text,
         user_id: uid,

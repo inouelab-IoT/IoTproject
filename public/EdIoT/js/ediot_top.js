@@ -39,6 +39,6 @@ function writeNewsData() {
         user_id: uid,
         date: time_unix
     }).catch(function(error) {
-        //alert(error.message);
+        console.error(error.message);
     });
 }

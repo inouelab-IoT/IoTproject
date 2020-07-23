@@ -34,5 +34,5 @@ function writeNewsData() {
     var date = new Date();
     var time_unix = date.getTime();
     firebase.database().ref('chat/' + key + '/text').set(text);
-    firebase.database().ref('chat/' + key + '/date').set(time_unix);
+    firebase.database().ref('chat/' + key + '/date').set(text);
 }

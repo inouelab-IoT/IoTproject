@@ -10,6 +10,9 @@ document.getElementById('upload').addEventListener('click', function() {
         var uploadTask = storageRef.child('/source_code/users/' + uid + '/' + upfile.name).put(upfile).then(function(snapshot) {
             alert('アップロードしました');
             obj.value = "";
+        }).catch(function(error) {
+            alert('アクセス拒否');
+            console.error(error);
         });
 });
 
@@ -65,8 +68,9 @@ function display_srctxt(fullpath, name) {
 
         xmlHttp.send();
     }).catch(function(error) {
-        console.log(error)
-    });
+        alert('アクセス拒否');
+        console.error(error);
+    })
 }
 
 
@@ -80,6 +84,9 @@ function file_uppdate() {
     console.log(filepath + '/' + filename)
     var uploadTask = storageRef.child(filepath + '/' + filename).put(upfile).then(function(snapshot) {
         alert('アップロードしました');
+    }).catch(function(error) {
+        alert('アクセス拒否');
+        console.error(error);
     });
 }
 

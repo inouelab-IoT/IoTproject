@@ -38,7 +38,6 @@
             <button id="sign_button" onclick="sign_button()">Sign in</button>
             <img id="user_icon" src="/img/no_login_icon.png" width="30" height="30" /><br>
             <div id="user_name">ユーザ名：ゲスト</div>
-            <div id="user_name">所属グループ : 未所属</div>
         </div>
         <center>
             <a href="/">
@@ -48,22 +47,24 @@
     </header>
     <hr>
     <main>
-        <br> javascript ファイルのみ実行可<br> 測定開始ボタンを押すとsensor_loop()が
-        <input type="number" id="loop_time" size="1" value=1>秒ごとに呼び出される<br>
+        <br> javascript ファイルのみ実行可<br>
         <h3> 〜デバイスリスト〜</h3>
+        folder :
         <select id="src_dir" onchange="open_srclist()">
-            <option value="">----</option>
+            <option value="----">----</option>
             <option value="sample">sample</option>
             <option value="user">user</option>
-        </select><br>
-        <ul id="src_list"></ul>
-
-
+        </select><br> file :
+        <select id="src_list">
+            <option value="----">----</option>
+        </select>
+        <h4></h4><var id="scriptstate"></var></h4>
+        <br>
         <button id="startstop" onclick="startstop()">測定開始</button>
         <br>
 
         <h4>console log</h4>
-        <textarea readonly id="console_log" cols="50" rows="5" 　width="100%"></textarea>
+        <textarea readonly id="console_log" rows="15" 　width="100%"></textarea>
         <input type="button" value="クリア" onclick="console_clear()">
 
         <br>
@@ -95,7 +96,7 @@
     <footer>
         <div id=labsign align="right">
             <a href="https://www.shibaura-it.ac.jp/" target="_blank">
-                <img src="/img/footer.png" alt="schoolsign" width="60">
+                <img src="/img/footer.png" alt="schoolsign" width="120">
             </a><br> 組込みネットワークシステム研究室
         </div>
 
@@ -103,7 +104,7 @@
         <a href="/EdIoT/ediot_top.html">トップ</a><br>
         <a href="/EdIoT/ediot_chat.html">問い合わせ</a><br>
     </footer>
-
+    <div id=addscript></div>
 </body>
 
 </html>

@@ -1,4 +1,5 @@
 var storageRef = firebase.storage().ref();
+var timer;
 
 window.onload = function() {
     if (!localStorage) {
@@ -19,61 +20,103 @@ function removeConfig() {
 
 function startstop() {
     if (document.getElementById("startstop").innerHTML == "測定開始") {
+        document.getElementById("startstop").disabled = true;
         console.log("測定開始");
-        //sensor_on(); //開始
-        document.getElementById("startstop").innerHTML = "停止";
+        var filepath = document.getElementById("src_list").value
+        if (filepath == "----") {
+            document.getElementById("startstop").disabled = false;
+            return false;
+        }
+        document.getElementById("scriptstate").innerHTML = "ファイル読み込み中：" + filepath;
+
+        //js storageからDownload & 読み込み
+        if (StoregeToText(filepath) == "catch_error") {
+            document.getElementById("startstop").disabled = false;
+            return false;
+        } else {
+            document.getElementById("scriptstate").innerHTML = "実行中：" + filepath;
+            //開始
+            document.getElementById("startstop").disabled = false;
+            document.getElementById("startstop").innerHTML = "停止";
+            return true;
+        }
     } else {
         console.log("停止");
+        if (timer) {
+            clearInterval(timer);
+        }
+        removeChildren(document.getElementById("addscript"));
         //sensor_off(); //停止
         document.getElementById("startstop").innerHTML = "測定開始";
+        document.getElementById("scriptstate").innerHTML = "";
     }
 }
 
-function console_clear() {
-    document.getElementById('console_log').innerHTML = "";
-}
-
-
-console.log = function(log) {
-    document.getElementById('console_log').innerHTML += log + "\n";
-}
 
 function open_srclist() {
     // selectで選択した値を取得
     var value = document.getElementById("src_dir").value;
     //document.getElementById("src_list").innerHTML = value;
     removeChildren(document.getElementById("src_list"))
+    addoption("----", "src_list", "----");
 
     if (value == "sample") {
         storageRef.child("source_code/all").listAll().then(function(result) {
             result.items.forEach(function(itemRef) {
-                addli(itemRef.name, "src_list", itemRef.fullPath);
+                addoption(itemRef.name, "src_list", itemRef.fullPath);
             });
         }).catch(function(error) {
-            console.error(error);
+            alert('アクセス拒否');
         })
     } else if (value == "user") {
         storageRef.child("source_code/users/" + uid).listAll().then(function(result) {
             result.items.forEach(function(itemRef) {
-                addli(itemRef.name, "src_list", itemRef.fullPath);
+                addoption(itemRef.name, "src_list", itemRef.fullPath);
             });
         }).catch(function(error) {
-            console.error(error);
+            alert('アクセス拒否');
         })
     }
 }
 
-function addli(name, ul_id, fullpath) {
-    var newLi = document.createElement("li");
-    var link = document.createElement("a");
+function StoregeToText(fullpath) {
+    //console.log("load path : " + fullpath)
 
-    link.innerText = name;
-    link.href = "javascript:li_crick('" + fullpath + "','" + name + "');";
+    storageRef.child(fullpath).getDownloadURL().then(function(url) {
+        var response
+        if (window.XMLHttpRequest) {
+            xmlHttp = new XMLHttpRequest();
+        } else {
+            if (window.ActiveXObject) {
+                xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
+            } else {
+                xmlHttp = null;
+            }
+        }
+        xmlHttp.addEventListener('load', (event) => {
+            response = event.target.responseText;
+            //console.log(response);
+            appendScript(response);
+        });
+        xmlHttp.open("GET", url);
+        xmlHttp.send();
+        return "success";
+
+    }).catch(function(error) {
+        alert('アクセス拒否' + error);
+        return "catch_error";
+    });
+}
+
+function addoption(display, id, value) {
+    var newOption = document.createElement("option");
+
+    newOption.innerText = display;
+    newOption.value = value;
 
     // リストに追加
-    newLi.appendChild(link);
-    var list = document.getElementById(ul_id);
-    list.appendChild(newLi);
+    var select_opt = document.getElementById(id);
+    select_opt.appendChild(newOption);
 }
 
 function removeChildren(x) {
@@ -86,8 +129,26 @@ function removeChildren(x) {
 
 
 //外部Js組込み
-function appendScript(URL) {
+function appendScript(srctext) {
+    var newScript = document.getElementById("addscript");
     var el = document.createElement('script');
-    el.src = URL;
-    document.body.appendChild(el);
-};
+    el.innerHTML = srctext;
+    newScript.appendChild(el);
+}
+
+function console_clear() {
+    document.getElementById('console_log').innerHTML = "";
+}
+
+
+console.log = function(log) {
+    var obj = document.getElementById('console_log');
+    obj.innerHTML += log + "\n";
+    obj.scrollTop = obj.scrollHeight;
+}
+
+console.error = function(error) {
+    var obj = document.getElementById('console_log');
+    obj.innerHTML += error + "\n";
+    obj.scrollTop = obj.scrollHeight;
+}

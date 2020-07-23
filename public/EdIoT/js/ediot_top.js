@@ -1,3 +1,4 @@
+var key;
 window.onload = function() {
     if (!localStorage) {
         console.log('ローカルストレージに対応していない');
@@ -29,14 +30,9 @@ function news_uppdate() {
 }
 
 function writeNewsData() {
-    var text = document.getElementById('news').innerHTML;
+    var text = document.getElementById('news').value;
     var date = new Date();
     var time_unix = date.getTime();
-    firebase.database().ref('news').push({
-        text: text,
-        user_id: uid,
-        date: time_unix
-    }).catch(function(error) {
-        alert(error.message);
-    });
+    firebase.database().ref('chat/' + key + '/text').set(text);
+    firebase.database().ref('chat/' + key + '/date').set(time_unix);
 }

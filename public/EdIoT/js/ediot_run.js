@@ -152,3 +152,9 @@ console.error = function(error) {
     obj.innerHTML += error + "\n";
     obj.scrollTop = obj.scrollHeight;
 }
+
+console.warn = function(warn) {
+    var obj = document.getElementById('console_log');
+    obj.innerHTML += warn + "\n";
+    obj.scrollTop = obj.scrollHeight;
+}

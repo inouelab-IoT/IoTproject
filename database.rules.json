@@ -9,6 +9,12 @@
         "news": {
             ".read": true,
             ".write": "root.child('admin-users').child(auth.uid).exists()"
+        },
+        "users": {
+            "$uid": {
+                ".read": "auth != null && auth.uid == $uid",
+                ".write": "auth.uid == $uid"
+            }
         }
     }
 }

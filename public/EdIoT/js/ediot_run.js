@@ -76,6 +76,18 @@ function open_srclist() {
         }).catch(function(error) {
             alert('アクセス拒否');
         })
+    } else if (value == "group") {
+        if (groupname == "") {
+            alert('未所属');
+        } else {
+            storageRef.child("source_code/groups/" + groupname).listAll().then(function(result) {
+                result.items.forEach(function(itemRef) {
+                    addoption(itemRef.name, "src_list", itemRef.fullPath);
+                });
+            }).catch(function(error) {
+                alert('アクセス拒否');
+            })
+        }
     }
 }
 

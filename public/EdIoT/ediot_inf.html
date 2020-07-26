@@ -17,6 +17,7 @@
     <!-- firebase_SDK -->
     <script src="/__/firebase/6.2.0/firebase-app.js"></script>
     <script src="/__/firebase/6.2.0/firebase-auth.js"></script>
+    <script src="/__/firebase/6.2.0/firebase-database.js"></script>
     <script type="text/javascript" src="/js/signin_state.js"></script>
 
     <script src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js"></script>
@@ -36,6 +37,7 @@
             <button id="sign_button" onclick="sign_button()">Sign in</button>
             <img id="user_icon" src="/img/no_login_icon.png" width="30" height="30" /><br>
             <div id="user_name">ユーザ名：ゲスト</div>
+            グループ名：<input type="text" id="group_name" size="7" placeholder="未所属" onchange="update_group()">
         </div>
     </header>
     <center>

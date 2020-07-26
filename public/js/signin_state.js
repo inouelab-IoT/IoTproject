@@ -19,6 +19,7 @@ var displayName = "Guest";
 var email = "@gmail.com";
 var uid = "guest";
 var photoURL = ""
+var groupname = ""
 
 initApp = function() {
     firebase.auth().onAuthStateChanged(function(user) {
@@ -35,21 +36,22 @@ initApp = function() {
             user.getIdToken().then(function(accessToken) {
                 document.getElementById("sign_button").textContent = 'Sign out';
                 document.getElementById("user_name").textContent = "ユーザ名：" + displayName;
-                user_img.src = photoURL
-                    /*
-                    document.getElementById('sign-in-status').textContent = 'Signed in';
-                    document.getElementById('sign-in').textContent = 'Sign out';
-                    document.getElementById('account-details').textContent = JSON.stringify({
-                        displayName: displayName,
-                        email: email,
-                        emailVerified: emailVerified,
-                        phoneNumber: phoneNumber,
-                        photoURL: photoURL,
-                        uid: uid,
-                        accessToken: accessToken,
-                        providerData: providerData
-                    }, null, '  ');
-                    */
+                user_img.src = photoURL;
+                groupname_uppdate();
+                /*
+                document.getElementById('sign-in-status').textContent = 'Signed in';
+                document.getElementById('sign-in').textContent = 'Sign out';
+                document.getElementById('account-details').textContent = JSON.stringify({
+                    displayName: displayName,
+                    email: email,
+                    emailVerified: emailVerified,
+                    phoneNumber: phoneNumber,
+                    photoURL: photoURL,
+                    uid: uid,
+                    accessToken: accessToken,
+                    providerData: providerData
+                }, null, '  ');
+                */
             });
         } else {
             // User is signed out.
@@ -74,6 +76,25 @@ window.addEventListener('load', function() {
     initApp();
 });
 
+
+function groupname_uppdate() {
+    display_group = firebase.database().ref('users/' + uid).on("value", function(snapshot) {
+        //console.log(snapshot.val());
+        groupname = snapshot.val().groupname;
+        document.getElementById("group_name").value = groupname;
+    });
+}
+
+function update_group() {
+    var text = document.getElementById("group_name").value;
+
+    firebase.database().ref('users/' + uid).set({
+        groupname: text
+    }).catch(function(error) {
+        alert(error.message);
+    });
+}
+
 function sign_button() {
     if (document.getElementById("sign_button").innerHTML == "Sign out") {
         sign_out();
@@ -86,6 +107,8 @@ function sign_button() {
 };
 
 function sign_out() {
+    document.getElementById("group_name").value = "";
+    groupname = "";
     firebase.auth().onAuthStateChanged((user) => {
         firebase.auth().signOut().then(() => {
                 console.log("ログアウトしました");

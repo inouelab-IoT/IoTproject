@@ -17,6 +17,7 @@
     <!-- firebase_SDK -->
     <script src="/__/firebase/6.2.0/firebase-app.js"></script>
     <script src="/__/firebase/6.2.0/firebase-auth.js"></script>
+    <script src="/__/firebase/6.2.0/firebase-database.js"></script>
     <script type="text/javascript" src="/js/signin_state.js"></script>
 
     <script src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js"></script>
@@ -36,6 +37,7 @@
             <button id="sign_button" onclick="sign_button()">Sign in</button>
             <img id="user_icon" src="/img/no_login_icon.png" width="30" height="30" /><br>
             <div id="user_name">ユーザ名：ゲスト</div>
+            グループ名：<input type="text" id="group_name" size="7" placeholder="未所属" onchange="update_group()">
         </div>
         <center>
             <a href="/">
@@ -61,7 +63,7 @@
 
 
             <a name="emb_list">
-                ・<a href="https://www.arduino.cc/" target="_blank">Visual Studio Code</a><br> 説明
+                ・<a href="https://www.arduino.cc/" target="_blank">Arduino IDE</a><br> 説明
             <br> Arduinoの開発環境でArduinoソフトウエアとも呼びます。フリーウエアで、コンパイル・ダウンロード・実行など一連の作業がこれひとつでできます。
             <br>インストール方法は
             <a href="/pdf/Arduino IDEのインストール.pdf" target="_blank">こちら</a>をクリック！<br><br>

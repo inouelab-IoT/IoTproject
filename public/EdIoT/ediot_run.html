@@ -38,6 +38,7 @@
             <button id="sign_button" onclick="sign_button()">Sign in</button>
             <img id="user_icon" src="/img/no_login_icon.png" width="30" height="30" /><br>
             <div id="user_name">ユーザ名：ゲスト</div>
+            グループ名：<input type="text" id="group_name" size="7" placeholder="未所属" onchange="update_group()">
         </div>
         <center>
             <a href="/">
@@ -54,6 +55,7 @@
             <option value="----">----</option>
             <option value="sample">sample</option>
             <option value="user">user</option>
+            <option value="group">group</option>
         </select><br> file :
         <select id="src_list">
             <option value="----">----</option>
@@ -64,7 +66,7 @@
         <br>
 
         <h4>console log</h4>
-        <textarea readonly id="console_log" rows="15" 　width="100%"></textarea>
+        <textarea readonly id="console_log"></textarea>
         <input type="button" value="クリア" onclick="console_clear()">
 
         <br>
@@ -87,8 +89,8 @@
         <a name="other-webapp">
             <font size="4">■その他アプリ■</font><br>
             <ul>
-                <li><a href="/EdIoT/device-motion.html">モーションキャプチャ</a></li>
-                <li><a href="http://sunpillar.jf.land.to/bekkan/javascript/info_sensor.html">センサ情報</a></li>
+                <li><a href="/EdIoT/other_webapp/device-motion.html">モーションキャプチャ</a></li>
+                <li><a href="/EdIoT/other_webapp/info_sensor.html">センサ情報</a></li>
             </ul>
 
     </main>

@@ -38,6 +38,7 @@
             <button id="sign_button" onclick="sign_button()">Sign in</button>
             <img id="user_icon" src="/img/no_login_icon.png" width="30" height="30" /><br>
             <div id="user_name">ユーザ名：ゲスト</div>
+            グループ名：<input type="text" id="group_name" size="7" placeholder="未所属" onchange="update_group()">
         </div>
         <center>
             <a href="#">
@@ -50,6 +51,7 @@
         <font size="3">アップロード</font><br>
         <select id="up_dir">
             <option value="user">user</option>
+            <option value="group" id = "up_group">group</option>
         </select>
         <input type="file" id="file" />
         <button id="upload" type="button">アップロード</button>
@@ -69,6 +71,7 @@
                         <option value="">----</option>
                         <option value="sample">sample</option>
                         <option value="user">user</option>
+                        <option value="group">group</option>
                     </select><br>
                     <ul id="src_list"></ul>
                 </td>

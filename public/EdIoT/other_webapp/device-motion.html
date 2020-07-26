@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+    <title>センサ</title>
+    <script type="text/javascript" src="js/jquery-1.8.2.min.js"></script>
+    <script type="text/javascript" src="js/device-motion.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/device-motion.css">
+</head>
+
+<body>
+    <header>
+        <h1>センサーレコーダー</h1>
+    </header>
+    <main>
+
+        <div>
+            <!--
+      <input type="button" value="ON" onclick="sensor_on()" id="startbutton">&nbsp;<input type="button" value="OFF" onclick="sensor_off()" id="stopbutton">
+-->
+            <button id="startstop" onclick="startstop()">測定開始</button>
+
+            <div id="time">
+                <h2>時刻[1/1000sec]</h2>
+                <p>t: <span id="unixtime"></span></p>
+            </div>
+
+            <div id="acceleration">
+                <h2>加速度（重力加速度なし）</h2>
+                <p>x: <span id="acc-x"></span> y: <span id="acc-y"></span> z: <span id="acc-z"></span></p>
+            </div>
+
+            <div id="accelerationIncludingGravity">
+                <h2>加速度</h2>
+                <p>x: <span id="acc-gx"></span> y: <span id="acc-gy"></span> z: <span id="acc-gz"></span></p>
+            </div>
+            <div id="rotationRate">
+                <h2>回転</h2>
+                <p>a: <span id="rr-a"></span> b: <span id="rr-b"></span> g: <span id="rr-g"></span></p>
+            </div>
+        </div>
+    </main>
+
+    <!--
+お名前<input type="text" id="na" />
+電話番号<input type="text" id="te" />
+住所<input type="text" id="ad" />
+-->
+    <!--debug
+<button id="button" onclick="getConfig()">表示</button>
+<button id="button" onclick="setConfig()">保存</button>
+-->
+    <!--debug
+<button id="button" onclick="removeConfig()">すべて削除</button>
+<button id="button" onclick="list()">リスト</button>
+-->
+    <p>&nbsp;</p>
+    <p>
+        <a id="download" onclick="exportcsv();">データ・ダウンロード</a>
+    </p>
+
+</body>
+
+</html>

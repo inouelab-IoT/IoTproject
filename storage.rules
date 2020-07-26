@@ -8,5 +8,8 @@ service firebase.storage {
       allow read, write: if request.auth.uid == userId
                    && fileName.matches('.*\\.js')
     }
+    match /source_code/groups/{all=**} {
+      allow write: if request.auth!=null;
+    }
   }
 }

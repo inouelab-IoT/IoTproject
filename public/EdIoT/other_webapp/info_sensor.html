@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <meta http-equiv="content-script-type" content="text/javascript">
+    <meta http-equiv="content-style-type" content="text/css">
+    <meta name="Author" content="kazuki">
+
+    <title>ブラウザでセンサ情報(JavaScript)</title>
+    <script type="text/javascript" src="js/info_sensor.js"></script>
+</head>
+
+<body class="info">
+    <h1>ブラウザでセンサ情報(JavaScript)</h1>
+    <p>デバイスにはGPSの他、照度センサや近接センサ、電子コンパス、加速度センサなど様々なセンサがついています。<br> ブラウザによっては非対応な項目もありますが、それら情報を表示します。
+    </p>
+    <hr>
+    <h2>GPS情報</h2>
+    <p><a href="http://www.w3.org/TR/geolocation-API/">Geolocation API</a>を使用しています。</p>
+    <script type="text/javascript">
+        if (navigator.geolocation) {
+            //Geolocation APIを利用できる環境向けの処理
+            flag_sup = 1;
+            document.write("<p><span class='info'>エラー情報</span></p>");
+            document.write("<p style='margin-left: 1em;' id='msg_error'>---</p>");
+            var geo_options = {
+                enableHighAccuracy: true,
+                maximumAge: 3000,
+                timeout: 30000
+            };
+            watchID_GPS = navigator.geolocation.watchPosition(successCallback, errorCallback, geo_options);
+            //navigator.geolocation.getCurrentPosition(successCallback, errorCallback, geo_options);
+        } else {
+            document.write("<p><span class='info'>エラー情報</span></p>");
+            document.write("<p style='margin-left: 1em;' id='msg_error'>このブラウザはGeolocation APIに対応していません。</p>");
+        }
+    </script>
+    <p><span class='info'>緯度</span></p>
+    <p style='margin-left: 1em;' id='tx_latitude'>---</p>
+    <p><span class='info'>経度</span></p>
+    <p style='margin-left: 1em;' id='tx_longitude'>---</p>
+    <p><span class='info'>高度</span></p>
+    <p style='margin-left: 1em;' id='tx_altitude'>---</p>
+    <p><span class='info'>経度緯度の誤差</span></p>
+    <p style='margin-left: 1em;' id='tx_accuracy'>---</p>
+    <p><span class='info'>高度の誤差</span></p>
+    <p style='margin-left: 1em;' id='tx_altitudeAccuracy'>---</p>
+    <p><span class='info'>移動している方角</span></p>
+    <p style='margin-left: 1em;' id='tx_heading'>---</p>
+    <p><span class='info'>移動している速さ</span></p>
+    <p style='margin-left: 1em;' id='tx_speed'>---</p>
+
+    <h2>照度センサ情報</h2>
+    <p><a href="http://www.w3.org/TR/ambient-light/">Ambient Light Events</a>を使用しています。</p>
+    <p><span class='info'>照度</span></p>
+    <p style='margin-left: 1em;' id='tx_lux'>---</p>
+
+    <h2>近接センサ情報</h2>
+    <p><a href="http://www.w3.org/TR/proximity/">Proximity Events</a>を使用しています。</p>
+    <p><span class='info'>近接物の有無</span></p>
+    <p style='margin-left: 1em;' id='tx_dist_boo'>---</p>
+    <p><span class='info'>近接物との現在の距離</span></p>
+    <p style='margin-left: 1em;' id='tx_dist_cur'>---</p>
+    <p><span class='info'>最大検出距離</span></p>
+    <p style='margin-left: 1em;' id='tx_dist_max'>---</p>
+    <p><span class='info'>最小検出距離</span></p>
+    <p style='margin-left: 1em;' id='tx_dist_min'>---</p>
+
+    <h2>電子コンパス情報</h2>
+    <p><a href="http://www.w3.org/TR/orientation-event/">DeviceOrientation Event</a>を使用しています。</p>
+    <p><span class='info'>方位角</span></p>
+    <p style='margin-left: 1em;' id='tx_or_alpha'>---</p>
+    <p><span class='info'>仰俯角</span></p>
+    <p style='margin-left: 1em;' id='tx_or_beta'>---</p>
+    <p><span class='info'>ロール角γ</span></p>
+    <p style='margin-left: 1em;' id='tx_or_gamma'>---</p>
+
+    <h2>加速度センサ情報</h2>
+    <p><a href="http://www.w3.org/TR/orientation-event/">DeviceOrientation Event</a>を使用しています。</p>
+    <h3>地球を基準にした座標系</h3>
+    <p>X軸は東西方向（東が正）、Y軸は南北方向（北が正）、Z軸は鉛直方向（上が正）です。</p>
+    <p><span class='info'>加速度</span></p>
+    <p style='margin-left: 1em;' id='tx_acc_x'>---</p>
+    <p style='margin-left: 1em;' id='tx_acc_y'>---</p>
+    <p style='margin-left: 1em;' id='tx_acc_z'>---</p>
+    <p style='margin-left: 1em;' id='tx_acc_ab'>---</p>
+    <p><span class='info'>重力加速度を含む加速度</span></p>
+    <p style='margin-left: 1em;' id='tx_acc_xg'>---</p>
+    <p style='margin-left: 1em;' id='tx_acc_yg'>---</p>
+    <p style='margin-left: 1em;' id='tx_acc_zg'>---</p>
+    <p style='margin-left: 1em;' id='tx_acc_abg'>---</p>
+
+    <p><span class='info'>加速度(最大値)</span></p>
+    <p style='margin-left: 1em;' id='tx_acc_xmx'>---</p>
+    <p style='margin-left: 1em;' id='tx_acc_ymx'>---</p>
+    <p style='margin-left: 1em;' id='tx_acc_zmx'>---</p>
+    <p style='margin-left: 1em;' id='tx_acc_abmx'>---</p>
+    <p><span class='info'>重力加速度を含む加速度(最大値)</span></p>
+    <p style='margin-left: 1em;' id='tx_acc_xgmx'>---</p>
+    <p style='margin-left: 1em;' id='tx_acc_ygmx'>---</p>
+    <p style='margin-left: 1em;' id='tx_acc_zgmx'>---</p>
+    <p style='margin-left: 1em;' id='tx_acc_abgmx'>---</p>
+
+    <p><span class='info'>加速度(最小値)</span></p>
+    <p style='margin-left: 1em;' id='tx_acc_xmi'>---</p>
+    <p style='margin-left: 1em;' id='tx_acc_ymi'>---</p>
+    <p style='margin-left: 1em;' id='tx_acc_zmi'>---</p>
+    <p><span class='info'>重力加速度を含む加速度(最小値)</span></p>
+    <p style='margin-left: 1em;' id='tx_acc_xgmi'>---</p>
+    <p style='margin-left: 1em;' id='tx_acc_ygmi'>---</p>
+    <p style='margin-left: 1em;' id='tx_acc_zgmi'>---</p>
+
+    <h3>デバイスを基準にした座標系</h3>
+    <p>α軸はデバイスを置いたときの垂直軸、β軸は左右軸、γ軸は前後軸です。</p>
+    <p><span class='info'>加速度</span></p>
+    <p style='margin-left: 1em;' id='tx_acc_a'>---</p>
+    <p style='margin-left: 1em;' id='tx_acc_b'>---</p>
+    <p style='margin-left: 1em;' id='tx_acc_g'>---</p>
+
+    <p><span class='info'>加速度(最大値)</span></p>
+    <p style='margin-left: 1em;' id='tx_acc_amx'>---</p>
+    <p style='margin-left: 1em;' id='tx_acc_bmx'>---</p>
+    <p style='margin-left: 1em;' id='tx_acc_gmx'>---</p>
+
+    <p><span class='info'>加速度(最小値)</span></p>
+    <p style='margin-left: 1em;' id='tx_acc_ami'>---</p>
+    <p style='margin-left: 1em;' id='tx_acc_bmi'>---</p>
+    <p style='margin-left: 1em;' id='tx_acc_gmi'>---</p>
+
+    <h2>バッテリー情報</h2>
+    <p><a href="http://www.w3.org/TR/battery-status/">Battery Status API</a>を使用しています。</p>
+    <p><span class='info'>充電状況</span></p>
+    <p style='margin-left: 1em;' id='tx_battery_charge'>---</p>
+    <p><span class='info'>残量</span></p>
+    <p style='margin-left: 1em;' id='tx_battery_level'>---</p>
+    <p><span class='info'>使用可能時間</span></p>
+    <p style='margin-left: 1em;' id='tx_battery_remain1'>---</p>
+    <p><span class='info'>充電完了時間</span></p>
+    <p style='margin-left: 1em;' id='tx_battery_remain2'>---</p>
+
+    <h2>画面の向き情報</h2>
+    <p><a href="http://www.w3.org/TR/screen-orientation/">The Screen Orientation API</a>を使用しています。</p>
+    <p><span class='info'>スクリーン状態</span></p>
+    <p style='margin-left: 1em;' id='tx_screen_ori'>---</p>
+    <p><span class='info'>スクリーン角度</span></p>
+    <p style='margin-left: 1em;' id='tx_screen_ang'>---</p>
+
+    <script type="text/javascript">
+        MyBattery();
+        deviceOrientationScreenHandler();
+    </script>
+
+
+</body>
+
+</html>

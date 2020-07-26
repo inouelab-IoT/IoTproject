@@ -3,14 +3,16 @@ input#stopbutton {
     width: 10em;
 }
 
-input#loop_time {
-    width: 3em;
-}
-
 h2 {
     font-size: 1.2em;
     font-weight: bold;
     background-color: #cccccc;
+}
+
+textarea#console_log {
+    width: 70%;
+    height: calc( 1.3em * 25);
+    line-height: 1.3;
 }
 
 button#startstop {

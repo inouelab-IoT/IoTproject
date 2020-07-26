@@ -6,7 +6,7 @@ document.getElementById('upload').addEventListener('click', function() {
     var files = obj.files;
     var upfile = files[0];
 
-    if (value == "user")
+    if (value == "user") {
         var uploadTask = storageRef.child('/source_code/users/' + uid + '/' + upfile.name).put(upfile).then(function(snapshot) {
             alert('アップロードしました');
             obj.value = "";
@@ -14,6 +14,19 @@ document.getElementById('upload').addEventListener('click', function() {
             alert('アクセス拒否');
             console.error(error);
         });
+    } else if (value == "group") {
+        if (groupname == "") {
+            alert('未所属');
+        } else {
+            var uploadTask = storageRef.child('/source_code/groups/' + groupname + '/' + upfile.name).put(upfile).then(function(snapshot) {
+                alert('アップロードしました');
+                obj.value = "";
+            }).catch(function(error) {
+                alert('アクセス拒否');
+                console.error(error);
+            });
+        }
+    }
 });
 
 
@@ -43,6 +56,20 @@ function open_srclist() {
             alert('アクセス拒否');
             console.error(error);
         })
+    } else if (value == "group") {
+        if (groupname == "") {
+            alert('未所属');
+        } else {
+            document.getElementById("file_place").innerText = "source_code/groups/" + groupname;
+            storageRef.child("source_code/groups/" + groupname).listAll().then(function(result) {
+                result.items.forEach(function(itemRef) {
+                    addli(itemRef.name, "src_list", itemRef.fullPath);
+                });
+            }).catch(function(error) {
+                alert('アクセス拒否');
+                console.error(error);
+            })
+        }
     }
 }
 

@@ -11,7 +11,7 @@ h2 {
 
 textarea#console_log {
     width: 70%;
-    height: calc( 1.3em * 25);
+    height: calc( 1.3em * 10);
     line-height: 1.3;
 }
 

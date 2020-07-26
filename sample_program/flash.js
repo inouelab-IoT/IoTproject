@@ -1,4 +1,4 @@
-//input button
+//output 
 var newDiv = document.createElement("div");
 newDiv.id = "flash";
 newDiv.style.width = "128px";
@@ -7,53 +7,48 @@ newDiv.style.color = '#a0a0a0';
 var output_area = document.getElementById("output_area");
 output_area.appendChild(newDiv);
 
-//input button
+//input 
+//button 作成
 var newBtn = document.createElement("button");
-newBtn.onclick = "run_flash();";
-newBtn.innerText = "ピカァ！";
+newBtn.innerText = "ぶるぶる";
+newBtn.value = "stop"
+newBtn.id = "btn_vib"
 var input_area = document.getElementById("input_area");
-input_area.appendChild(newBtn);
+input_area.appendChild(newBtn); //input ereaにボタン追加
 
 
 // 処理
 
-var isLock = false;
-var target_elm = document.getElementById("flash");
-var perc = 0.1;
-var timer = null;
-
-function run_flash() {
-    //処理中じゃないか
-    if (!isLock) {
-        //処理ロック
-        isLock = true;
-        //透過度リセット
-        perc = 0.1;
-        //0.1秒間隔(本当は三角関数使うなどして自然な上昇率にするといい)
-        timer = setInterval(
-            function() {
-                if (1 <= perc) {
-                    //IE
-                    target_elm.style.filter = 'alpha(opacity=100)';
-                    //FF
-                    target_elm.style.MozOpacity = 1.0;
-                    //other
-                    target_elm.style.opacity = 1.0;
-                    //処理ロック解除
-                    isLock = false;
-                    //タイマー削除
-                    clearInterval(timer);
-                } else {
-                    //IE
-                    target_elm.style.filter = 'alpha(opacity=' + (100 * perc) + ')';
-                    //FF
-                    target_elm.style.MozOpacity = perc;
-                    //other
-                    target_elm.style.opacity = perc;
-                    perc += 0.1;
-                }
-            },
-            100
-        );
+var vibrateInterval;
+btn_vib = document.getElementById("btn_vib");
+btn_vib.addEventListener("click", function() {
+    console.log(btn_vib.value);
+    if (btn_vib.value == "stop") {
+        btn_vib.value = "start";
+        startVibrate(1000);
+    } else if (btn_vib.value == "start") {
+        btn_vib.value = "stop";
+        stopVibrate();
     }
+});
+
+
+// 渡されたレベルでバイブレーションを開始
+function startVibrate(duration) {
+    window.navigator.vibrate(duration);
+}
+
+// バイブレーションを停止
+function stopVibrate() {
+    // インターバルをクリアして継続的なバイブレーションを停止 
+    if (vibrateInterval) clearInterval(vibrateInterval);
+    window.navigator.vibrate(0);
+}
+
+// 与えられた時間とインターバルによる継続的なバイブレーションを開始
+// 数値が与えられるものとする
+function startPersistentVibrate(duration, interval) {
+    vibrateInterval = setInterval(function() {
+        startVibrate(duration);
+    }, interval);
 }

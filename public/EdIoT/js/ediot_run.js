@@ -1,5 +1,6 @@
 var storageRef = firebase.storage().ref();
 var timer;
+//var run_type = "js";
 
 window.onload = function() {
     if (!localStorage) {
@@ -19,9 +20,9 @@ function removeConfig() {
 
 
 function startstop() {
-    if (document.getElementById("startstop").innerHTML == "測定開始") {
+    if (document.getElementById("startstop").innerHTML == "実行") {
         document.getElementById("startstop").disabled = true;
-        console.log("測定開始");
+        console.log("実行");
         var filepath = document.getElementById("src_list").value
         if (filepath == "----") {
             document.getElementById("startstop").disabled = false;
@@ -46,8 +47,9 @@ function startstop() {
             clearInterval(timer);
         }
         removeChildren(document.getElementById("addscript"));
+        window.location.reload(true);
         //sensor_off(); //停止
-        document.getElementById("startstop").innerHTML = "測定開始";
+        document.getElementById("startstop").innerHTML = "実行";
         document.getElementById("scriptstate").innerHTML = "";
     }
 }
@@ -108,7 +110,12 @@ function StoregeToText(fullpath) {
         xmlHttp.addEventListener('load', (event) => {
             response = event.target.responseText;
             //console.log(response);
-            appendScript(response);
+            if (get_extension(fullpath) == "html") {
+                run_newHTML(response)
+            }
+            if (get_extension(fullpath) == "js") {
+                appendScript(response);
+            }
         });
         xmlHttp.open("GET", url);
         xmlHttp.send();
@@ -152,6 +159,13 @@ function console_clear() {
     document.getElementById('console_log').innerHTML = "";
 }
 
+//HTML new page open
+function run_newHTML(srctext) {
+    var obj = window.open();
+    obj.document.open();
+    obj.document.write(srctext);
+    obj.document.close();
+}
 
 console.log = function(log) {
     var obj = document.getElementById('console_log');
@@ -169,4 +183,8 @@ console.warn = function(warn) {
     var obj = document.getElementById('console_log');
     obj.innerHTML += warn + "\n";
     obj.scrollTop = obj.scrollHeight;
+}
+
+function get_extension(filename) {
+    return filename.slice((filename.lastIndexOf('.') - 1 >>> 0) + 2);
 }

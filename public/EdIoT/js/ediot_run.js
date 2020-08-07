@@ -1,5 +1,7 @@
 var storageRef = firebase.storage().ref();
 var timer;
+var srctext = "asasas";
+
 //var run_type = "js";
 
 window.onload = function() {
@@ -31,16 +33,8 @@ function startstop() {
         document.getElementById("scriptstate").innerHTML = "ファイル読み込み中：" + filepath;
 
         //js storageからDownload & 読み込み
-        if (StoregeToText(filepath) == "catch_error") {
-            document.getElementById("startstop").disabled = false;
-            return false;
-        } else {
-            document.getElementById("scriptstate").innerHTML = "実行中：" + filepath;
-            //開始
-            document.getElementById("startstop").disabled = false;
-            document.getElementById("startstop").innerHTML = "停止";
-            return true;
-        }
+        StoregeToText(filepath);
+
     } else {
         console.log("停止");
         if (timer) {
@@ -95,9 +89,7 @@ function open_srclist() {
 
 function StoregeToText(fullpath) {
     //console.log("load path : " + fullpath)
-
     storageRef.child(fullpath).getDownloadURL().then(function(url) {
-        var response
         if (window.XMLHttpRequest) {
             xmlHttp = new XMLHttpRequest();
         } else {
@@ -107,24 +99,44 @@ function StoregeToText(fullpath) {
                 xmlHttp = null;
             }
         }
-        xmlHttp.addEventListener('load', (event) => {
-            response = event.target.responseText;
-            //console.log(response);
-            if (get_extension(fullpath) == "html") {
-                run_newHTML(response)
-            }
-            if (get_extension(fullpath) == "js") {
-                appendScript(response);
-            }
-        });
-        xmlHttp.open("GET", url);
-        xmlHttp.send();
-        return "success";
 
+        xmlHttp.open('GET', url, false);
+        xmlHttp.send();
+
+        if (xmlHttp.status === 200) {
+            srctext = xmlHttp.responseText
+            run_src(srctext, fullpath);
+        }
     }).catch(function(error) {
-        alert('アクセス拒否' + error);
-        return "catch_error";
+        alert('catch_error' + error);
+        srctext = "catch_error";
     });
+}
+
+
+function run_src(srctext, filepath) {
+    if (srctext == "catch_error") {
+        document.getElementById("startstop").disabled = false;
+        return false;
+    } else {
+        if (get_extension(filepath) == "html") {
+            var w;
+            w = window.open();
+            w.focus();
+            w.document.open();
+            w.document.clear();
+            w.document.write(srctext);
+            w.document.close();
+        }
+        if (get_extension(filepath) == "js") {
+            appendScript(srctext);
+        }
+        document.getElementById("scriptstate").innerHTML = "実行中：" + filepath;
+        //開始
+        document.getElementById("startstop").disabled = false;
+        document.getElementById("startstop").innerHTML = "停止";
+        return true;
+    }
 }
 
 function addoption(display, id, value) {
@@ -160,14 +172,6 @@ function console_clear() {
     window.location.reload(true);
 }
 
-//HTML new page open
-function run_newHTML(srctext) {
-    var obj = window.open();
-    obj.document.open();
-    obj.document.write(srctext);
-    obj.document.close();
-}
-
 console.log = function(log) {
     var obj = document.getElementById('console_log');
     obj.innerHTML += log + "\n";
@@ -188,4 +192,9 @@ console.warn = function(warn) {
 
 function get_extension(filename) {
     return filename.slice((filename.lastIndexOf('.') - 1 >>> 0) + 2);
+}
+
+function sleep(waitMsec) {
+    var startMsec = new Date();
+    while (new Date() - startMsec < waitMsec);
 }

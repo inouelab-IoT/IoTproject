@@ -47,7 +47,7 @@ function startstop() {
             clearInterval(timer);
         }
         removeChildren(document.getElementById("addscript"));
-        window.location.reload(true);
+        //window.location.reload(true);
         //sensor_off(); //停止
         document.getElementById("startstop").innerHTML = "実行";
         document.getElementById("scriptstate").innerHTML = "";
@@ -157,6 +157,7 @@ function appendScript(srctext) {
 
 function console_clear() {
     document.getElementById('console_log').innerHTML = "";
+    window.location.reload(true);
 }
 
 //HTML new page open

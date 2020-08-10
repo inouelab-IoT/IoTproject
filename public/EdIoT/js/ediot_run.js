@@ -126,7 +126,7 @@ function run_src(srctext, filepath) {
             document.open();
             //w.document.clear();
             document.writeln(srctext);
-            document.writeln("<a href='javascript:window.location.reload(true);;'>戻る<\/a>");
+            document.writeln("<br><a href='javascript:window.location.reload(true);;'>戻る<\/a>");
             document.close();
         }
         if (get_extension(filepath) == "js") {

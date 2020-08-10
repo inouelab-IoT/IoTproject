@@ -1,0 +1,31 @@
+<html>
+
+<head>
+    <meta HTTP-EQUIV="Content-Type" content="text/html; charset=utf-8" />
+</head>
+
+<body>
+    <video id="player" controls></video><br>
+    <button id="capture">Capture</button><br>
+    <canvas id="snapshot" width="90%"></canvas>
+
+    <script type="text/javascript">
+        const player = document.getElementById('player')
+        const snapshotZone = document.getElementById('snapshot')
+        const captureButton = document.getElementById('capture')
+
+        navigator.mediaDevices.getUserMedia({
+            video: true
+        }).then(stream => {
+            player.srcObject = stream
+        })
+
+        captureButton.addEventListener('click', function() {
+            const context = snapshot.getContext('2d')
+            context.drawImage(player, 0, 0, snapshotZone.width, snapshotZone.height)
+        })
+    </script>
+
+</body>
+
+</html>

@@ -108,7 +108,7 @@ function StoregeToText(fullpath) {
             run_src(srctext, fullpath);
         }
     }).catch(function(error) {
-        alert('catch_error' + error);
+        //alert('catch_error' + error);
         srctext = "catch_error";
     });
 }
@@ -120,13 +120,14 @@ function run_src(srctext, filepath) {
         return false;
     } else {
         if (get_extension(filepath) == "html") {
-            var w;
-            w = window.open();
-            w.focus();
-            w.document.open();
-            w.document.clear();
-            w.document.write(srctext);
-            w.document.close();
+            //var w;
+            //w = window.open("https://ediotwebserver.web.app/index.html");
+            //w.focus();
+            document.open();
+            //w.document.clear();
+            document.writeln(srctext);
+            document.writeln("<a href='javascript:window.location.reload(true);;'>戻る<\/a>");
+            document.close();
         }
         if (get_extension(filepath) == "js") {
             appendScript(srctext);

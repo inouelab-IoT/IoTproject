@@ -124,7 +124,7 @@ function run_src(srctext, filepath) {
             //w = window.open("https://ediotwebserver.web.app/index.html");
             //w.focus();
             document.open();
-            //w.document.clear();
+            document.clear();
             document.writeln(srctext);
             document.writeln("<br><a href='javascript:window.location.reload(true);;'>戻る<\/a>");
             document.close();

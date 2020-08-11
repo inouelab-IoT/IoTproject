@@ -5,27 +5,47 @@
 </head>
 
 <body>
-    <video id="player" controls></video><br>
-    <button id="capture">Capture</button><br>
-    <canvas id="snapshot" width="90%"></canvas>
+    <div id=contents　width=95%>
+        <!-- カメラ映像 -->
+        <video id="player" width=100% controls autoplay></video>
 
-    <script type="text/javascript">
-        const player = document.getElementById('player')
-        const snapshotZone = document.getElementById('snapshot')
-        const captureButton = document.getElementById('capture')
+        <!-- 撮影 -->
+        <button id="capture">Capture</button>
+        <canvas id="snapshot" width=100%></canvas>
+    </div>
 
-        navigator.mediaDevices.getUserMedia({
-            video: true
-        }).then(stream => {
-            player.srcObject = stream
-        })
+    <script>
+        var player = document.getElementById('player');
+        var snapshot = document.getElementById('snapshot');
+        var captureButton = document.getElementById('capture');
+
+        const medias = {
+            audio: false,
+            video: {
+                width: 640,
+                height: 480,
+
+                facingMode: "user", // フロントカメラを利用する
+                //facingMode: {
+                //    exact: "environment"
+                //} // リアカメラを利用する
+            }
+        };
+
+        var handleSuccess = function(stream) {
+            // Attach the video stream to the video element and autoplay.
+            player.srcObject = stream;
+        };
 
         captureButton.addEventListener('click', function() {
-            const context = snapshot.getContext('2d')
-            context.drawImage(player, 0, 0, snapshotZone.width, snapshotZone.height)
-        })
-    </script>
+            const context = snapshot.getContext('2d');
+            console.log(snapshot.width + ", " + snapshot.height)
+            context.drawImage(player, 0, 0, snapshot.width, snapshot.height);
+        });
 
+        navigator.mediaDevices.getUserMedia(medias)
+            .then(handleSuccess);
+    </script>
 </body>
 
 </html>

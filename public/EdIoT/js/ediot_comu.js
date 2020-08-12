@@ -58,12 +58,12 @@ $(function () {
 
 	//チャットグループの初期状態を設定
 	var current_group = $("#chat_group").val();
-	firebase.database().ref("chat/" + current_group).on("value",displayChatData(snapshot)); 
+	firebase.database().ref("chat/" + current_group).on("value",displayChatData); 
 	//チャットグループの変更
 	$("#chat_group").on("change",function(){
 		firebase.database().ref("chat/" + current_group).off("value"); 
 		current_group = $("#chat_group").val();
-		firebase.database().ref("chat/" + current_group).on("value",displayChatData(snapshot)); 	
+		firebase.database().ref("chat/" + current_group).on("value",displayChatData); 	
 	});
 
 	//利用可能なチャットグループの追加

@@ -8,8 +8,9 @@ $(function () {
 
 	// 発言を登録
 	function writeChatData(name, text) {
+		var group_name = $("#chat_group").val()
 		$("#input_text").val("");
-		firebase.database().ref('chat').push({
+		firebase.database().ref('chat/' +group_name).push({
 			name: name,
 			text: text,
 			user_id: uid,
@@ -21,13 +22,15 @@ $(function () {
 
 	// 発言を更新
 	function updateChatData(key, text) {
-		firebase.database().ref('chat/' + key + '/text').set(text).catch(function (error) {
+		var group_name = $("#chat_group").val()
+		firebase.database().ref('chat/' + group_name + '/' + key + '/text').set(text).catch(function (error) {
 			alert(error.message);
 		});
 	}
 
 	// 発言を表示
-	firebase.database().ref("chat").on("value", function (snapshot) {
+	
+	function displayChatData(snapshot) {
 		$("#chat_area").html("");
 
 		var logs = snapshot.val();
@@ -51,5 +54,19 @@ $(function () {
 			updateChatData(key, text);
 		});
 
+	}
+
+	//チャットグループの初期状態を設定
+	var current_group = $("#chat_group").val();
+	firebase.database().ref("chat/" + current_group).on("value",displayChatData(snapshot)); 
+	//チャットグループの変更
+	$("#chat_group").on("change",function(){
+		firebase.database().ref("chat/" + current_group).off("value"); 
+		current_group = $("#chat_group").val();
+		firebase.database().ref("chat/" + current_group).on("value",displayChatData(snapshot)); 	
 	});
+
+	//利用可能なチャットグループの追加
+	//Todo
+	$("#chat_group")
 });

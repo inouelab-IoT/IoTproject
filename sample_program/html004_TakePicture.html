@@ -7,23 +7,23 @@
 <body>
     <div id=contents　width=95%>
         <!-- カメラ映像 -->
-        <video id="player" width=100% controls autoplay></video>
+        <video id="player" width=100% controls autoplay></video><br>
 
         <!-- 撮影 -->
-        <button id="capture">Capture</button>
-        <canvas id="snapshot" width=100%></canvas>
+        <button id="capture">Capture</button><br>
+        <canvas id="snapshot" width=100%></canvas><br>
     </div>
 
     <script>
-        var player = document.getElementById('player');
-        var snapshot = document.getElementById('snapshot');
+        var video = document.getElementById('player');
+        var canvas = document.getElementById('snapshot');
         var captureButton = document.getElementById('capture');
 
         const medias = {
             audio: false,
             video: {
-                width: 640,
-                height: 480,
+                width: 600,
+                height: 600,
 
                 facingMode: "user", // フロントカメラを利用する
                 //facingMode: {
@@ -32,19 +32,34 @@
             }
         };
 
-        var handleSuccess = function(stream) {
-            // Attach the video stream to the video element and autoplay.
-            player.srcObject = stream;
-        };
-
         captureButton.addEventListener('click', function() {
-            const context = snapshot.getContext('2d');
-            console.log(snapshot.width + ", " + snapshot.height)
-            context.drawImage(player, 0, 0, snapshot.width, snapshot.height);
+            var ctx = canvas.getContext('2d');
+            var w = video.offsetWidth;
+            var h = video.offsetHeight;
+            canvas.setAttribute('width', w);
+            canvas.setAttribute('height', h)
+
+            ctx.drawImage(video, 0, 0, w, h);
+            canvas.toBlob(function(blob) {
+                var img = document.getElementById('image');
+                img.src = window.URL.createObjectURL(blob);
+
+                //var request = new XMLHttpRequest();
+                //request.open('POST', '/avatars');
+                //request.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
+                //var formData = new FormData();
+                //formData.append('avatar[image]', blob, '<%= Time.now.strftime("%Y%m%d%H%M") %>}.jpeg');
+                //formData.append('avatar[uuid]', '<%= user.uuid %>');
+                //request.send(formData);
+            }, 'image/jpeg', 0.95);
         });
 
-        navigator.mediaDevices.getUserMedia(medias)
-            .then(handleSuccess);
+        navigator.mediaDevices.getUserMedia(medias).then(function(stream) {
+            video.srcObject = stream;
+        }).catch(function(error) {
+            console.error('mediaDevice.getUserMedia() error:', error);
+            return;
+        });
     </script>
 </body>
 

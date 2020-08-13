@@ -68,5 +68,16 @@ $(function () {
 
 	//利用可能なチャットグループの追加
 	//Todo
-	$("#chat_group")
+	function addGroup2select(data){
+		var groups = data.val();
+		for(var group in groups){
+			console.log(group+" "+groups[group].hasOwnProperty(uid));
+			if(groups[group].hasOwnProperty(uid)){
+				
+				var htmlCode='<option value="' + group + '">' + group + '</option>';
+				$("#chat_group").append(htmlCode);
+			}
+		}
+	}
+	firebase.database().ref("groups").once("value",addGroup2select);
 });

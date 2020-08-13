@@ -1,0 +1,85 @@
+<html lang="ja">
+
+<head>
+    <!--外部ライブラリの読み込み-->
+
+    <!--AWS SDK -->
+    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.1.12.min.js"></script>
+</head>
+
+<body>
+    <!--表示-->
+    <input type="file" id="fileToUpload" />
+    <button onclick="uploadFile()">Upload to S3</button><br>
+    <hr>
+    <button onclick="listObjs()">S3 - List Objects</button>
+    <div id="objKeys"></div>
+    <div id="objImgs"></div>
+
+    <!--処理-->
+    <script>
+        //初期化
+        AWS.config.update({
+            accessKeyId: 'YOUR_ACCESS_KEY',
+            secretAccessKey: 'YOUR_SECRET_KEY'
+        });
+        var awsUserName = "YOUR_USER_NAME"
+        var s3BucketName = "ediot"; //'BUCKET_NAME';
+        var s3RegionName = 'ap-northeast-1'; //東京Region
+
+        var s3 = new AWS.S3({
+            params: {
+                Bucket: s3BucketName,
+                Prefix: awsUserName + '/',
+                Region: s3RegionName
+            }
+        });
+
+        // アップロード
+        function uploadFile() {
+            var file = document.getElementById('fileToUpload').files[0];
+            if (file) {
+                s3.putObject({
+                        Key: awsUserName + '/' + file.name,
+                        ContentType: file.type,
+                        Body: file,
+                        ACL: "public-read"
+                    },
+                    function(err, data) {
+                        if (data !== null) {
+                            alert("アップロード成功");
+                        } else {
+                            alert("アップロード失敗");
+                        }
+                    });
+            }
+        }
+
+        //リスト表示
+        function listObjs() {
+            s3.listObjects(function(error, data) {　 //リストの取得
+                if (error === null) {
+                    var html_keys = 'Object Keys:<br />';
+                    var html_imgs = '';
+
+                    data.Contents.forEach(function(obj, index) {
+                        var params = {
+                            Bucket: s3BucketName,
+                            Key: obj.Key
+                        };
+                        var url = s3.getSignedUrl('getObject', params); //ダウンロード
+                        html_keys += (index + ': ' + obj.Key + '<br />');
+                        html_imgs += "<img src='" + url + "'/><br/>";
+                    });
+                    document.getElementById("objKeys").innerHTML = html_keys;
+                    document.getElementById("objImgs").innerHTML = html_imgs;
+                } else {
+                    console.log(error);
+                    console.log("error");
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

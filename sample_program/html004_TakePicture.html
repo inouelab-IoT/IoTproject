@@ -41,8 +41,7 @@
 
             ctx.drawImage(video, 0, 0, w, h);
             canvas.toBlob(function(blob) {
-                var img = document.getElementById('image');
-                img.src = window.URL.createObjectURL(blob);
+                canvas.src = window.URL.createObjectURL(blob);
 
                 //var request = new XMLHttpRequest();
                 //request.open('POST', '/avatars');

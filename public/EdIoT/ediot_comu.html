@@ -48,6 +48,11 @@
 
 
     <main>
+        <span>チャットルーム：</span>
+        <select id="chat_group">
+            <option value="All">全体</option><!--ToDo:valueを正しい値（id）にセット-->
+            <!--ToDo:valueをグループIDにして追加や移動するjavascriptを書く-->
+        </select>
         <form id="input_form">
             <input type="text" id="input_text" size="50" placeholder="コメント">
             <button type="submit" id="send_btn">SEND</button>

@@ -22,6 +22,14 @@
 
     <!--処理-->
     <script type="text/javascript">
+        var clientId = "YOUR_USER_NAME"; // "YOUR_USER_NAME"
+        var deviceName = "YOUR_DEVICE_NAME";
+        var awsRegion = 'ap-northeast-1'; // Your Region
+        var awsIotEndpoint = 'anmwgx2rsnw45-ats.iot.ap-northeast-1.amazonaws.com'; // Require 'lowercamelcase'!!
+        var AWS_ACCESS_KEY = 'YOUR_AWS_ACCESS_KEY'; //
+        var AWS_SECRET_ACCESS_KEY = 'YOUR_AWS_SECRET_ACCESS_KEY';
+
+
         //表示の処理
         var data = {
             messages: []
@@ -33,8 +41,17 @@
         });
 
         document.getElementById('send').addEventListener('click', function(e) {
+            var time = moment.utc();
+            var dateStamp = time.format('YYYYMMDD');
+            var date = dateStamp + 'T' + time.format('HHmmss') + 'Z';
+
             var say = document.getElementById('say')
-            send(say.value);
+            var sendMes = {
+                messages: say.value,
+                sender: deviceName,
+                date: date
+            }
+            send(JSON.stringify(sendMes));
             say.value = '';
         });
 
@@ -92,11 +109,10 @@
         }
 
         var endpoint = createEndpoint(
-            'ap-northeast-1', // Your Region
-            'anmwgx2rsnw45-ats.iot.ap-northeast-1.amazonaws.com', // Require 'lowercamelcase'!!
-            'AKIA34MKVHJNJI7DNDW4', //YOUR_AWS_ACCESS_KEY
-            '/h+WIfH9gsLX46/GROlDRilpLO4mdqbdQ5NDTh3s'); //YOUR_AWS_SECRET_ACCESS_KEY
-        var clientId = Math.random().toString(36).substring(7);
+            awsRegion, // Your Region
+            awsIotEndpoint, // Require 'lowercamelcase'!!
+            AWS_ACCESS_KEY, //
+            AWS_SECRET_ACCESS_KEY);
         var client = new Paho.MQTT.Client(endpoint, clientId);
         var connectOptions = {
             useSSL: true,
@@ -111,13 +127,13 @@
         };
 
         function subscribe() {
-            client.subscribe("Test/chat");
+            client.subscribe(clientId + "/chat");
             console.log("subscribed");
         }
 
         function send(content) {
             var message = new Paho.MQTT.Message(content);
-            message.destinationName = "Test/chat";
+            message.destinationName = clientId + "/chat";
             client.send(message);
             console.log("sent");
         }

@@ -126,7 +126,7 @@ function run_src(srctext, filepath) {
             document.open();
             document.clear();
             document.writeln(srctext);
-            document.writeln('<br><textarea readonly id="console_log"></textarea>')
+            document.writeln('<hr><br><textarea readonly id="console_log"></textarea>')
             document.writeln("<br><a href='javascript:window.location.reload(true);;'>戻る<\/a>");
             document.close();
         }

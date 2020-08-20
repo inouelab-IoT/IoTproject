@@ -14,9 +14,12 @@
 
 <body>
     <!--表示-->
+    <input type="text" name="sub_topic" id="sub_topic" placeholder="Input a subscribe topic here...">
+    <button id="sub">Subscribe</button>
     <ul id="chat">
         <li v-for="m in messages">{{ m }}</li>
     </ul>
+    <input type="text" name="pub_topic" id="pub_topic" value="test" placeholder="Input a publish topic here...">
     <input type="text" name="say" id="say" placeholder="Input a message here...">
     <button id="send">Send</button>
 
@@ -28,6 +31,8 @@
         var awsIotEndpoint = 'anmwgx2rsnw45-ats.iot.ap-northeast-1.amazonaws.com'; // Require 'lowercamelcase'!!
         var AWS_ACCESS_KEY = 'YOUR_AWS_ACCESS_KEY'; //
         var AWS_SECRET_ACCESS_KEY = 'YOUR_AWS_SECRET_ACCESS_KEY';
+        var PUB_TOPIC = "test"
+        var SUB_TOPIC = "#"
 
 
         //表示の処理
@@ -45,7 +50,8 @@
             var dateStamp = time.format('YYYYMMDD');
             var date = dateStamp + 'T' + time.format('HHmmss') + 'Z';
 
-            var say = document.getElementById('say')
+            var say = document.getElementById('say');
+            PUB_TOPIC = document.getElementById('pub_topic').value;
             var sendMes = {
                 messages: say.value,
                 sender: deviceName,
@@ -55,6 +61,30 @@
             say.value = '';
         });
 
+        document.getElementById("sub").addEventListener('click', function(e) {
+            console.log("client is disconnecting..");
+            client.disconnect();
+            SUB_TOPIC = document.getElementById('sub_topic');
+            client.connect(connectOptions);
+            client.onMessageArrived = onMessage;
+            client.onConnectionLost = function(e) {
+                console.log(e)
+            };
+        });
+
+        // MQTT Publish の処理 
+        function send(content) {
+            var message = new Paho.MQTT.Message(content);
+            message.destinationName = clientId + "/" + PUB_TOPIC;
+            client.send(message);
+            console.log("sent");
+        }
+
+        // MQTT Subscribe でメッセージがあった時の処理
+        function onMessage(message) {
+            data.messages.push("Topic : " + clientId + "/" + SUB_TOPIC + "  " + message.payloadString);
+            console.log("message received: " + message.payloadString);
+        }
 
         //署名作成
         function SigV4Utils() {}
@@ -127,20 +157,8 @@
         };
 
         function subscribe() {
-            client.subscribe(clientId + "/chat");
+            client.subscribe(clientId + "/" + SUB_TOPIC);
             console.log("subscribed");
-        }
-
-        function send(content) {
-            var message = new Paho.MQTT.Message(content);
-            message.destinationName = clientId + "/chat";
-            client.send(message);
-            console.log("sent");
-        }
-
-        function onMessage(message) {
-            data.messages.push(message.payloadString);
-            console.log("message received: " + message.payloadString);
         }
     </script>
 </body>

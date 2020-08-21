@@ -121,14 +121,12 @@ function file_delete() {
     var filepath = document.getElementById("file_place").innerHTML;
     var filename = document.getElementById("input_srcname").value;
 
-    var desertRef = storageRef.child(filepath + '/' + filename);
-
-    // Delete the file
-    desertRef.delete().then(function() {
+    var desertRef = storageRef.child(filepath + '/' + filename).delete().then(function() {
         alert('File deleted successfully');
         // File deleted successfully
     }).catch(function(error) {
         alert('Uh-oh, an error occurred!');
+        console.log(error);
         // Uh-oh, an error occurred!
     });
 }

@@ -143,7 +143,7 @@
             awsIotEndpoint, // Require 'lowercamelcase'!!
             AWS_ACCESS_KEY, //
             AWS_SECRET_ACCESS_KEY);
-        var client = new Paho.MQTT.Client(endpoint, clientId);
+        var client = new Paho.MQTT.Client(endpoint, Math.random().toString(36).substring(7));
         var connectOptions = {
             useSSL: true,
             timeout: 3,

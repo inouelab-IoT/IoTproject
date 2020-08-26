@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+
+    <!-- site infomation -->
+    <meta name="author" content="kazuki" />
+    <title>003 Sound</title>
+    <!-- js & css -->
+</head>
+
+<body>
+    <!-- ///////////////////////////////////////////////////////////////
+                            ビープ音再生
+//////////////////////////////////////////////////////////////////////-->
+    <h4>ビープ音</h4>
+    frequency
+    <input type="range" id="fIn" min="40" max="6000" oninput="show()" />
+    <span id="fOut"></span>
+    <br> type
+    <input type="range" id="tIn" min="0" max="3" oninput="show()" />
+    <span id="tOut"></span>
+    <br> volume
+    <input type="range" id="vIn" min="0" max="100" oninput="show()" />
+    <span id="vOut"></span>
+    <br> duration
+    <input type="range" id="dIn" min="1" max="5000" oninput="show()" />
+    <span id="dOut"></span>
+    <br>
+    <button onclick='beep();'>Play</button>
+    <script type="text/javascript">
+        audioCtx = new(window.AudioContext || window.webkitAudioContext)();
+
+        show();
+
+        function show() {
+            frequency = document.getElementById("fIn").value;
+            document.getElementById("fOut").innerHTML = frequency + ' Hz';
+
+            switch (document.getElementById("tIn").value * 1) {
+                case 0:
+                    type = 'sine';
+                    break;
+                case 1:
+                    type = 'square';
+                    break;
+                case 2:
+                    type = 'sawtooth';
+                    break;
+                case 3:
+                    type = 'triangle';
+                    break;
+            }
+            document.getElementById("tOut").innerHTML = type;
+
+            volume = document.getElementById("vIn").value / 100;
+            document.getElementById("vOut").innerHTML = volume;
+
+            duration = document.getElementById("dIn").value;
+            document.getElementById("dOut").innerHTML = duration + ' ms';
+        }
+
+        function beep() {
+            var oscillator = audioCtx.createOscillator();
+            var gainNode = audioCtx.createGain();
+
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+
+            gainNode.gain.value = volume;
+            oscillator.frequency.value = frequency;
+            oscillator.type = type;
+
+            oscillator.start();
+
+            setTimeout(
+                function() {
+                    oscillator.stop();
+                },
+                duration
+            );
+        };
+    </script>
+    <br>
+    <hr><br>
+    <!-- ///////////////////////////////////////////////////////////////
+                            録音&再生
+//////////////////////////////////////////////////////////////////////-->
+    <h4>録音</h4>
+    <button id="stop">Stop</button><br>
+    <a id="download">Download</a>
+    <audio>
+        <source src="omikuji.wav" type="audio/wav">
+        <p>（audio要素に非対応なブラウザ向けの表示）</p>
+     </audio>
+    <script>
+        // for html
+        const downloadLink = document.getElementById('download');
+        const stopButton = document.getElementById('stop');
+
+        // for audio
+        let audio_sample_rate = null;
+        let scriptProcessor = null;
+        let audioContext = null;
+
+        // audio data
+        let audioData = [];
+        let bufferSize = 1024;
+
+        let saveAudio = function() {
+            downloadLink.href = exportWAV(audioData);
+            downloadLink.download = 'test.wav';
+            downloadLink.click();
+
+            audioContext.close().then(function() {
+                stopButton.setAttribute('disabled', 'disabled');
+            });
+        }
+
+        // export WAV from audio float data
+        let exportWAV = function(audioData) {
+
+            let encodeWAV = function(samples, sampleRate) {
+                let buffer = new ArrayBuffer(44 + samples.length * 2);
+                let view = new DataView(buffer);
+
+                let writeString = function(view, offset, string) {
+                    for (let i = 0; i < string.length; i++) {
+                        view.setUint8(offset + i, string.charCodeAt(i));
+                    }
+                };
+
+                let floatTo16BitPCM = function(output, offset, input) {
+                    for (let i = 0; i < input.length; i++, offset += 2) {
+                        let s = Math.max(-1, Math.min(1, input[i]));
+                        output.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
+                    }
+                };
+
+                writeString(view, 0, 'RIFF'); // RIFFヘッダ
+                view.setUint32(4, 32 + samples.length * 2, true); // これ以降のファイルサイズ
+                writeString(view, 8, 'WAVE'); // WAVEヘッダ
+                writeString(view, 12, 'fmt '); // fmtチャンク
+                view.setUint32(16, 16, true); // fmtチャンクのバイト数
+                view.setUint16(20, 1, true); // フォーマットID
+                view.setUint16(22, 1, true); // チャンネル数
+                view.setUint32(24, sampleRate, true); // サンプリングレート
+                view.setUint32(28, sampleRate * 2, true); // データ速度
+                view.setUint16(32, 2, true); // ブロックサイズ
+                view.setUint16(34, 16, true); // サンプルあたりのビット数
+                writeString(view, 36, 'data'); // dataチャンク
+                view.setUint32(40, samples.length * 2, true); // 波形データのバイト数
+                floatTo16BitPCM(view, 44, samples); // 波形データ
+
+                return view;
+            };
+
+            let mergeBuffers = function(audioData) {
+                let sampleLength = 0;
+                for (let i = 0; i < audioData.length; i++) {
+                    sampleLength += audioData[i].length;
+                }
+                let samples = new Float32Array(sampleLength);
+                let sampleIdx = 0;
+                for (let i = 0; i < audioData.length; i++) {
+                    for (let j = 0; j < audioData[i].length; j++) {
+                        samples[sampleIdx] = audioData[i][j];
+                        sampleIdx++;
+                    }
+                }
+                return samples;
+            };
+
+            let dataview = encodeWAV(mergeBuffers(audioData), audio_sample_rate);
+            let audioBlob = new Blob([dataview], {
+                type: 'audio/wav'
+            });
+            console.log(dataview);
+
+            let myURL = window.URL || window.webkitURL;
+            let url = myURL.createObjectURL(audioBlob);
+            return url;
+        };
+
+        // stop button
+        stopButton.addEventListener('click', function() {
+            saveAudio();
+            console.log('saved wav');
+        });
+
+        // save audio data
+        var onAudioProcess = function(e) {
+            var input = e.inputBuffer.getChannelData(0);
+            var bufferData = new Float32Array(bufferSize);
+            for (var i = 0; i < bufferSize; i++) {
+                bufferData[i] = input[i];
+            }
+
+            audioData.push(bufferData);
+        };
+
+        // getusermedia
+        let handleSuccess = function(stream) {
+            audioContext = new AudioContext();
+            audio_sample_rate = audioContext.sampleRate;
+            console.log(audio_sample_rate);
+            scriptProcessor = audioContext.createScriptProcessor(bufferSize, 1, 1);
+            var mediastreamsource = audioContext.createMediaStreamSource(stream);
+            mediastreamsource.connect(scriptProcessor);
+            scriptProcessor.onaudioprocess = onAudioProcess;
+            scriptProcessor.connect(audioContext.destination);
+
+            console.log('record start?');
+
+            // when time passed without pushing the stop button
+            setTimeout(function() {
+                console.log("10 sec");
+                if (stopButton.disabled == false) {
+                    saveAudio();
+                    console.log("saved audio");
+                }
+            }, 10000);
+        };
+
+        // getUserMedia
+        navigator.mediaDevices.getUserMedia({
+                audio: true,
+                video: false
+            })
+            .then(handleSuccess);
+    </script>
+</body>
+
+</html>

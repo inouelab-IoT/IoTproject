@@ -6,19 +6,255 @@
 
     <!-- site infomation -->
     <meta name="author" content="kazuki" />
-    <title>001 Hello World</title>
+    <title>004 GPS</title>
     <!-- js & css -->
+    <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
 </head>
 
 <body>
-    <header>
-        <h1>title</h1>
-    </header>
-    <main>
-        Hello World
-    </main>
-    <footer>
-    </footer>
+    <h2>GPS情報</h2>
+    <script type="text/javascript">
+    </script>
+    <p><span class='info'>緯度</span></p>
+    <p style='margin-left: 1em;' id='tx_latitude'>---</p>
+    <p><span class='info'>経度</span></p>
+    <p style='margin-left: 1em;' id='tx_longitude'>---</p>
+    <p><span class='info'>高度</span></p>
+    <p style='margin-left: 1em;' id='tx_altitude'>---</p>
+    <p><span class='info'>経度緯度の誤差</span></p>
+    <p style='margin-left: 1em;' id='tx_accuracy'>---</p>
+    <p><span class='info'>高度の誤差</span></p>
+    <p style='margin-left: 1em;' id='tx_altitudeAccuracy'>---</p>
+    <p><span class='info'>移動している方角</span></p>
+    <p style='margin-left: 1em;' id='tx_heading'>---</p>
+    <p><span class='info'>移動している速さ</span></p>
+    <p style='margin-left: 1em;' id='tx_speed'>---</p>
+
+    <div style="width: 100%; height: 320px; position: relative; overflow: hidden;" id="watMap"></div>
+
+    <script>
+        var nowlatitude; // 経度
+        var nowlongitude; //緯度
+        var nowaltitude; //高さ
+        var nowaccuracy; //経度緯度の正確性
+        var nowaltitudeAccuracy; //高さの正確性
+        var nowheading; //向いてる方向
+        var nowspeed; //移動速度
+
+        if (navigator.geolocation) {
+            //Geolocation APIを利用できる環境向けの処理
+            flag_sup = 1;
+            document.write("<p><span class='info'>エラー情報</span></p>");
+            document.write("<p style='margin-left: 1em;' id='msg_error'>---</p>");
+            var geo_options = {
+                enableHighAccuracy: true,
+                maximumAge: 2000,
+                timeout: 30000
+            };
+            watchID_GPS = navigator.geolocation.watchPosition(successCallback, errorCallback, geo_options);
+            //navigator.geolocation.getCurrentPosition(successCallback, errorCallback, geo_options);
+
+        } else {
+            document.write("<p><span class='info'>エラー情報</span></p>");
+            document.write("<p style='margin-left: 1em;' id='msg_error'>このブラウザはGeolocation APIに対応していません。</p>");
+        }
+
+        //Geolocation API成功時のコールバック関数
+        function successCallback(position) {
+            console.log(position);
+            if (position.coords.latitude) {
+                document.getElementById("tx_latitude").innerHTML = MyLatitude(position.coords.latitude);
+                nowlatitude = position.coords.latitude;
+            } else {
+                document.getElementById("tx_latitude").innerHTML = "---";
+                nowlatitude = NaN;
+            }
+            if (position.coords.longitude) {
+                document.getElementById("tx_longitude").innerHTML = MyLongitude(position.coords.longitude);
+                nowlongitude = position.coords.longitude;
+            } else {
+                document.getElementById("tx_longitude").innerHTML = "---";
+                nowlongitude = NaN;
+            }
+            if (position.coords.altitude) {
+                document.getElementById("tx_altitude").innerHTML = position.coords.altitude + "m";
+                nowaltitude = position.coords.altitude;
+            } else {
+                document.getElementById("tx_altitude").innerHTML = "---";
+                nowaltitude = NaN;
+            }
+            if (position.coords.accuracy) {
+                document.getElementById("tx_accuracy").innerHTML = position.coords.accuracy + "m";
+                nowaccuracy = position.coords.accuracy;
+            } else {
+                document.getElementById("tx_accuracy").innerHTML = "---";
+                nowaccuracy = NaN;
+            }
+            if (position.coords.altitudeAccuracy) {
+                document.getElementById("tx_altitudeAccuracy").innerHTML = position.coords.altitudeAccuracy + "m";
+                nowaltitudeAccuracy = position.coords.altitudeAccuracy;
+            } else {
+                document.getElementById("tx_altitudeAccuracy").innerHTML = "---";
+                nowaltitudeAccuracy = NaN
+            }
+            if (position.coords.heading) {
+                document.getElementById("tx_heading").innerHTML = MyHeading(position.coords.heading);
+                nowheading = position.coords.heading;
+            } else {
+                document.getElementById("tx_heading").innerHTML = "---";
+                nowheading = NaN;
+            }
+            if (position.coords.speed) {
+                document.getElementById("tx_speed").innerHTML = MySpeed(position.coords.speed);
+                nowspeed = position.coords.speed;
+            } else {
+                document.getElementById("tx_speed").innerHTML = "---";
+                nowspeed = NaN;
+
+            }
+            document.getElementById("msg_error").innerHTML = "---";
+            cmanMapUpdate(nowlatitude, nowlongitude);
+        }
+        //Geolocation APIエラー時のコールバック関数
+        function errorCallback(error) {
+            var err_msg = "";
+            switch (error.code) {
+                case 1:
+                    err_msg = "Error:位置情報の取得が許可がされていません。";
+                    break;
+                case 2:
+                    err_msg = "Error:デバイスの位置情報が利用できません。";
+                    break;
+                case 3:
+                    err_msg = "Error:タイムアウトしました。";
+                    break;
+            }
+            document.getElementById("msg_error").innerHTML = err_msg;
+            document.getElementById("tx_latitude").innerHTML = "---";
+            document.getElementById("tx_longitude").innerHTML = "---";
+            document.getElementById("tx_altitude").innerHTML = "---";
+            document.getElementById("tx_accuracy").innerHTML = "---";
+            document.getElementById("tx_altitudeAccuracy").innerHTML = "---";
+            document.getElementById("tx_heading").innerHTML = "---";
+            document.getElementById("tx_speed").innerHTML = "---";
+        }
+
+        //緯度を整形する
+        function MyLatitude(latitude) {
+            var NorS;
+            var Lat_Deg;
+            var Lat_Min;
+            var Lat_Sec;
+            var Lat_mSec;
+            //北緯か南緯
+            if (latitude > 0.0)
+                NorS = "北緯";
+            else
+                NorS = "南緯";
+            latitude = Math.abs(latitude); //絶対値化
+            Lat_Deg = Math.floor(latitude); //度
+            Lat_Min = Math.floor((latitude - Lat_Deg) * 60); //分
+            Lat_Sec = Math.floor((latitude - Lat_Deg - Lat_Min / 60) * 3600); //秒
+            Lat_mSec = Math.floor((latitude - Lat_Deg - Lat_Min / 60 - Lat_Sec / 3600) * 3600000); //ミリ秒
+            if (Lat_mSec < 10) Lat_mSec = "00" + Lat_mSec;
+            else if (Lat_mSec < 100) Lat_mSec = "0" + Lat_mSec;
+
+            return NorS + Lat_Deg + "度" + Lat_Min + "分" + Lat_Sec + "秒" + Lat_mSec;
+        }
+        //経度を整形する
+        function MyLongitude(longitude) {
+            var EorW;
+            var Lon_Deg;
+            var Lon_Min;
+            var Lon_Sec;
+            var Lon_mSec;
+            //東経か西経か
+            if (longitude > 0.0)
+                EorW = "東経";
+            else
+                EorW = "西経";
+            longitude = Math.abs(longitude); //絶対値化
+            Lon_Deg = Math.floor(longitude); //度
+            Lon_Min = Math.floor((longitude - Lon_Deg) * 60); //分
+            Lon_Sec = Math.floor((longitude - Lon_Deg - Lon_Min / 60) * 3600); //秒
+            Lon_mSec = Math.round((longitude - Lon_Deg - Lon_Min / 60 - Lon_Sec / 3600) * 3600000); //ミリ秒
+            if (Lon_mSec < 10) Lon_mSec = "00" + Lon_mSec;
+            else if (Lon_mSec < 100) Lon_mSec = "0" + Lon_mSec;
+
+            return EorW + Lon_Deg + "度" + Lon_Min + "分" + Lon_Sec + "秒" + Lon_mSec;
+        }
+        //方角を整形する
+        function MyHeading(heading) {
+            var head16;
+
+            if (heading < 11.25)
+                head16 = "北";
+            else if (heading < 22.5 + 11.25)
+                head16 = "北北東";
+            else if (heading < 22.5 * 2 + 11.25)
+                head16 = "北東";
+            else if (heading < 22.5 * 3 + 11.25)
+                head16 = "東北東";
+            else if (heading < 22.5 * 4 + 11.25)
+                head16 = "東";
+            else if (heading < 22.5 * 5 + 11.25)
+                head16 = "東南東";
+            else if (heading < 22.5 * 6 + 11.25)
+                head16 = "南東";
+            else if (heading < 22.5 * 7 + 11.25)
+                head16 = "南南東";
+            else if (heading < 22.5 * 8 + 11.25)
+                head16 = "南";
+            else if (heading < 22.5 * 9 + 11.25)
+                head16 = "南南西";
+            else if (heading < 22.5 * 10 + 11.25)
+                head16 = "南西";
+            else if (heading < 22.5 * 11 + 11.25)
+                head16 = "西南西";
+            else if (heading < 22.5 * 12 + 11.25)
+                head16 = "西";
+            else if (heading < 22.5 * 13 + 11.25)
+                head16 = "西北西";
+            else if (heading < 22.5 * 14 + 11.25)
+                head16 = "北西";
+            else if (heading < 22.5 * 15 + 11.25)
+                head16 = "北北西";
+            else if (heading < 22.5 * 16 + 11.25)
+                head16 = "北";
+            else
+                head16 = "異常値";
+
+
+            return head16 + "（方位角：" + Math.round(heading) + "deg.）"
+        }
+        //速さを整形する
+        function MySpeed(speed) {
+            return (speed * 3.6).toFixed(2) + "km/h　" + (speed).toFixed(2) + "m/s　" + (speed / 0.44704).toFixed(2) + "mph　" + (speed * 3600 / 1852).toFixed(2) + "knot";
+        }
+
+
+        function cmanMapUpdate(argLatitude, argLongitude) {
+
+            // --- 緯度・経度の編集 ------------------------------------------------------------------------
+            var wCenterPos = new google.maps.LatLng(argLatitude, argLongitude);
+
+            // --- オプション編集 --------------------------------------------------------------------------
+            var wOptions = {
+                zoom: 16, // ズーム率
+                center: wCenterPos, // 地図中央の座標
+                mapTypeId: google.maps.MapTypeId.ROADMAP // 通常の地図
+            };
+
+            // --- GoogleMapを表示 -------------------------------------------------------------------------
+            var wGoogleMap = new google.maps.Map(document.getElementById("watMap"), wOptions);
+
+            // --- 座標にマーカーを付ける ------------------------------------------------------------------
+            var wMarker = new google.maps.Marker({
+                position: wCenterPos,
+                map: wGoogleMap
+            });
+        }
+    </script>
 </body>
 
 </html>

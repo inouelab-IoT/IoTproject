@@ -76,7 +76,7 @@
 
         // MQTT Subscribe でメッセージがあった時の処理
         function onMessage(message) {
-            data.messages.push("Topic : " + clientId + "/" + SUB_TOPIC + " ,Message :  " + message.payloadString);
+            data.messages.push("Topic : " + message.destinationName + " ,Message :  " + message.payloadString);
             console.log("message received: " + message.payloadString);
         }
 

@@ -1,4 +1,5 @@
-<html lang="ja">
+<!DOCTYPE html>
+<html>
 
 <head>
     <!--外部ライブラリの読み込み-->
@@ -14,14 +15,10 @@
 
 <body>
     <!--表示-->
-    <input type="text" name="sub_topic" id="sub_topic" value="#">
-    <button id="sub">Subscribe</button>
-    <ul id="chat">
+    <h4>Publish</h4>
+    <ul id="pub_data">
         <li v-for="m in messages">{{ m }}</li>
     </ul>
-    <input type="text" name="pub_topic" id="pub_topic" value="test" placeholder="Input a publish topic here...">
-    <input type="text" name="say" id="say" placeholder="Input a message here...">
-    <button id="send">Send</button>
 
     <!--処理-->
     <script type="text/javascript">
@@ -31,9 +28,15 @@
         var awsIotEndpoint = 'anmwgx2rsnw45-ats.iot.ap-northeast-1.amazonaws.com'; // Require 'lowercamelcase'!!
         var AWS_ACCESS_KEY = 'YOUR_AWS_ACCESS_KEY'; //
         var AWS_SECRET_ACCESS_KEY = 'YOUR_AWS_SECRET_ACCESS_KEY';
-        var PUB_TOPIC = "test"
-        var SUB_TOPIC = "#"
+        var PUB_TOPIC = "GPS"
 
+        var nowlatitude; // 経度
+        var nowlongitude; //緯度
+        var nowaltitude; //高さ
+        var nowaccuracy; //経度緯度の正確性
+        var nowaltitudeAccuracy; //高さの正確性
+        var nowheading; //向いてる方向
+        var nowspeed; //移動速度
 
         //表示の処理
         var data = {
@@ -45,26 +48,93 @@
             data: data
         });
 
-        document.getElementById('send').addEventListener('click', function(e) {
+        //GPSの処理
+        if (navigator.geolocation) {
+            //Geolocation APIを利用できる環境向けの処理
+            flag_sup = 1;
+            document.write("<p><span class='info'>エラー情報</span></p>");
+            document.write("<p style='margin-left: 1em;' id='msg_error'>---</p>");
+            var geo_options = {
+                enableHighAccuracy: true,
+                maximumAge: 2000,
+                timeout: 30000
+            };
+            watchID_GPS = navigator.geolocation.watchPosition(successCallback, errorCallback, geo_options);
+            //navigator.geolocation.getCurrentPosition(successCallback, errorCallback, geo_options);
+
+        } else {
+            document.write("<p><span class='info'>エラー情報</span></p>");
+            document.write("<p style='margin-left: 1em;' id='msg_error'>このブラウザはGeolocation APIに対応していません。</p>");
+        }
+
+        //Geolocation API成功時のコールバック関数
+        function successCallback(position) {
+            console.log(position);
+            if (position.coords.latitude)
+                nowlatitude = position.coords.latitude;
+            else
+                nowlatitude = NaN;
+            if (position.coords.longitude)
+                nowlongitude = position.coords.longitude;
+            else
+                nowlongitude = NaN;
+            if (position.coords.altitude)
+                nowaltitude = position.coords.altitude;
+            else
+                nowaltitude = NaN;
+            if (position.coords.accuracy)
+                nowaccuracy = position.coords.accuracy;
+            else
+                nowaccuracy = NaN;
+            if (position.coords.altitudeAccuracy)
+                nowaltitudeAccuracy = position.coords.altitudeAccuracy;
+            else
+                nowaltitudeAccuracy = NaN
+            if (position.coords.heading)
+                nowheading = position.coords.heading;
+            else
+                nowheading = NaN;
+            if (position.coords.speed)
+                nowspeed = position.coords.speed;
+            else
+                nowspeed = NaN;
+
+        }
+        //Geolocation APIエラー時のコールバック関数
+        function errorCallback(error) {
+            var err_msg = "";
+            switch (error.code) {
+                case 1:
+                    err_msg = "Error:位置情報の取得が許可がされていません。";
+                    break;
+                case 2:
+                    err_msg = "Error:デバイスの位置情報が利用できません。";
+                    break;
+                case 3:
+                    err_msg = "Error:タイムアウトしました。";
+                    break;
+            }
+            console.log(err_msg)
+        }
+
+        setInterval(publish_GPS, 1000)
+            // MQTTの処理
+        function publish_GPS() {
             var time = moment.utc();
             var dateStamp = time.format('YYYYMMDD');
             var date = dateStamp + 'T' + time.format('HHmmss') + 'Z';
-
-            var say = document.getElementById('say');
-            PUB_TOPIC = document.getElementById('pub_topic').value;
             var sendMes = {
-                messages: say.value,
+                messages: {
+                    latitude: nowlatitude,
+                    longitude: nowlongitude,
+                    altitude: nowaltitude
+                },
                 sender: deviceName,
                 date: date
             }
             send(JSON.stringify(sendMes));
             say.value = '';
-        });
-
-        document.getElementById("sub").addEventListener('click', function(e) {
-            SUB_TOPIC = document.getElementById('sub_topic').value;
-            subscribe();
-        });
+        };
 
         // MQTT Publish の処理 
         function send(content) {
@@ -72,12 +142,7 @@
             message.destinationName = clientId + "/" + PUB_TOPIC;
             client.send(message);
             console.log("sent");
-        }
-
-        // MQTT Subscribe でメッセージがあった時の処理
-        function onMessage(message) {
-            data.messages.push("Topic : " + clientId + "/" + SUB_TOPIC + " ,Message :  " + message.payloadString);
-            console.log("message received: " + message.payloadString);
+            data.messages.push("Topic : " + clientId + "/" + PUB_TOPIC + " ,Message :  " + message.payloadString);
         }
 
         //署名作成
@@ -142,17 +207,16 @@
             useSSL: true,
             timeout: 3,
             mqttVersion: 4,
-            onSuccess: subscribe
+            onSuccess: onSuccess
         };
         client.connect(connectOptions);
-        client.onMessageArrived = onMessage;
+        //        client.onMessageArrived = onMessage;
         client.onConnectionLost = function(e) {
             console.log(e)
         };
 
-        function subscribe() {
-            client.subscribe(clientId + "/" + SUB_TOPIC);
-            console.log("subscribed");
+        function onSuccess() {
+            console.log("connect Success");
         }
     </script>
 </body>

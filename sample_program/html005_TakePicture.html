@@ -38,19 +38,7 @@
             var h = video.offsetHeight;
             canvas.setAttribute('width', w);
             canvas.setAttribute('height', h)
-
             ctx.drawImage(video, 0, 0, w, h);
-            canvas.toBlob(function(blob) {
-                canvas.src = window.URL.createObjectURL(blob);
-
-                //var request = new XMLHttpRequest();
-                //request.open('POST', '/avatars');
-                //request.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
-                //var formData = new FormData();
-                //formData.append('avatar[image]', blob, '<%= Time.now.strftime("%Y%m%d%H%M") %>}.jpeg');
-                //formData.append('avatar[uuid]', '<%= user.uuid %>');
-                //request.send(formData);
-            }, 'image/jpeg', 0.95);
         });
 
         navigator.mediaDevices.getUserMedia(medias).then(function(stream) {

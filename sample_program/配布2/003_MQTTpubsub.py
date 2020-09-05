@@ -44,7 +44,7 @@ def onSubscribe(client, userdata, message):
     print("====================================")
     if(message.topic== clientId + "/alert/fromDevice"):
         messegeJson=json.loads(message.payload.decode('utf-8'))
-        send(PUB_TOPIC_2, messegeJson)
+        send(PUB_TOPIC_2, messegeJson) #PUB_TOPIC_2 = clientId + "/alert/fromServer" 
 
 def send(topic,message):
     print("= Publish ========================")

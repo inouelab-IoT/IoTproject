@@ -24,7 +24,8 @@ for o in objs.get('Contents'):
     key = o.get('Key')
     if key[-4:]=='.jpg':
         print(key)
-        bucket.download_file(key, os.path.basename(key)) # download
+        os.makedirs(os.path.dirname(key), exist_ok=True)
+        bucket.download_file(key, key) # download
 
 #download
 #bucket.upload_file('DownloadするS3のpath', '保存先のpath')

@@ -1,0 +1,23 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background: #88f;
+    padding: 10px;
+}
+
+footer {
+    background: #88f;
+    padding: 10px;
+}
+
+#title {
+    float: left;
+}
+
+#labsign {
+    float: right;
+    width: 60%;
+}

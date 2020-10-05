@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta HTTP-EQUIV="Content-Type" content="text/html; charset=utf-8" />
+    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.1.12.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.2/moment.min.js" type="text/javascript"></script>
+</head>
+
+<body>
+    <div id=contents　width=95%>
+        <!-- カメラ映像 -->
+        <video id="player" width=100% controls autoplay></video><br>
+
+        <!-- 撮影&アップロード -->
+        <button id="capture">Capture</button><br>
+        <canvas id="snapshot" width=100%></canvas><br>
+    </div>
+
+    <script>
+        var video = document.getElementById('player');
+        var canvas = document.getElementById('snapshot');
+        var captureButton = document.getElementById('capture');
+
+        AWS.config.update({
+            accessKeyId: 'YOUR_ACCESS_KEY',
+            secretAccessKey: 'YOUR_SECRET_KEY'
+        });
+        var awsUserName = "YOUR_USER_NAME"
+        var s3BucketName = "ediot"; //'BUCKET_NAME';
+        var s3RegionName = 'ap-northeast-1'; //東京Region
+
+        var s3 = new AWS.S3({
+            params: {
+                Bucket: s3BucketName,
+                Prefix: awsUserName + '/',
+                Region: s3RegionName
+            }
+        });
+
+        const medias = {
+            audio: false,
+            video: {
+                width: 600,
+                height: 600,
+
+                facingMode: "user", // フロントカメラを利用する
+                //facingMode: {
+                //    exact: "environment"
+                //} // リアカメラを利用する
+            }
+        };
+
+        captureButton.addEventListener('click', function() {
+            var time = moment.utc();
+            var dateStamp = time.format('YYYYMMDD');
+            var date = dateStamp + 'T' + time.format('HHmmss') + 'Z';
+            var ctx = canvas.getContext('2d');
+            var w = video.offsetWidth;
+            var h = video.offsetHeight;
+            canvas.setAttribute('width', w);
+            canvas.setAttribute('height', h)
+            ctx.drawImage(video, 0, 0, w, h);
+
+            canvas.toBlob(function(blob) {
+                canvas.src = window.URL.createObjectURL(blob);
+
+                uploadFile(blob, date + ".jpg");
+            }, 'image/jpeg', 0.95);
+        });
+
+        navigator.mediaDevices.getUserMedia(medias).then(function(stream) {
+            video.srcObject = stream;
+        }).catch(function(error) {
+            console.error('mediaDevice.getUserMedia() error:', error);
+            return;
+        });
+
+        function uploadFile(file, filename) {
+            if (file) {
+                s3.putObject({
+                        Key: awsUserName + '/html009/' + filename,
+                        ContentType: file.type,
+                        Body: file,
+                        ACL: "public-read"
+                    },
+                    function(err, data) {
+                        if (data !== null) {
+                            alert("アップロード成功");
+                        } else {
+                            alert("アップロード失敗");
+                        }
+                    });
+            }
+        }
+    </script>
+</body>
+
+</html>

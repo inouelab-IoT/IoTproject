@@ -1,79 +1,98 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        
-        <!-- site infomation -->
-		<meta name="author" content="kazuki" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"> 
-		<meta name="apple-mobile-web-app-capable" content="yes"> 
-        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-        <link rel="icon" type="image/png" href="/img/icon.png">
-		<link rel="shortcut icon" href="/img/icon.png" />
-		<link rel="apple-touch-icon" href="/img/icon.png" />
-        <title>inouelab_IoT</title>
-        
-        <!-- firebase_SDK -->
-        <script src="/__/firebase/6.2.0/firebase-app.js"></script>
-        <script src="/__/firebase/6.2.0/firebase-auth.js"></script>
-        <script type="text/javascript" src="/js/signin_state.js"></script>  
 
-		<script src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js"></script>
-		<link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css" />
+<head>
+    <meta charset="UTF-8">
 
-		<!-- js & css -->
-		<script type="text/javascript" src="js/ediot_chat.js"></script>
-		<link rel="stylesheet" type="text/css" href="css/ediot_chat.css">
-		   
-	</head>
-	
-	<body>
-        <header>
-            <div align="right">
-                <button id="sign_button" onclick="sign_button()">Sign in</button>
-                <img id="user_icon"  src="/img/no_login_icon.png" width="30" height="30" /><br>
-                <div id="user_name">ユーザ名：ゲスト</div>
-                <div id="user_name">所属グループ : 未所属</div>
-            </div>
+    <!-- site infomation -->
+    <meta name="author" content="kazuki" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="icon" type="image/png" href="/img/icon.png">
+    <link rel="shortcut icon" href="/img/icon.png" />
+    <link rel="apple-touch-icon" href="/img/icon.png" />
+    <title>inouelab_IoT</title>
+
+    <!-- firebase_SDK -->
+    <script src="/__/firebase/6.2.0/firebase-app.js"></script>
+    <script src="/__/firebase/6.2.0/firebase-auth.js"></script>
+    <script src="/__/firebase/6.2.0/firebase-database.js"></script>
+    <script src="/__/firebase/6.2.0/firebase-firestore.js"></script>
+    <script type="text/javascript" src="/js/signin_state.js"></script>
+
+    <script src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css" />
+
+    <!-- aws iot -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.2/moment.min.js" type="text/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/components/core-min.js" type="text/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/components/hmac-min.js" type="text/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/components/sha256-min.js" type="text/javascript"></script>
+    <!--MQTT-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.js" type="text/javascript"></script>
+
+
+    <!-- js & css -->
+    <link rel="stylesheet" type="text/css" href="css/ediot_chat.css">
+    <link rel="stylesheet" type="text/css" href="css/ediot.css">
+
+
+</head>
+
+<body>
+    <header>
+        <div id=title>
             <h1>問い合わせ</h1>
-            <center>
-                <a href="/">
+        </div>
+        <div align="right">
+            <button id="sign_button" onclick="sign_button()">Sign in</button>
+            <img id="user_icon" src="/img/no_login_icon.png" width="30" height="30" /><br>
+            <div id="user_name">ユーザ名：ゲスト</div>
+            グループ名：<input type="text" id="group_name" size="7" placeholder="未所属" onchange="update_group()">
+        </div>
+        <center>
+            <a href="/">
                 <img src="./img/top.jpg" alt="title" width="100%" height="100">
+            </a>
+        </center>
+    </header>
+    <main>
+        <form method="POST" action="/send">
+            <br>
+            <br> 管理者に、メッセージを送ることができます。 送ったメッセージは管理者以外に見られることはありません。 返事が欲しい場合は、個人が特定できるような情報や、連絡先なども本文に一緒に載せてください。
+            <br> ※本文と一緒に呼び名が管理者へ送信されます。
+
+            <br>
+            <br>
+            <center>
+                <br>送信メッセージ<br>
+                <textarea name="sendMes" id="sendMes_area"></textarea>
+                <br>
+                <input type="button" value="送信" onclick="send_Message()">
+                <br>
+                <br>
+                </a>
+                <a href="/">
+                    <button type="button" style="font:20pt MS ゴシック; width:95%; height:15%">トップページへ</button>
                 </a>
             </center>
-        </header>
-        <main>
-			<form method="POST" action="/send">
-				<br>
-				<br>
-				管理者に、メッセージを送ることができます。
-				送ったメッセージは管理者以外に見られることはありません。
-				返事が欲しい場合は、個人が特定できるような情報や、連絡先なども本文に一緒に載せてください。
-				<br>
-				※本文と一緒に呼び名が管理者へ送信されます。
-			
-				<br>
-				<br>
-				<center>
-					<br>送信メッセージ<br>
-					<textarea name="sendMes" id="sendMes_area"></textarea>
-					<br>
-					<input type="button" value="送信（未実装）" onclick="send_Message()">
-					<br>
-					<br>
-					</a>
-					<a href="/">
-					<button type="button" style="font:20pt MS ゴシック; width:95%; height:15%">トップページへ</button>
-					</a>
-				</center>
-			</form>
-        </main>
-		<hr>
-        <footer>
-            <a name="map">■サイトマップ■</a><br>
-            <a href="/EdIoT/ediot_top.html">トップ</a><br>
-            <a href="/EdIoT/ediot_chat.html">問い合わせ</a><br>
-        </footer>
-	</body>
-</html>
+        </form>
+    </main>
+    <hr>
+    <footer>
+        <div id=labsign align="right">
+            <a href="https://www.shibaura-it.ac.jp/" target="_blank">
+                <img src="/img/footer.png" alt="schoolsign" height="60">
+            </a><br> 組込みネットワークシステム研究室
+        </div>
 
+        <a name="map">■サイトマップ■</a><br>
+        <a href="/EdIoT/ediot_top.html">トップ</a><br>
+        <a href="/EdIoT/ediot_chat.html">問い合わせ</a><br>
+    </footer>
+
+</body>
+<script type="text/javascript" src="js/ediot_chat.js"></script>
+
+</html>

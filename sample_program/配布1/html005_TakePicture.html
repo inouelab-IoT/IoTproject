@@ -1,0 +1,53 @@
+<html>
+
+<head>
+    <meta HTTP-EQUIV="Content-Type" content="text/html; charset=utf-8" />
+</head>
+
+<body>
+    <div id=contents　width=95%>
+        <!-- カメラ映像 -->
+        <video id="player" width=100% controls autoplay></video><br>
+
+        <!-- 撮影 -->
+        <button id="capture">Capture</button><br>
+        <canvas id="snapshot" width=100%></canvas><br>
+    </div>
+
+    <script>
+        var video = document.getElementById('player');
+        var canvas = document.getElementById('snapshot');
+        var captureButton = document.getElementById('capture');
+
+        const medias = {
+            audio: false,
+            video: {
+                width: 600,
+                height: 600,
+
+                facingMode: "user", // フロントカメラを利用する
+                //facingMode: {
+                //    exact: "environment"
+                //} // リアカメラを利用する
+            }
+        };
+
+        captureButton.addEventListener('click', function() {
+            var ctx = canvas.getContext('2d');
+            var w = video.offsetWidth;
+            var h = video.offsetHeight;
+            canvas.setAttribute('width', w);
+            canvas.setAttribute('height', h)
+            ctx.drawImage(video, 0, 0, w, h);
+        });
+
+        navigator.mediaDevices.getUserMedia(medias).then(function(stream) {
+            video.srcObject = stream;
+        }).catch(function(error) {
+            console.error('mediaDevice.getUserMedia() error:', error);
+            return;
+        });
+    </script>
+</body>
+
+</html>

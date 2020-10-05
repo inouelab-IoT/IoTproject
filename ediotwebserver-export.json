@@ -1,0 +1,88 @@
+{
+    "admin-users": {
+        "L6DZPegJkKMFj926uF0nNeY2mpU2": true,
+        "pHycMbF3vLPm1X6mwhvGmoFqH2F2": true
+    },
+    "users": {
+        "L6DZPegJkKMFj926uF0nNeY2mpU2": {
+            "groupname": "admin"
+        },
+        "pHycMbF3vLPm1X6mwhvGmoFqH2F2": {
+            "groupname": "admin"
+        }
+    },
+    "chat": {
+        "-MCLgspTJK-wvzEHhdGC": {
+            "name": "Makita Kazuki",
+            "photo_url": "https://lh5.googleusercontent.com/-wOSGaY54bj0/AAAAAAAAAAI/AAAAAAAAAAA/AMZuuckJVIh5kE2U3tAZRjf5OkJpTOpg3A/photo.jpg",
+            "text": "",
+            "user_id": "VQ5rBf3hnFdZn3TD7lBbMqsTB6n2"
+        },
+        "-MCLhBFf-pa8eRCDi33y": {
+            "name": "Makita Kazuki",
+            "photo_url": "https://lh5.googleusercontent.com/-wOSGaY54bj0/AAAAAAAAAAI/AAAAAAAAAAA/AMZuuckJVIh5kE2U3tAZRjf5OkJpTOpg3A/photo.jpg",
+            "text": "げんき？",
+            "user_id": "VQ5rBf3hnFdZn3TD7lBbMqsTB6n2"
+        },
+        "-MCLhCBHomPngQ-aU5EC": {
+            "name": "牧田和樹",
+            "photo_url": "https://lh4.googleusercontent.com/-PmXuK4q9qa4/AAAAAAAAAAI/AAAAAAAAAAA/AMZuuclEkfPIAG-3DSBnLPOFKXxEP3Hh7A/photo.jpg",
+            "text": "だｓs",
+            "user_id": "pHycMbF3vLPm1X6mwhvGmoFqH2F2"
+        },
+        "-MCM9bBPK-opSSEkI4Rz": {
+            "name": "Makita Kazuki",
+            "photo_url": "https://lh5.googleusercontent.com/-wOSGaY54bj0/AAAAAAAAAAI/AAAAAAAAAAA/AMZuuckJVIh5kE2U3tAZRjf5OkJpTOpg3A/photo.jpg",
+            "text": "たまや",
+            "user_id": "VQ5rBf3hnFdZn3TD7lBbMqsTB6n2"
+        },
+        "-MCuG8ddvrPSPYDS243D": {
+            "name": "牧田和樹",
+            "photo_url": "https://lh4.googleusercontent.com/-PmXuK4q9qa4/AAAAAAAAAAI/AAAAAAAAAAA/AMZuuclEkfPIAG-3DSBnLPOFKXxEP3Hh7A/photo.jpg",
+            "text": "",
+            "user_id": "pHycMbF3vLPm1X6mwhvGmoFqH2F2"
+        },
+        "-MCuKBKrlsb4KrnCXDkQ": {
+            "name": "Sekiguchi Shiryu",
+            "photo_url": "https://lh4.googleusercontent.com/-DTDlAVLwUv0/AAAAAAAAAAI/AAAAAAAAAAA/AMZuucn7FiVDd6zUSrMnW5GLOInZAaK4_Q/photo.jpg",
+            "text": "こんにちは",
+            "user_id": "eNx8udLqOCVmGekbBZuuTbM0aZT2"
+        },
+        "-MCuKFpPf7fo0_xv553m": {
+            "name": "Makita Kazuki",
+            "photo_url": "https://lh5.googleusercontent.com/-wOSGaY54bj0/AAAAAAAAAAI/AAAAAAAAAAA/AMZuuckJVIh5kE2U3tAZRjf5OkJpTOpg3A/photo.jpg",
+            "text": "げんき？",
+            "user_id": "VQ5rBf3hnFdZn3TD7lBbMqsTB6n2"
+        },
+        "-MCuyTHKLq1RpTvpuc5J": {
+            "text": "[2020/7/17] test\n[2020/7/23] βテdsストihi"
+        }
+    },
+    "news": {
+        "-MCv1or2dmRo5BKtYV0i": {
+            "date": 1595497206024,
+            "text": "[2020/7/17] test post\n[2020/7/23] βテストstart",
+            "user_id": "pHycMbF3vLPm1X6mwhvGmoFqH2F2"
+        },
+        "-MCvX2zFu1PIkFyCxcPj": {
+            "date": 1595505394098,
+            "text": "[2020/7/17] test post\n[2020/7/23] βテストstart",
+            "user_id": "pHycMbF3vLPm1X6mwhvGmoFqH2F2"
+        },
+        "-MCvX3JjNVybaiLLMiSl": {
+            "date": 1595505395473,
+            "text": "[2020/7/17] test post\n[2020/7/23] βテストstart",
+            "user_id": "pHycMbF3vLPm1X6mwhvGmoFqH2F2"
+        },
+        "-MCvX3OazoZTalitdx2M": {
+            "date": 1595505395785,
+            "text": "[2020/7/17] test post\n[2020/7/23] βテストstart",
+            "user_id": "pHycMbF3vLPm1X6mwhvGmoFqH2F2"
+        },
+        "-MCvX3Sa9ArnBPxUvO97": {
+            "date": 1595505396041,
+            "text": "[2020/7/17] test post\n[2020/7/23] βテストstart",
+            "user_id": "pHycMbF3vLPm1X6mwhvGmoFqH2F2"
+        }
+    }
+}

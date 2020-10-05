@@ -1,69 +1,107 @@
 <html>
-    <head>
-        <meta charset="UTF-8">
-        
-        <!-- site infomation -->
-		<meta name="author" content="kazuki" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"> 
-		<meta name="apple-mobile-web-app-capable" content="yes"> 
-        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-        <link rel="icon" type="image/png" href="/img/icon.png">
-		<link rel="shortcut icon" href="/img/icon.png" />
-		<link rel="apple-touch-icon" href="/img/icon.png" />
-        <title>inouelab_IoT</title>
-        
-        <!-- firebase_SDK -->
-        <script src="/__/firebase/6.2.0/firebase-app.js"></script>
-        <script src="/__/firebase/6.2.0/firebase-auth.js"></script>
-        <script type="text/javascript" src="/js/signin_state.js"></script>  
 
-		<script src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js"></script>
-		<link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css" />
+<head>
+    <meta charset="UTF-8">
 
-   		<!-- js & css -->
-	   <script type="text/javascript" src="js/ediot_run.js"></script>
-	   <link rel="stylesheet" type="text/css" href="css/run.css">
-	</head>  
-	  
-	<body>
-		<header>
-            <div align="right">
-                <button id="sign_button" onclick="sign_button()">Sign in</button>
-                <img id="user_icon"  src="/img/no_login_icon.png" width="30" height="30" /><br>
-                <div id="user_name">ユーザ名：ゲスト</div>
-                <div id="user_name">所属グループ : 未所属</div>
-            </div>
+    <!-- site infomation -->
+    <meta name="author" content="kazuki" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="icon" type="image/png" href="/img/icon.png">
+    <link rel="shortcut icon" href="/img/icon.png" />
+    <link rel="apple-touch-icon" href="/img/icon.png" />
+    <title>inouelab_IoT</title>
+
+    <!-- firebase_SDK -->
+    <script src="/__/firebase/6.2.0/firebase-app.js"></script>
+    <script src="/__/firebase/6.2.0/firebase-auth.js"></script>
+    <script src="/__/firebase/6.2.0/firebase-database.js"></script>
+    <script src="/__/firebase/6.2.0/firebase-storage.js"></script>
+    <script type="text/javascript" src="/js/signin_state.js"></script>
+    <script src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css" />
+
+    <!-- js & css -->
+    <script type="text/javascript" src="js/ediot_run.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="css/ediot.css">
+    <link rel="stylesheet" type="text/css" href="css/run.css">
+</head>
+
+<body>
+    <header>
+        <div id=title>
             <h1>実行</h1>
-			<center>
-				<a href="/">
-				<img src="./img/top.jpg" alt="title" width="100%" height="100">
-				</a>
-			</center>
-        </header>
-		<hr>
-		<main>
-			<br>
-			〜デバイスリスト〜<br>
-			<button id="startstop" onclick="startstop()">測定開始</button>
-			<br>
+        </div>
+        <div align="right">
+            <button id="sign_button" onclick="sign_button()">Sign in</button>
+            <img id="user_icon" src="/img/no_login_icon.png" width="30" height="30" /><br>
+            <div id="user_name">ユーザ名：ゲスト</div>
+            グループ名：<input type="text" id="group_name" size="7" placeholder="未所属" onchange="update_group()">
+        </div>
+        <center>
+            <a href="/">
+                <img src="./img/top.jpg" alt="title" width="100%" height="100">
+            </a>
+        </center>
+    </header>
+    <hr>
+    <main>
+        <br> javascript or HTML ファイルのみ実行可<br>
+        <h3> 〜デバイスリスト〜</h3>
+        folder :
+        <select id="src_dir" onchange="open_srclist()">
+            <option value="----">----</option>
+            <option value="sample">sample</option>
+            <option value="user">user</option>
+            <option value="group">group</option>
+        </select><br> file :
+        <select id="src_list">
+            <option value="----">----</option>
+        </select>
+        <h4></h4><var id="scriptstate"></var></h4>
+        <br>
+        <button id="startstop" onclick="startstop()">実行</button>
+        <br>
 
-			<br>console log<br>
-			<textarea readonly id = "console_log" cols="50" rows="5"　width="60%"></textarea>
-			<input type="button" value="クリア" onclick="console_clear()">
+        <h4>console log</h4>
+        <textarea readonly id="console_log"></textarea>
+        <input type="button" value="クリア" onclick="console_clear()">
 
-			<hr>
-			<a name="other-webapp">
-			<font size="4">■その他アプリ■</font><br>
-			
-			・<a href="/EdIoT/device-motion.html">モーションキャプチャ</a><br>
+        <br>
 
-		</main>
-		<hr>
-        <footer>
-            <a name="map">■サイトマップ■</a><br>
-            <a href="/EdIoT/ediot_top.html">トップ</a><br>
-            <a href="/EdIoT/ediot_chat.html">問い合わせ</a><br>
-        </footer>
-	</body>
+        <br>
+        <h4>free space</h4>
+        （&lt;div id = "free_space"&gt;&lt;/div&gt;） この要素を使って入力 html5 言語<br>
+        <div id="free_space"></div>
+
+        <br>
+
+
+        <hr>
+        <a name="other-webapp">
+            <font size="4">■その他アプリ■</font><br>
+            <ul>
+                <li><a href="/EdIoT/other_webapp/device-motion.html">モーションキャプチャ</a></li>
+                <li><a href="/EdIoT/other_webapp/info_sensor.html">センサ情報</a></li>
+                <li><a href="/EdIoT/other_webapp/face_detect.html">顔検出</a></li>
+            </ul>
+
+    </main>
+    <hr>
+    <footer>
+        <div id=labsign align="right">
+            <a href="https://www.shibaura-it.ac.jp/" target="_blank">
+                <img src="/img/footer.png" alt="schoolsign" width="120">
+            </a><br> 組込みネットワークシステム研究室
+        </div>
+
+        <a name="map">■サイトマップ■</a><br>
+        <a href="/EdIoT/ediot_top.html">トップ</a><br>
+        <a href="/EdIoT/ediot_chat.html">問い合わせ</a><br>
+    </footer>
+    <div id=addscript></div>
+</body>
+
 </html>
-

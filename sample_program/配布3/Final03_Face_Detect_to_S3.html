@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Face Detect to S3</title>
+    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.1.12.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.2/moment.min.js" type="text/javascript"></script>
+
+</head>
+
+<body onload="init()">
+    <video id="video" autoplay onloadedmetadata="onPlay()"></video>
+    <p id="message"></p>
+    <canvas id="snapshot" width=100%></canvas><br>
+
+
+    <script src="/js/face-api.js"></script>
+    <script>
+        const video = document.getElementById("video");
+        var canvas = document.getElementById('snapshot');
+
+        ////////////////////////////////////////////////////////////////////////
+        /////                        ここを編集                             /////
+        ////////////////////////////////////////////////////////////////////////
+        var deviceName = "SENDER"; //グループメンバーの名前
+        var clientId = "YOUR_USER_NAME"; // グループ名
+        var AWS_ACCESS_KEY = 'YOUR_ACCESS_KEY'; //　アクセスキー
+        var AWS_SECRET_ACCESS_KEY = 'YOUR_SECRET_ACCESS_KEY'; // シークレットキー 
+        ////////////////////////////////////////////////////////////////////////
+
+        AWS.config.update({
+            accessKeyId: AWS_ACCESS_KEY, //'YOUR_ACCESS_KEY',
+            secretAccessKey: AWS_SECRET_ACCESS_KEY //'YOUR_SECRET_KEY'
+        });
+        var awsUserName = clientId; //"YOUR_GROUP_NAME"
+        var s3BucketName = "ediot"; //'BUCKET_NAME';
+        var s3RegionName = 'ap-northeast-1'; //東京Region
+
+        var s3 = new AWS.S3({
+            params: {
+                Bucket: s3BucketName,
+                Prefix: awsUserName + '/',
+                Region: s3RegionName
+            }
+        })
+
+        const init = async() => {
+            // Webカメラ初期化
+            const stream = await navigator.mediaDevices.getUserMedia({
+                audio: false,
+                video: {
+                    width: 600,
+                    height: 600
+                }
+            });
+
+            try {
+                video.srcObject = stream;
+            } catch (err) {
+                video.src = window.URL.createObjectURL(stream);
+            }
+            // (1)モデル読み込み　※フォルダを指定
+            await faceapi.nets.tinyFaceDetector.load("/models/");
+        }
+
+        const onPlay = () => {
+            const message = document.getElementById('message')
+            const inputSize = 512; // 認識対象のサイズ
+            const scoreThreshold = 0.5; // 数値が高いほど精度が高くなる（〜0.9）
+            // (2)オプション設定
+            const options = new faceapi.TinyFaceDetectorOptions({
+                inputSize,
+                scoreThreshold
+            })
+            const detectInterval = setInterval(async() => {
+                // (3)顔認識処理
+                const result = await faceapi.detectSingleFace(
+                    video,
+                    options
+                );
+
+                if (result) {
+                    message.textContent = "認識されてます";
+                    var time = moment.utc();
+                    var dateStamp = time.format('YYYYMMDD');
+                    var date = dateStamp + 'T' + time.format('HHmmss') + 'Z';
+                    var ctx = canvas.getContext('2d');
+                    var w = video.offsetWidth;
+                    var h = video.offsetHeight;
+                    canvas.setAttribute('width', w);
+                    canvas.setAttribute('height', h)
+                    ctx.drawImage(video, 0, 0, w, h);
+
+                    canvas.toBlob(function(blob) {
+                        canvas.src = window.URL.createObjectURL(blob);
+
+                        uploadFile(blob, date + ".jpg");
+                    }, 'image/jpeg', 0.95);
+                } else {
+                    message.textContent = "認識されていません";
+                }
+            }, 500);
+        }
+
+        function uploadFile(file, filename) {
+            if (file) {
+                s3.putObject({
+                        Key: awsUserName + '/facedetect/' + deviceName + '/' + filename,
+                        ContentType: file.type,
+                        Body: file,
+                        ACL: "authenticated-read"
+                    },
+                    function(err, data) {
+                        if (data !== null) {
+                            console.log("アップロード成功");
+                        } else {
+                            console.log("アップロード失敗");
+                        }
+                    });
+            }
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+
+    <!-- site infomation -->
+    <meta name="author" content="kazuki" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <link rel="icon" type="image/png" href="/img/icon.png" />
+    <link rel="shortcut icon" href="/img/icon.png" />
+    <link rel="apple-touch-icon" href="/img/icon.png" />
+    <title>inouelab_IoT</title>
+
+    <!-- firebase_SDK -->
+    <script src="/__/firebase/6.2.0/firebase-app.js"></script>
+    <script src="/__/firebase/6.2.0/firebase-auth.js"></script>
+    <script src="/__/firebase/6.2.0/firebase-database.js"></script>
+    <script type="text/javascript" src="/js/signin_state.js"></script>
+    <script src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css" />
+
+    <!-- js & css -->
+    <link rel="stylesheet" type="text/css" href="css/ediot.css">
+    <script src="/__/firebase/6.2.0/firebase-firestore.js"></script>
+
+</head>
+
+<body>
+    <header>
+        <div id=title>
+            <h1>コミュ</h1>
+        </div>
+        <div align="right">
+            <button id="sign_button" onclick="sign_button()">Sign in</button>
+            <img id="user_icon" src="/img/no_login_icon.png" width="30" height="30" /><br>
+            <div id="user_name">ユーザ名：ゲスト</div>
+            グループ名：<input type="text" id="group_name" size="7" placeholder="未所属" onchange="update_group()">
+        </div>
+        <center>
+            <a href="/">
+                <img src="./img/top.jpg" alt="title" width="100%" height="100">
+            </a>
+        </center>
+    </header>
+
+
+    <main>
+        <span>チャットルーム：</span>
+        <select id="chat_group">
+            <option value="All">全体</option><!--ToDo:valueを正しい値（id）にセット-->
+            <!--ToDo:valueをグループIDにして追加や移動するjavascriptを書く-->
+        </select>
+        <form id="input_form">
+            <input type="text" id="input_text" size="50" placeholder="コメント">
+            <button type="submit" id="send_btn">SEND</button>
+            <hr>
+            <div id="chat_area"></div>
+        </form>
+    </main>
+
+    <footer>
+        <div id=labsign align="right">
+            <a href="https://www.shibaura-it.ac.jp/" target="_blank">
+                <img src="/img/footer.png" alt="schoolsign" height="60">
+            </a><br> 組込みネットワークシステム研究室
+        </div>
+
+        <a name="map">■サイトマップ■</a><br>
+        <a href="/EdIoT/ediot_top.html">トップ</a><br>
+        <a href="/EdIoT/ediot_chat.html">問い合わせ</a><br>
+    </footer>
+
+
+</body>
+<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+<script src="js/ediot_comu.js"></script>
+
+</html>

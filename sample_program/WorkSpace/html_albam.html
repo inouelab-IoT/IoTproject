@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!--外部ライブラリの読み込み-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/1.0.16/vue.min.js" type="text/javascript"></script>
+    <!--署名の生成で使用-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.2/moment.min.js" type="text/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/components/core-min.js" type="text/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/components/hmac-min.js" type="text/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/components/sha256-min.js" type="text/javascript"></script>
+    <!--MQTT-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.js" type="text/javascript"></script>
+    <!--S3-->
+    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.1.12.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.2/moment.min.js" type="text/javascript"></script>
+</head>
+
+<body>
+    <!--表示-->
+    <h4>Publish</h4>
+    <ul id="pub_data">
+        <li v-for="m in messages">{{ m }}</li>
+    </ul>
+    <div id=contents　width=95%>
+        <!-- カメラ映像 -->
+        <video id="player" width=100% controls autoplay></video><br>
+
+        <!-- 撮影&アップロード -->
+        <button id="capture">Capture</button><br>
+        <canvas id="snapshot" width=100%></canvas><br>
+    </div>
+
+    <!--処理-->
+    <script type="text/javascript">
+        var clientId = "inouelabiot"; // "YOUR_USER_NAME"
+        var deviceName = "notepc";
+        var awsRegion = 'ap-northeast-1'; // Your Region
+        var awsIotEndpoint = 'anmwgx2rsnw45-ats.iot.ap-northeast-1.amazonaws.com'; // Require 'lowercamelcase'!!
+        var AWS_ACCESS_KEY = 'AKIA34MKVHJNJI7DNDW4'; //
+        var AWS_SECRET_ACCESS_KEY = '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';
+        var PUB_TOPIC = "albam";
+
+        var loopTime = 1000; //MQTT Publishする間隔 （ms）
+
+        var nowlatitude; // 経度
+        var nowlongitude; //緯度
+        var nowaltitude; //高さ
+        var nowaccuracy; //経度緯度の正確性
+        var nowaltitudeAccuracy; //高さの正確性
+        var nowheading; //向いてる方向
+        var nowspeed; //移動速度
+
+        var video = document.getElementById('player');
+        var canvas = document.getElementById('snapshot');
+        var captureButton = document.getElementById('capture');
+
+        AWS.config.update({
+            accessKeyId: AWS_ACCESS_KEY, //'YOUR_ACCESS_KEY',
+            secretAccessKey: AWS_SECRET_ACCESS_KEY //'YOUR_SECRET_KEY'
+        });
+        var awsUserName = clientId; //"YOUR_GROUP_NAME"
+        var s3BucketName = "ediot"; //'BUCKET_NAME';
+        var s3RegionName = 'ap-northeast-1'; //東京Region
+
+        var s3 = new AWS.S3({
+            params: {
+                Bucket: s3BucketName,
+                Prefix: awsUserName + '/',
+                Region: s3RegionName
+            }
+        });
+
+        //表示の処理
+        var data = {
+            messages: []
+        };
+
+        new Vue({
+            el: '#pub_data',
+            data: data
+        });
+
+
+        const medias = {
+            audio: false,
+            video: {
+                width: 600,
+                height: 600,
+
+                facingMode: "user", // フロントカメラを利用する
+                //facingMode: {
+                //    exact: "environment"
+                //} // リアカメラを利用する
+            }
+        };
+
+        captureButton.addEventListener('click', function() {
+            var time = moment.utc();
+            var dateStamp = time.format('YYYYMMDD');
+            var date = dateStamp + 'T' + time.format('HHmmss') + 'Z';
+            var ctx = canvas.getContext('2d');
+            var w = video.offsetWidth;
+            var h = video.offsetHeight;
+            canvas.setAttribute('width', w);
+            canvas.setAttribute('height', h)
+            ctx.drawImage(video, 0, 0, w, h);
+
+            filename = date + ".jpg";
+            canvas.toBlob(function(blob) {
+                canvas.src = window.URL.createObjectURL(blob);
+
+                uploadFile(blob, filename);
+            }, 'image/jpeg', 0.95);
+
+            var key = awsUserName + '/albam/' + filename;
+            publish_albam(key);
+        });
+
+        navigator.mediaDevices.getUserMedia(medias).then(function(stream) {
+            video.srcObject = stream;
+        }).catch(function(error) {
+            console.error('mediaDevice.getUserMedia() error:', error);
+            return;
+        });
+
+        function uploadFile(file, filename) {
+            if (file) {
+                s3.putObject({
+                        Key: awsUserName + '/albam/' + filename,
+                        ContentType: file.type,
+                        Body: file,
+                        ACL: "public-read"
+                    },
+                    function(err, data) {
+                        if (data !== null) {
+                            alert("アップロード成功");
+                        } else {
+                            alert("アップロード失敗");
+                        }
+                    });
+            }
+        }
+
+        //GPSの処理
+        if (navigator.geolocation) {
+            //Geolocation APIを利用できる環境向けの処理
+            flag_sup = 1;
+            document.write("<p><span class='info'>エラー情報</span></p>");
+            document.write("<p style='margin-left: 1em;' id='msg_error'>---</p>");
+            var geo_options = {
+                enableHighAccuracy: true,
+                maximumAge: 2000,
+                timeout: 30000
+            };
+            watchID_GPS = navigator.geolocation.watchPosition(successCallback, errorCallback, geo_options);
+            //navigator.geolocation.getCurrentPosition(successCallback, errorCallback, geo_options);
+
+        } else {
+            document.write("<p><span class='info'>エラー情報</span></p>");
+            document.write("<p style='margin-left: 1em;' id='msg_error'>このブラウザはGeolocation APIに対応していません。</p>");
+        }
+
+        //Geolocation API成功時のコールバック関数
+        function successCallback(position) {
+            console.log(position);
+            if (position.coords.latitude)
+                nowlatitude = position.coords.latitude;
+            else
+                nowlatitude = NaN;
+            if (position.coords.longitude)
+                nowlongitude = position.coords.longitude;
+            else
+                nowlongitude = NaN;
+            if (position.coords.altitude)
+                nowaltitude = position.coords.altitude;
+            else
+                nowaltitude = NaN;
+            if (position.coords.accuracy)
+                nowaccuracy = position.coords.accuracy;
+            else
+                nowaccuracy = NaN;
+            if (position.coords.altitudeAccuracy)
+                nowaltitudeAccuracy = position.coords.altitudeAccuracy;
+            else
+                nowaltitudeAccuracy = NaN
+            if (position.coords.heading)
+                nowheading = position.coords.heading;
+            else
+                nowheading = NaN;
+            if (position.coords.speed)
+                nowspeed = position.coords.speed;
+            else
+                nowspeed = NaN;
+
+        }
+        //Geolocation APIエラー時のコールバック関数
+        function errorCallback(error) {
+            var err_msg = "";
+            switch (error.code) {
+                case 1:
+                    err_msg = "Error:位置情報の取得が許可がされていません。";
+                    break;
+                case 2:
+                    err_msg = "Error:デバイスの位置情報が利用できません。";
+                    break;
+                case 3:
+                    err_msg = "Error:タイムアウトしました。";
+                    break;
+            }
+            console.log(err_msg)
+        }
+
+
+        // MQTTの処理
+        function publish_albam(key) {
+            var time = moment.utc();
+            var dateStamp = time.format('YYYYMMDD');
+            var date = dateStamp + 'T' + time.format('HHmmss') + 'Z';
+            var sendMes = {
+                messages: {
+                    latitude: nowlatitude,
+                    longitude: nowlongitude,
+                    altitude: nowaltitude,
+                    photourl: key
+                },
+                sender: deviceName,
+                date: date
+            }
+            send(JSON.stringify(sendMes));
+            sendMes = {};
+        };
+
+        // MQTT Publish の処理 
+        function send(content) {
+            var message = new Paho.MQTT.Message(content);
+            message.destinationName = clientId + "/" + PUB_TOPIC;
+            client.send(message);
+            console.log("sent");
+            data.messages.push("Topic : " + clientId + "/" + PUB_TOPIC + " ,Message :  " + message.payloadString);
+        }
+
+        //署名作成
+        function SigV4Utils() {}
+
+        SigV4Utils.sign = function(key, msg) {
+            var hash = CryptoJS.HmacSHA256(msg, key);
+            return hash.toString(CryptoJS.enc.Hex);
+        };
+
+        SigV4Utils.sha256 = function(msg) {
+            var hash = CryptoJS.SHA256(msg);
+            return hash.toString(CryptoJS.enc.Hex);
+        };
+
+        SigV4Utils.getSignatureKey = function(key, dateStamp, regionName, serviceName) {
+            var kDate = CryptoJS.HmacSHA256(dateStamp, 'AWS4' + key);
+            var kRegion = CryptoJS.HmacSHA256(regionName, kDate);
+            var kService = CryptoJS.HmacSHA256(serviceName, kRegion);
+            var kSigning = CryptoJS.HmacSHA256('aws4_request', kService);
+            return kSigning;
+        };
+
+        function createEndpoint(regionName, awsIotEndpoint, accessKey, secretKey) {
+            var time = moment.utc();
+            var dateStamp = time.format('YYYYMMDD');
+            var amzdate = dateStamp + 'T' + time.format('HHmmss') + 'Z';
+            var service = 'iotdevicegateway';
+            var region = regionName;
+            var secretKey = secretKey;
+            var accessKey = accessKey;
+            var algorithm = 'AWS4-HMAC-SHA256';
+            var method = 'GET';
+            var canonicalUri = '/mqtt';
+            var host = awsIotEndpoint;
+
+            var credentialScope = dateStamp + '/' + region + '/' + service + '/' + 'aws4_request';
+            var canonicalQuerystring = 'X-Amz-Algorithm=AWS4-HMAC-SHA256';
+            canonicalQuerystring += '&X-Amz-Credential=' + encodeURIComponent(accessKey + '/' + credentialScope);
+            canonicalQuerystring += '&X-Amz-Date=' + amzdate;
+            canonicalQuerystring += '&X-Amz-SignedHeaders=host';
+
+            var canonicalHeaders = 'host:' + host + '\n';
+            var payloadHash = SigV4Utils.sha256('');
+            var canonicalRequest = method + '\n' + canonicalUri + '\n' + canonicalQuerystring + '\n' + canonicalHeaders + '\nhost\n' + payloadHash;
+
+            var stringToSign = algorithm + '\n' + amzdate + '\n' + credentialScope + '\n' + SigV4Utils.sha256(canonicalRequest);
+            var signingKey = SigV4Utils.getSignatureKey(secretKey, dateStamp, region, service);
+            var signature = SigV4Utils.sign(signingKey, stringToSign);
+
+            canonicalQuerystring += '&X-Amz-Signature=' + signature;
+            return 'wss://' + host + canonicalUri + '?' + canonicalQuerystring;
+        }
+
+        var endpoint = createEndpoint(
+            awsRegion, // Your Region
+            awsIotEndpoint, // Require 'lowercamelcase'!!
+            AWS_ACCESS_KEY, //
+            AWS_SECRET_ACCESS_KEY);
+        var client = new Paho.MQTT.Client(endpoint, Math.random().toString(36).substring(7));
+        var connectOptions = {
+            useSSL: true,
+            timeout: 3,
+            mqttVersion: 4,
+            onSuccess: onSuccess
+        };
+        client.connect(connectOptions);
+        //        client.onMessageArrived = onMessage;
+        client.onConnectionLost = function(e) {
+            console.log(e)
+        };
+
+        function onSuccess() {
+            console.log("connect Success");
+        }
+    </script>
+</body>
+
+</html>

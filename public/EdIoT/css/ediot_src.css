@@ -1,0 +1,11 @@
+textarea#source_edit {
+    width: 98%;
+    height: calc( 1.3em * 25);
+    line-height: 1.3;
+}
+
+.src_tbody {
+    height: 2px 70%;
+    border: solid;
+    vertical-align: top;
+}

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+
+    <!-- site infomation -->
+    <meta name="author" content="kazuki" />
+    <title>002 Button</title>
+    <!-- js & css -->
+</head>
+
+<body>
+    <input type="button" id="button1" value="button1"><br>
+    <var id="output1"></var><br>
+    <button id="button2" value="button2だよ">button2</button><br>
+    <var id="output2"></var><br>
+    <script type="text/javascript">
+        document.getElementById('button1').addEventListener('click', function(e) {
+            document.getElementById('output1').innerHTML = document.getElementById('button1').value;
+        });
+        document.getElementById('button2').addEventListener('click', function(e) {
+            document.getElementById('output2').innerHTML = document.getElementById('button2').value;
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Face Detect Sample</title>
+</head>
+
+<body onload="init()">
+    <video id="video" autoplay onloadedmetadata="onPlay()"></video>
+    <p id="message"></p>
+    <canvas id="canvas1"></canvas>
+
+    <script src="/js/face-api.js"></script>
+    <script>
+        const video = document.getElementById("video");
+        const init = async() => {
+
+            // Webカメラ初期化
+            const stream = await navigator.mediaDevices.getUserMedia({
+                audio: false,
+                video: {
+                    width: 600,
+                    height: 600
+                }
+            });
+
+            try {
+                video.srcObject = stream;
+            } catch (err) {
+                video.src = window.URL.createObjectURL(stream);
+            }
+            // (1)モデル読み込み　※フォルダを指定
+            await faceapi.nets.ssdMobilenetv1.load("/models/");
+        }
+
+        const onPlay = () => {
+            const message = document.getElementById('message')
+            const inputSize = 512; // 認識対象のサイズ
+            const scoreThreshold = 0.5; // 数値が高いほど精度が高くなる（〜0.9）
+            // (2)オプション設定
+            const options = new faceapi.SsdMobilenetv1Options({
+                inputSize,
+                scoreThreshold
+            })
+            const detectInterval = setInterval(async() => {
+                // (3)顔認識処理
+                const result = await faceapi.detectSingleFace(
+                    video,
+                    options
+                );
+
+                if (result) {
+                    message.textContent = "認識されてます"
+
+                } else {
+                    message.textContent = "認識されていません"
+                }
+            }, 500);
+        }
+    </script>
+</body>
+
+</html>

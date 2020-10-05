@@ -1,0 +1,401 @@
+/*#js-local-stream{
+    width:100px;
+    position: fixed;
+    display: block;
+    right:10px;
+    bottom:10px;
+    border-radius: 10px;
+    border: 1px solid rgba(128,128,128,.7);
+    padding: 0;
+    background: rgba(128,128,128,.7) ;
+}*/
+body{
+    overflow:hidden scroll;
+    user-select: none;
+    background: #FFFFF5;
+}
+.remote-streams{
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(300px , 1fr));
+    grid-template-rows: repeat(auto-fit,minmax(300px , 1fr));
+    gap: 10px;
+    vertical-align: middle;
+}
+.remote-streams{
+    padding:5px;
+}
+.remote-streams div{
+    position: relative;
+}
+video{
+    width:100%;
+    margin: auto;
+    position:relative;
+    z-index: 10;
+}
+canvas{
+    background-color: #FFFFFF00;
+    position: absolute;
+    z-index:12;
+    top:0;
+    left:0;
+
+}
+.room{margin-top: 4em;}
+.stream > img{
+    background-color: #FFFFFF00;
+    position: absolute;
+    z-index:11;
+    top:0;
+    left:0;
+}
+.pointer{
+    top: 0;
+    left:0;
+    margin: 0;
+    position: absolute;
+    border-radius: 0 2em 2em 2em;
+    width:auto;
+    height:auto;
+    padding: 10px 10px 5px 5px;
+    font-size: 1.5em;
+    background-color:red;
+    pointer-events: none;
+    z-index: 20;
+    transform-origin: 0px 0px 0px;
+    transform: rotate(-45deg);
+    overflow: hidden;
+}
+.pointer div{
+    transform-origin: center center;
+    transform: rotate(45deg);
+    border-radius: 2em 2em 2em;
+    margin:0;
+    padding: 0;
+    width:40px;
+    height:40px;
+    text-align: center;
+    vertical-align: middle;
+    background-size: cover;
+    background-repeat: no-repeat;
+
+}
+ .control{
+    padding: 1em;
+    position:relative;
+    top:-.5em;
+    z-index:1;
+    background-color:red;
+    border-radius:  0 0 1em 1em;
+    width: auto;
+    display: inline-block;
+    vertical-align: middle;
+}
+.display-none{
+    display:none !important;
+}
+.buttons{
+    display: inline-block;
+}
+.button{
+    display: inline-block;
+    background-color: darkblue;
+    font-size: 1em;
+    color:white;
+    border-radius: 2em;
+    transition: background .3s, color .3s;
+    margin-left: .5em;
+    padding: .5em;
+    bottom: 0;
+    border: none;
+}
+.button:hover{
+    color:darkblue;
+    background-color: white;
+}
+.button:active{
+    background-color: lightgray;
+    transition: background .1s;
+}
+.name{
+    font-size: 1.3em;
+    font-weight: 600;
+    margin-right:2em;
+}
+#touchcontrol{
+    display: block;
+    position: fixed;
+    right:0;
+    bottom:3em;
+    border-radius: 2em 0 0 2em ;
+    width:3em;
+    height:20em;
+    padding: .5em;
+    background:#FFAA00AA;
+    z-index: 50;
+    overflow: hidden;
+}
+#touchcontrol label{
+    display: block;
+    background-color: greenyellow;
+    border-radius: 50%;
+    width: 2em;
+    height:2em;
+    padding: .5em;
+    margin: 1.5em auto;
+    text-align: center;
+    transition: background .3s, width .3s;
+}
+#touchcontrol input:checked +label{
+    background-color: white;
+}
+input[type="radio"]{
+    display:none;
+}
+.init{
+    text-align: center;
+    width:100%;
+    height:100%;
+    z-index: 99;
+    position: fixed;
+    left:0;
+    bottom:0;
+    background-color: #000000DD;
+    vertical-align: baseline;
+}
+.init h1{
+    color:white;
+    width: 100%;
+    position: fixed;
+    left:0;
+    top:0;
+    z-index: 100;
+    background-color: #000000AA;
+    overflow: hidden;
+}
+.init video{
+    left: 50%;
+    top:50%;
+
+    transform:translate(-50%, -60%);
+    
+}
+.init .buttons{
+    z-index: 100;
+    position: fixed;
+    left:0;
+    bottom:20px;
+    width:100%;
+    left: 0%;
+
+}
+button:not(.button){
+    font-size: 1.5em;
+    border-radius: 2em;
+    padding: .5em;
+    margin: .5em;
+    width: 80%;
+    border: 1px solid gray;
+    background:rgb(122, 217, 255);
+    bottom:10px;
+
+}
+button:disabled{
+    background-color: gray !important;
+    color: white;
+}
+/*ヘッダー*/
+.header{
+    transition: height .5s;
+    position: fixed;
+    width:100%;
+    height:auto;
+    background-color:#CCCCCC;
+    top:0;
+    left:0;
+    z-index: 50;
+}
+.header > div{
+    text-align: center;
+}
+.header > div:first-child h2{
+    margin-block-start: .3em;
+    margin-block-end: .3em;
+}
+.header > div:first-child button {
+    position: absolute;
+    width:auto;
+    height:1.8em;
+    top:0px;
+    margin-top: 3px;
+    padding: .2em .5em;
+    right:5px;
+    background: #fd7096;
+}
+/*レフトボタン*/
+.left > div{
+    position: fixed;
+    width:80%;
+    left:-83%;
+    height: calc(100% - 4em);
+    top:3.1em;
+    padding-left: 2%;
+    transition: left .5s;
+    background-color: #EEEEEE;
+    border: black solid 1px;
+    border-left: none;
+    z-index: 31;
+}
+
+.left > div > .right-button{
+    border: black solid 2px;
+    border-left: none;
+    position: relative;
+    background-color: #EEEEEE;
+    border-radius: 0 .25em .25em 0;
+    font-size: 2em;
+    width: 1.5em;
+    height:1.5em;
+    margin-left: 0;
+    padding-left: 2.5%;
+    margin-right: 0;
+    background-size:1.2em 1.2em ;
+    background-position: center;
+    background-repeat: no-repeat;
+    transition: left .3s;
+
+}
+.left > .messages > .right-button{
+    transition: background .3s;
+    top: 0em;
+    background-image: url("img/message.svg");
+}
+
+.left > .member > .right-button{
+    top: 1.5em;
+    background-image: url("img/member.svg");
+}
+.left > .option > .right-button{
+    top: 3em;
+    background-image: url("img/menu.svg");
+}
+.left > div:hover{
+    left:0%;
+    z-index: 32;
+}
+.scroll{
+    overflow-y: scroll;
+}
+.left label{
+    display: block;
+    position: fixed;
+    text-align: center;
+    top:5px;
+    left:5px;
+    font-size: 1.6em;
+    width:4em;
+    height: 1.5em;
+    border-radius: 1em;
+    background-color: lightcyan;
+    border: black solid 1px;
+
+    z-index: 51;
+}
+.left label:before{
+    display: inline-block;
+    content: "menu";
+}
+#show_menu:checked  +label:before{
+    content: "close";
+}
+#show_menu:checked ~ div .right-button{
+    left: 100%;
+
+}
+
+.left >.new > .right-button{
+    background-color: orange;
+}
+/*オプション*/
+#room_option{
+    text-align: center;
+}
+    
+
+
+#room_option input[type="text"]{
+    width: calc(100% - 5em);
+    background-color: #ffffff00;
+    font-size: 1.3em;
+    margin: 0;
+    padding: 0;
+    margin-left: 10px;
+    padding-left:10px;
+    border: none;
+}
+#room_option div span {
+    display: inline-block;
+    width: 5em;
+    text-align: center;
+    border-right: 2px solid black;
+}
+
+#room_option form > label > span{
+    border-radius: 100%;
+    width: 1.3em;
+    height: 1.3em;
+    display: inline-block;
+    margin: auto .5em;
+    border: 1px solid black;
+    cursor: pointer;
+}
+#room_option input[type="radio"]:checked +span{
+    background-image: url("img/check.svg");
+    background-size: cover;
+}
+
+#room_option form{
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+}
+#room_option div{
+    text-align: left;
+    display: inline-block;
+    font-size: 1.3em;
+    border-radius: 2em;
+    vertical-align: middle;
+    padding: .35em;
+    margin: .5em;
+    width: 70%;
+    padding-left:1em;
+    padding-right: 1.4em;
+    border: 1px solid gray;
+    background-color: #ffffffdd;
+    bottom:10px;
+}
+button{
+    cursor: pointer;
+}
+.popup{
+    position: absolute;
+    top: 30px;
+    left: 10px;
+    padding:1em;
+    background-color: #000000AA;
+    border-radius: .5em;
+    color: white;
+    animation-name: popup;
+    animation-duration: 5s;
+    animation-fill-mode: forwards;
+    z-index: 99;
+}
+@keyframes popup{
+    0% {opacity: 0%;}
+    8% {opacity: 100%;}
+    90%{opacity: 100%;}
+    100%{opacity: 0%;}
+}
+.img img{
+    width: 40%;
+}

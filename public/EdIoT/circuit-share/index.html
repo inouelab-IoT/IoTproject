@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>回路共有システム</title>
+    <link rel="icon" type="image/png" href="/img/icon.png">
+		<link rel="shortcut icon" href="/img/icon.png" />
+		<link rel="apple-touch-icon" href="/img/icon.png" />
+    <script src="/__/firebase/6.2.0/firebase-app.js"></script>
+    <script src="/__/firebase/6.2.0/firebase-auth.js"></script>
+    <script src="/__/firebase/6.2.0/firebase-database.js"></script>
+    <script type="text/javascript" src="/js/signin_state.js"></script>
+    <script src="/__/firebase/6.2.0/firebase-firestore.js"></script>
+    <script src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js"></script>
+
+    <link rel="stylesheet" href="style.css">
+    
+  </head>
+  <body>
+    <header class="display-none">
+      <div id=title>
+      </div>
+      <div align="right">
+          <button id="sign_button" onclick="sign_button()">Sign in</button>
+          <img id="user_icon" src="/img/no_login_icon.png" width="30" height="30" /><br>
+          <div id="user_name">ユーザ名：ゲスト</div>
+          グループ名：<input type="text" id="group_name" size="7" placeholder="未所属" onchange="update_group()">
+      </div>
+      <center>
+          <a href="/">
+              <img src="./img/top.jpg" alt="title" width="100%" height="100">
+          </a>
+      </center>
+  </header>
+    <div class="header">
+      <div>
+        <h2 name="h2_roomId">Room_id</h2><button id="js-leave-trigger">退出</button>
+      </div>
+
+      <!--<div>▼</div>
+      <div class="hover">
+        <button id="clearAll">全ての書込をクリア</button>
+        <button id="saveAll">全ての回路を保存</button>  
+      </div>-->
+    </div>
+    <div class="left">
+      <input type="checkbox" id="show_menu">
+      <label for="show_menu"></label>
+      <div class="messages">
+        <div class="right-button"></div>
+        <h3>メッセージ</h3>
+        <div  id="js-messages" class="scroll"></div>
+      </div>
+      <div class="member">
+        <div class="right-button"></div>
+        <h3>メンバー</h3>
+        <div class="scroll"></div>
+      </div>
+      <div class="option">
+        <div class="right-button"></div>
+        <h3>オプション</h3>
+
+      </div>
+    </div>
+    <div class="init">
+      <h1>回路共有システム</h1>
+      <video id="init-stream"></video>
+      <div class="buttons">
+        <div id="room_option" class="">
+          <label><div><span>ルームID</span><input type="text" name="roomId" placeholder="ルームID"></div></label>
+          <label><div><span>名前</span><input type="text" name="name" placeholder="名前"></div></label>
+          <div class="display-none"><span>アイコン</span><input type="text" name="icon" placeholder="アイコン画像URI"></div>
+          <div>
+            <span>表示色</span>
+            <form>
+              <label><input type="radio" name="color" value="red"><span style="background-color: red;"></span></label>
+              <label><input type="radio" name="color" value="pink"><span style="background-color: pink;"></span></label>
+              <label><input type="radio" name="color" value="orange"><span style="background-color: orange;"></span></label>
+              <label><input type="radio" name="color" value="yellow"><span style="background-color: yellow;"></span></label>
+              <label><input type="radio" name="color" value="lightgreen"><span style="background-color: lightgreen;"></span></label>
+              <label><input type="radio" name="color" value="lightblue"><span style="background-color: lightblue;"></span></label>
+              <label><input type="radio" name="color" value="plum"><span style="background-color:plum;"></span></label>
+            </form>
+          </div>
+        </div>
+        <button id="js-join-trigger" type="button" disabled>参加</button>
+        <button id="js-join-trigger-without-camera" style="background-color: lightgray;" disabled>ビデオなしで参加</button>  
+      </div>
+    </div>
+
+      <div class="room">
+        <div class="remote-streams" id="js-remote-streams">
+        </div>
+
+      <p class="meta" id="js-meta"></p>
+    </div>
+    <div id="pointers">
+    </div>
+    <div class="img"></div>
+    <form id ="touchcontrol" class="display-none">
+      <input type="radio" name="touchAction" value="scroll" id="scroll"><label for="scroll"><img src="img/scroll.svg"></label>
+      <input type="radio" name="touchAction" value="point" id="point"><label for="point"><img src="img/select.svg"></label>
+      <input type="radio" name="touchAction" value="draw" id="draw"><label for="draw"><img src="img/pen.svg"></label>
+      <input type="radio" name="touchAction" value="off" id="off" checked>
+    </form>
+    <script src="https://cdn.webrtc.ecl.ntt.com/skyway-latest.js"></script>
+    <script src="./key.js"></script>
+    <script src="./canvas.js"></script>
+    <script src="./element.js"></script>
+    <script src="./toFirebase.js"></script>
+    <script src="./script.js"></script>    
+    <script src="./smartphone.js"></script>
+  </body>
+</html>

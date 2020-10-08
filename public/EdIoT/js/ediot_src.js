@@ -37,7 +37,7 @@ function open_srclist() {
     removeChildren(document.getElementById("src_list"))
 
     if (value == "sample") {
-        document.getElementById("file_place").innerText = "gs://ediotwebserver.appspot.com/source_code/all";
+        document.getElementById("file_place").innerText = "source_code/all";
         storageRef.child("source_code/all").listAll().then(function(result) {
             result.items.forEach(function(itemRef) {
                 addli(itemRef.name, "src_list", itemRef.fullPath);
@@ -47,7 +47,7 @@ function open_srclist() {
             console.error(error);
         })
     } else if (value == "user") {
-        document.getElementById("file_place").innerText = "gs://ediotwebserver.appspot.com/source_code/users/" + uid;
+        document.getElementById("file_place").innerText = "source_code/users/" + uid;
         storageRef.child("source_code/users/" + uid).listAll().then(function(result) {
             result.items.forEach(function(itemRef) {
                 addli(itemRef.name, "src_list", itemRef.fullPath);
@@ -60,7 +60,7 @@ function open_srclist() {
         if (groupname == "") {
             alert('未所属');
         } else {
-            document.getElementById("file_place").innerText = "gs://ediotwebserver.appspot.com/source_code/groups/" + groupname;
+            document.getElementById("file_place").innerText = "source_code/groups/" + groupname;
             storageRef.child("source_code/groups/" + groupname).listAll().then(function(result) {
                 result.items.forEach(function(itemRef) {
                     addli(itemRef.name, "src_list", itemRef.fullPath);

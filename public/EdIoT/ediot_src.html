@@ -48,6 +48,14 @@
     </header>
     <hr>
     <main>
+        <br>
+        <font size="4">フォルダの種類</font><br>
+        <br>・Sample : サンプルプログラム用のフォルダ。編集・削除・アップロードは不可。
+        <br>・user : ログインしているユーザー個人用のフォルダ。
+        <br>・group : グループ毎のフォルダ。同じグループの人が編集・削除・アップロードできる。
+        <br> * 全て Google storage 上に保存されています。ローカルで使用したい場合はダウンロードしてください
+        <br>
+        <hr>
         <font size="3">アップロード</font><br>
         <select id="up_dir">
             <option value="user">user</option>
@@ -77,7 +85,7 @@
                 </td>
                 <td class="src_tbody" , width=80%>
                     <p>ファイルの場所：
-                        <span id="file_place"></span>/<input type="text" id="input_srcname" size="10" placeholder="ファイル名"></p>
+                        <span id="file_place"></span>gs://ediotwebserver.appspot.com/<input type="text" id="input_srcname" size="10" placeholder="ファイル名"></p>
                     <textarea id="source_edit"></textarea><br>
                     <input type="button" value="保存" onclick="file_uppdate()">
                     <input type="button" value="削除" onclick="file_delete()">

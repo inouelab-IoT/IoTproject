@@ -6,12 +6,14 @@ addPointer(peerId,color,icon,name)
 */
 window.pointers = document.getElementById("pointers");
 window.streams = document.getElementById("js-remote-streams");
+window.members = document.getElementById("js-remote-streams"); 
 setTimeout(()=>{
     document.getElementById("js-join-trigger").disabled= false;
     document.getElementById("js-join-trigger-without-camera").disabled= false;   
 },3000);
 var random =Math.floor(Math.random()*(document.getElementsByName("color").length),0);
 document.getElementsByName("color")[random].checked = true;
+
 function addMsg(msg){
     var p = document.createElement("p");
     var d = new Date();
@@ -45,17 +47,28 @@ async function addArea(stream,peerId,name=peerId,color="lightgray"){
     newVideo.setAttribute('data-peer-id', peerId);
     div.append(newVideo);
     //Create Canvas
+    var bg = document.createElement("canvas");
+    bg.setAttribute('peer-id',peerId);
+    bg.setAttribute('drawer',"bg");
+    bg.context=bg.getContext("2d");
+    div.append(bg);
+    
+    var vgdraw= document.createElement("canvas");
+    vgdraw.setAttribute('peer-id',peerId);
+    vgdraw.context=vgdraw.getContext("2d");
+    vgdraw.setAttribute('drawer',"vgdraw");
+
+
     var canvas= document.createElement("canvas");
     canvas.setAttribute('peer-id',peerId);
-    canvas.contexts = {};
-    canvas.contexts[peerId]=canvas.getContext("2d");
-    canvas.contexts.draw=canvas.getContext("2d");
+    canvas.setAttribute('drawer',peer.id);
+    
+    canvas.context=canvas.getContext("2d");
     canvas.addEventListener("pointermove",focusmove);
     canvas.addEventListener("pointerenter",onFocus);
     canvas.addEventListener("pointerout",offFocus);
     canvas.addEventListener("pointerdown",drawInitialize);
     canvas.addEventListener("pointerup",drawFinalize);
-    div.append(canvas);
     //Create Control tab
     var control = document.createElement("div");
     control.classList.add("control");
@@ -66,7 +79,7 @@ async function addArea(stream,peerId,name=peerId,color="lightgray"){
     control.append(nameDom);
     div.append(control);
     var buttons = document.createElement("div");
-    var action = ["pause","save","clear"];
+    var action = ["pause","save","clear","fullscreen"];
     for(act in action){
         let button = document.createElement("button");
         button.classList.add("button");
@@ -76,6 +89,9 @@ async function addArea(stream,peerId,name=peerId,color="lightgray"){
         buttons.append(button);
     }
     control.append(buttons);
+    div.append(vgdraw);
+    div.append(canvas);
+
     //Add observer
     streams.append(div);
     var element = streams.querySelector(`[data-peer-id="${peerId}"]`);
@@ -95,10 +111,19 @@ function addPointer(peerId,color="light-gray",icon='img/man.png',name=""){
     document.getElementById("pointers").append(pointer);
     return pointer;
 }
+function addCanvas(target,drawer){
+    var canvas = document.createElement("canvas");
+    canvas.setAttribute('peer-id',target);
+    canvas.setAttribute('drawer',drawer);
+    canvas.context=canvas.getContext("2d");
+    streams.querySelector(`[peer-id="${target}"][drawer="${peer.id}"]`).insertAdjacentElement("beforebegin",canvas);
+    return streams.querySelector(`[peer-id="${target}"][drawer="${drawer}"]`);
+}
 function removeElements(peerId){
     var video = document.querySelector(`[data-peer-id="${peerId}"]`);
     video.srcObject.getTracks().forEach(track => track.stop());
     video.srcObject = null;
     streams.querySelector(`[content-peer-id="${peerId}"]`).remove();
     pointers.querySelector(`[peer-id="${peerId}"]`).remove();
+    members.querySelector(`[peer-id="${peerId}"]`).remove();
 }

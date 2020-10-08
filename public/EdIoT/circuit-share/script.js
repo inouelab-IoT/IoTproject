@@ -16,7 +16,6 @@ for (target of params){
 if('room' in param){
   document.querySelector("input[name='roomId']").value= decodeURI(param.room);
 }
-
 async function main() {
   const joinTriggerNoCam = document.getElementById('js-join-trigger-without-camera');
   const joinTrigger = document.getElementById('js-join-trigger');
@@ -24,14 +23,8 @@ async function main() {
   const messages = document.getElementById('js-messages');
 
 
-
-  var localStream = await navigator.mediaDevices
-    .getUserMedia({
-      audio: false,
-      video: {facingMode:"environment"}
-    })
-    .catch(console.error);
-
+  var localStream = null;
+  setTimeout(()=>{getNames();},500);
   // Render local stream
   // eslint-disable-next-line require-atomic-updates
   const peer = (window.peer = new Peer({
@@ -39,12 +32,60 @@ async function main() {
     debug: 3,
   }));
   joinTriggerNoCam.addEventListener("click",()=>{
-    localStream.getTracks()[0].stop();
-    localStream = null;
-    joinTrigger.click();
-  },{passive:true});
+    if(localStream!=null){
+      localStream.getTracks()[0].stop();
+      localStream = null;
+    }
+    startSharing();
+    },{passive:true});
+  //カメラONトリガー
+  async function getCamera(){
+    //ストリームするカメラの選択
+
+  }
+  async function localStreamOn(e){
+  e.target.removeEventListener("click",localStreamOn);
+  initStream = document.getElementById('init-stream');
+  stream= await navigator.mediaDevices
+  .getUserMedia({
+    audio: false,
+    video: {facingMode:"environment"}
+  })
+  .catch(console.error);
+  console.log(stream);
+  initStream.muted = true;
+  initStream.srcObject = stream;
+  initStream.playsInline = true;
+  initStream.play();
+  navigator.mediaDevices.enumerateDevices()
+      .then(function(devices) { // 成功時
+          devices.forEach(function(device) {
+              if(device.kind=="videoinput"){
+                  let dom = document.createElement("option");
+                  dom.value=device.deviceId;
+                  //facing
+                  dom.innerHTML="";
+                  console.dir(device);
+              }
+              
+          // デバイスごとの処理
+          });
+      }).catch(function(err) { // エラー発生時
+          console.error('enumerateDevide ERROR:', err);
+      });
+
+  localStream = await navigator.mediaDevices
+  .getUserMedia({
+    audio: false,
+    video: {facingMode:"environment"}
+  })
+  .catch(console.error);
+  e.target.innerHTML = "ビデオありで参加";
+  e.target.addEventListener("click",startSharing);
+  }
+joinTrigger.addEventListener("click",localStreamOn);
   // Register join handler
-  joinTrigger.addEventListener('click', () => {
+  function startSharing(){
     var name = document.querySelector("input[name='name']").value;
     var color = document.querySelector("div form").color.value;
     var icon = document.querySelector("input[name='icon']").value;
@@ -75,7 +116,23 @@ async function main() {
     room.on('peerJoin', peerId => {
       addMsg("<span class='"+peerId+"'>"+peerId+"</span>が入室しました");
       addPointer(peerId);
-      room.send({profile:profile});
+      var canvas = document.createElement("canvas");
+      canvas.context = canvas.getContext("2d");
+      var current = streams.querySelectorAll(`[peer-id="${peer.id}"]:not([drawer="bg"])`);
+      canvas.width = current[0].width;
+      canvas.height = current[0].height;
+      for(cv of current){
+        canvas.context.drawImage(cv,0,0);
+      }
+      var newProf = JSON.parse(JSON.stringify(profile));
+      newProf.img = canvas;
+      newProf.w = canvas.width;
+      newProf.h = canvas.height;
+      room.send({profile:newProf});
+      console.warn("Profile sent",newProf);
+      delete canvas;
+      //ユーザー一覧に追加
+      //todo
     });
 
     // Render remote stream for new peer join in the room
@@ -95,6 +152,9 @@ async function main() {
       var name = streams.querySelector(`[content-peer-id="${peerId}"]`).querySelector(".name").innerHTML;
       addMsg(name+" さん が退出しました。");
       removeElements(peerId);
+      //ユーザー一覧から削除
+      //todo
+
     });
 
     // for closing myself
@@ -107,6 +167,9 @@ async function main() {
         removeElements(stream.getAttribute("content-peer-id"));
       });
       alert("退出しました。");
+      //ユーザー一覧を削除
+      //todo
+
     });
     leaveTrigger.addEventListener('click', () => room.close(), { once: true });
 
@@ -135,7 +198,7 @@ async function main() {
       onDataRcv.save(null,v);
   
   }
-  },{passive:true});
+  }
   peer.on('error', console.error);
 
 

@@ -10,6 +10,7 @@
     <script src="/__/firebase/6.2.0/firebase-app.js"></script>
     <script src="/__/firebase/6.2.0/firebase-auth.js"></script>
     <script src="/__/firebase/6.2.0/firebase-database.js"></script>
+    <script src="/__/firebase/6.2.0/firebase-storage.js"></script>
     <script type="text/javascript" src="/js/signin_state.js"></script>
     <script src="/__/firebase/6.2.0/firebase-firestore.js"></script>
     <script src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js"></script>
@@ -60,7 +61,8 @@
       <div class="option">
         <div class="right-button"></div>
         <h3>オプション</h3>
-
+        <button>全ての回路を保存(未実装)</button>
+        <button onclick="clearAll">全ての描画・ポーズをクリア</button>
       </div>
     </div>
     <div class="init">
@@ -84,7 +86,7 @@
             </form>
           </div>
         </div>
-        <button id="js-join-trigger" type="button" disabled>参加</button>
+        <button id="js-join-trigger" type="button" disabled>ビデオをONにする</button>
         <button id="js-join-trigger-without-camera" style="background-color: lightgray;" disabled>ビデオなしで参加</button>  
       </div>
     </div>
@@ -97,7 +99,10 @@
     </div>
     <div id="pointers">
     </div>
-    <div class="img"></div>
+    <div class="img">
+      <h2>保存した回路</h2>
+      <p>保存された回路は<a href="#">こちら</a>に保存されます。PCやスマートフォンに以下から直接保存することもできます。</p>
+    </div>
     <form id ="touchcontrol" class="display-none">
       <input type="radio" name="touchAction" value="scroll" id="scroll"><label for="scroll"><img src="img/scroll.svg"></label>
       <input type="radio" name="touchAction" value="point" id="point"><label for="point"><img src="img/select.svg"></label>

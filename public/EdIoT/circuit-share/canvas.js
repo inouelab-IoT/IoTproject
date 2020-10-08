@@ -1,34 +1,38 @@
 //Observer
 window.resizeObserver = new ResizeObserver(async entries=>{
     for (entry of entries){
-        let canvas = entry.target.parentNode.getElementsByTagName("canvas")[0];
-        if(Math.abs(((canvas.width/canvas.height)/(entry.target.clientWidth/entry.target.clientheight))-1)>0.1){
+        let canvases = entry.target.parentNode.getElementsByTagName("canvas");
+        let canvas0 = canvases[0];
+        if(Math.abs(((canvas0.width/canvas0.height)/(entry.target.clientWidth/entry.target.clientheight))-1)>0.1){
         //縦横比が大きく変化したとき =　スマホ等の画面が回転したときは、描画内容を保存しない
-        canvas.width=entry.target.clientWidth;
-        canvas.height=entry.target.clientHeight; 
+        canvas0.width=entry.target.clientWidth;
+        canvas0.height=entry.target.clientHeight; 
         continue; 
         }
-        //作業内容を保存
-        var tmp_c = document.createElement("canvas");
+        let tmp_c = document.createElement("canvas");
         tmp_c.width = entry.target.clientWidth;
         tmp_c.height=entry.target.clientHeight;
-        var ctx = tmp_c.getContext("2d");
-        ctx.drawImage(canvas,0,0); 
-        //リサイズ
-        canvas.width=entry.target.clientWidth;
-        canvas.height=entry.target.clientHeight; 
-        //復元
-        if(!resizing){
-            setTimeout((tmp_c)=>{
-                canvas.contexts.draw.scale(canvas.width/tmp_c.width,canvas.height/tmp_c.height);
-                canvas.contexts.draw.drawImage(tmp_c,0,0);
-                canvas.contexts.draw.scale(tmp_c.width/canvas.width,tmp_c.height/canvas.height);
-                delete tmp_c;
-                resizing=false;
-            },300,tmp_c);
+        //作業内容を保存
+        for (canvas of canvases){
+            let ctx = tmp_c.getContext("2d");
+            ctx.drawImage(canvas,0,0); 
+            //リサイズ
+            canvas.width=entry.target.clientWidth;
+            canvas.height=entry.target.clientHeight; 
+            //復元
+            if(!resizing){
+                setTimeout((tmp_c,canvas)=>{
+                    canvas.context.scale(canvas.width/tmp_c.width,canvas.height/tmp_c.height);
+                    canvas.context.drawImage(tmp_c,0,0);
+                    canvas.context.scale(tmp_c.width/canvas.width,tmp_c.height/canvas.height);
+                    delete tmp_c;
+                    resizing=false;
+                },300,tmp_c,canvas);
+            }
         }
     }
     resizing=true;
+
 });
 window.resizing =false;
 //canvas control
@@ -38,23 +42,19 @@ window.canvasControl = {
         var video = div.querySelector("video");
         var v_info = video.srcObject.getVideoTracks()[0].getSettings();
         console.log(v_info);
-        var canvas = div.querySelector("canvas");
-        //すでに止まってるとき
-        if("bg" in canvas.contexts){
-            canvas.contexts.bg.clearRect(0,0,canvas.width,canvas.height);
-            delete canvas.contexts.bg;
+        var canvas = div.querySelector("[drawer='bg']");
+        
+        if(canvas.pause){
+            canvas.context.clearRect(0,0,canvas.width,canvas.height);
+            room.send({pause:{canvas:canvas.getAttribute("peer-id"),pause:false}});
+            canvas.pause=false;
         }else{
-            var tmp_c = document.createElement("canvas");
-            tmp_c.width = canvas.width;
-            tmp_c.height= canvas.height; 
-            var ctx = tmp_c.getContext("2d");
-            canvas.contexts.bg = canvas.getContext("2d");
-            ctx.drawImage(canvas,0,0);
-            canvas.contexts.bg.scale(canvas.width/v_info.width,canvas.width/v_info.width);
-            canvas.contexts.bg.drawImage(video,0,0);
-            canvas.contexts.bg.scale(v_info.width/canvas.width,v_info.width/canvas.width);
-            canvas.contexts.draw.drawImage(tmp_c,0,0);
-            delete tmp_c;
+            canvas.context.scale(canvas.width/v_info.width,canvas.width/v_info.width);
+            canvas.context.drawImage(video,0,0);
+            canvas.context.scale(v_info.width/canvas.width,v_info.width/canvas.width);
+            canvas.pause=true;
+            room.send({pause:{canvas:canvas.getAttribute("peer-id"),pause:true}});
+
         }
     },
     save:  function(e){
@@ -63,32 +63,47 @@ window.canvasControl = {
         var video = div.querySelector("video");
         var v_info = video.srcObject.getVideoTracks()[0].getSettings();
         console.log(v_info);
-        var canvas = div.querySelector("canvas");
+        var canvas = div.getElementsByTagName("canvas");
         var tmp_c = document.createElement("canvas");
         tmp_c.width = v_info.width ;
         tmp_c.height = v_info.height;
-        tmp_c.contexts = {bg:null,draw:null};
-        tmp_c.contexts.bg=tmp_c.getContext("2d");
-        tmp_c.contexts.draw =tmp_c.getContext("2d");
-        tmp_c.contexts.bg.drawImage(video,0,0);
-        tmp_c.contexts.draw.scale(v_info.width/canvas.width,v_info.height/canvas.height);
-        tmp_c.contexts.draw.drawImage(canvas,0,0);
+        tmp_c.context=tmp_c.getContext("2d");
+        tmp_c.context.drawImage(video,0,0);
+        tmp_c.context.scale(v_info.width/canvas[0].width,v_info.height/canvas[0].height);
+        for(var i = 0;i<canvas.length;i++){
+            tmp_c.context.drawImage(canvas[i],0,0);
+
+        }
+
         var url = tmp_c.toDataURL();
         var img =document.createElement("img");
         img.src=url;
         document.querySelector("div.img").append(img);
+        saveImg(url,document.querySelector(".name").innerHTML); 
         tmp_c.remove();
         },
     clear: function(e){
         var div = e.target.parentNode.parentNode.parentNode;
-        var canvas = div.querySelector("canvas");
-        if(canvas)
-        canvas.width = canvas.width+1;
-        canvas.width = canvas.width-1;
+        var canvases = div.getElementsByTagName("canvas");
+        for (canvas in canvases){
+            canvas.width = canvas.width+1;
+            canvas.width = canvas.width-1;    
+        }
         var id= div.getAttribute("content-peer-id");
         room.send({clear:id});
     }
 };
+//新canvasのクリア完了
+function clearAll(){
+    var canvases = document.getElementsByTagName("canvas");
+    room.send({clearAll:true});
+    for (canvas in canvases){
+        canvas.width = canvas.width+1;
+        canvas.width = canvas.width-1;
+        if(canvas.pause!=undefined){canvas.pause=false;}
+    } 
+    
+}
 //local drawing
 var clicked=false;
 var focusSendable=true;
@@ -104,8 +119,8 @@ function focusmove(e){
     //描画処理
     if(clicked){
         drawing.push({x:x,y:y,w:w,h:h,"peer-id":e.target.getAttribute('peer-id'),begin:false});
-        e.target.contexts[peer.id].lineTo(x,y);
-        e.target.contexts[peer.id].stroke();
+        e.target.context.lineTo(x,y);
+        e.target.context.stroke();
     }
     //0.15秒に1回送信
     if(!focusSendable){
@@ -138,10 +153,10 @@ function drawInitialize(e){
     y = e.offsetY;
     w = e.target.clientWidth;
     h = e.target.clientHeight;
-    if(peer.id in e.target.contexts==false){
-        e.target.contexts[peer.id]=e.target.getContext("2d");
-    }
-    let mycnvs = e.target.contexts[peer.id];
+    /*if(streams.querySelector(`[peer-id="${peerId}"][drawer="${peerId}"]`)){
+        addCanvas(peerId,peerId);
+    }*/
+    let mycnvs = e.target.context;
     mycnvs.lineWidth=3;
     mycnvs.strokeStyle="red";
     mycnvs.beginPath();
@@ -153,7 +168,7 @@ function drawInitialize(e){
 
 function drawFinalize(e){
     if(touchStatus=="scroll"||touchStatus=="point"){return;}
-    let mycnvs = e.target.contexts[peer.id];
+    let mycnvs = e.target.context;
     drawing.push({"peer-id":e.target['peer-id'],x:x,y:y,w:w,h:h,begin:false});
     mycnvs.lineTo(x,y);
     mycnvs.stroke();
@@ -180,13 +195,15 @@ window.onDataRcv ={
     draw: function(src,data){
         for(var i=0;i<data.length;i++){
             let obj = data[i];
-            let canvas = streams.querySelector(`[peer-id="${obj['peer-id']}"]`);
+            let canvas = streams.querySelector(`[peer-id="${obj['peer-id']}"][drawer="${src}"]`);
+            if(canvas==null){
+                canvas = addCanvas(obj["peer-id"],src);
+                canvas.width = canvas.parentNode.querySelector(`[drawer="${peer.id}"]`).width;
+                canvas.height = canvas.parentNode.querySelector(`[drawer="${peer.id}"]`).height;
+              }
             let xcvs = (canvas.clientWidth/obj.w )*obj.x;
             let ycvs = (canvas.clientHeight/obj.h)*obj.y;
-            if(src in canvas.contexts==false){
-              canvas.contexts[src]=canvas.getContext("2d");
-            }
-            let mycnvs=canvas.contexts[src];
+            let mycnvs=canvas.context;
             if(obj.begin){
                 mycnvs.lineWidth=3;
                 mycnvs.strokeStyle="red";//色の選択を後ほど考える
@@ -206,18 +223,46 @@ window.onDataRcv ={
         cursor.classList.add("display-none");
     },
     clear: function(src,canvas){
-        var canvas = streams.querySelector(`[peer-id="${canvas}"]`);
+        var div = streams.querySelector(`[content-peer-id="${canvas}"]`);
         //保存するならここで
-        canvas.width = canvas.width+1;
-        canvas.width = canvas.width-1;
+        var canvases = div.getElementsByTagName("canvas");
+        for (canvas in canvases){
+            canvas.width = canvas.width+1;
+            canvas.width = canvas.width-1;    
+        }
         /*
-        w = e.target.clientWidth;
-        h = e.target.clientHeight;  
         */  
     },
-    pause: function(){
+    clearAll: function(src,data){
+        var canvases = document.getElementsByTagName("canvas");
+        for (canvas in canvases){
+            canvas.width = canvas.width+1;
+            canvas.width = canvas.width-1;
+            if(canvas.pause!=undefined){canvas.pause=false;}
+        } 
+    },
+    pause: function(src,data){
+        if(data.pause){
+            //停止処理
+            var video = streams.querySelector(`[data-peer-id="${data.canvas}"]`);
+            var v_info = video.srcObject.getVideoTracks()[0].getSettings();
+            var canvas = streams.querySelector(`[peer-id="${data.canvas}"][drawer="bg"]`);
+            canvas.pause =true;
+            canvas.context.scale(canvas.width/v_info.width,canvas.width/v_info.width);
+            canvas.context.drawImage(video,0,0);
+            canvas.context.scale(v_info.width/canvas.width,v_info.width/canvas.width);
+
+        }else{
+            //解除処理
+            var canvas = streams.querySelector(`[peer-id="${data.canvas}"][drawer="bg"]`);
+            canvas.context.clearRect(0,0,canvas.width,canvas.height);
+            canvas.pause =false;
+        }
         //hoge
-    },    
+    },
+    focus: function focus(src,data){
+
+    },
     profile: function(src,data){
         //ポインター、プロフィールの更新
         if(data.icon==""){data.icon="img/man.png";}
@@ -234,16 +279,25 @@ window.onDataRcv ={
             //videoは読み込みが遅いことを考慮して3秒後に実施
             setTimeout((src,data)=>{
                 var video = streams.querySelector(`[data-peer-id="${src}"]`);
+                var div = video.parentNode;
                 if(video==null){return;}
                 video = video.parentNode;
                 video.querySelector(".control").style.backgroundColor=data.color;
                 video.querySelector(".name").innerHTML=data.name;
+                if(div.getAttribute("init")==null){
+                    initNewUser(div,data);
+                    div.setAttribute("init","done");
+                }
             },3000,src,data);
         }else{
             video = video.parentNode;
             video.querySelector(".control").style.backgroundColor=data.color;
             video.querySelector(".name").innerHTML=data.name;
-
+            var div = video.parentNode;
+            if(div.getAttribute("init")==null){
+                initNewUser(div,data);
+                div.setAttribute("init","done");
+            }
         }
         //最初のお知らせ部分の文字更新
         setTimeout((src,data)=>{
@@ -255,8 +309,26 @@ window.onDataRcv ={
             },500,src,data);
     }
 }
+function initNewUser(div,data){
+    if(data.img!=undefined){
+        var vgdraw = div.querySelector("[drawer='vgdraw']");
+        vgdraw.context.scale(vgdraw.width/data.w,vgdraw.height/data.h);
+        vgdraw.context.drawImage(img,0,0);
+        vgdraw.context.scale(data.w/vgdraw.width,data.h/vgdraw.height);
+    }
+    if(data.bg!=undefined){
+        var bg = div.querySelector("[drawer='bg']");
+        bg.pause = true;
+        bg.context.scale(bg.width/data.w,bg.height/data.h);
+        bg.context.drawImage(img,0,0);
+        bg.context.scale(data.w/bg.width,data.h/bg.height);
+    }
+    if(data.focus){
+        //focusの内容 todo
+    }
+}
 function saveImg(url,name){
-    var path = "circuit/"+uid;
+    var path = "circuits/"+uid;
     var d = new Date();
     var time = "";
     if(d.getMonth()<9){time +="0"}

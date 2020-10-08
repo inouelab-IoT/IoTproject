@@ -378,9 +378,10 @@ button{
     cursor: pointer;
 }
 .popup{
-    position: absolute;
+    position: fixed;
     top: 30px;
-    left: 10px;
+    left: 50%;
+    transform: translate(-50%);
     padding:1em;
     background-color: #000000AA;
     border-radius: .5em;

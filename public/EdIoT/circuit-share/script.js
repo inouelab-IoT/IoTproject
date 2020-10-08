@@ -110,7 +110,7 @@ joinTrigger.addEventListener("click",localStreamOn);
       if(localStream!=null){
         addArea(localStream,peer.id,profile.name+" (自分)",profile.color);
       }
-      addPointer(peer.id,profile.color,profile.icon);
+      addPointer(peer.id,profile.color,profile.icon,profile.name+"(自分)");
       room.send({profile:profile});
     });
     room.on('peerJoin', peerId => {
@@ -125,14 +125,12 @@ joinTrigger.addEventListener("click",localStreamOn);
         canvas.context.drawImage(cv,0,0);
       }
       var newProf = JSON.parse(JSON.stringify(profile));
-      newProf.img = canvas;
+      newProf.img = canvas.toDataURL();
       newProf.w = canvas.width;
       newProf.h = canvas.height;
       room.send({profile:newProf});
-      console.warn("Profile sent",newProf);
       delete canvas;
-      //ユーザー一覧に追加
-      //todo
+
     });
 
     // Render remote stream for new peer join in the room
@@ -154,7 +152,6 @@ joinTrigger.addEventListener("click",localStreamOn);
       removeElements(peerId);
       //ユーザー一覧から削除
       //todo
-
     });
 
     // for closing myself

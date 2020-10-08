@@ -9,29 +9,38 @@ window.resizeObserver = new ResizeObserver(async entries=>{
         canvas0.height=entry.target.clientHeight; 
         continue; 
         }
-        let tmp_c = document.createElement("canvas");
-        tmp_c.width = entry.target.clientWidth;
-        tmp_c.height=entry.target.clientHeight;
         //作業内容を保存
         for (canvas of canvases){
+            let tmp_c = document.createElement("canvas");
+            tmp_c.width = entry.target.clientWidth;
+            tmp_c.height=entry.target.clientHeight;    
             let ctx = tmp_c.getContext("2d");
             ctx.drawImage(canvas,0,0); 
+            //復元
+            if(!resizing){
+    
+                setTimeout((tmp_c,peerId,drawer)=>{
+                    var canvas = streams.querySelector(`[peer-id="${peerId}"][drawer="${drawer}"]`);
+                    var newcanv = document.createElement("canvas");
+                    newcanv.width=canvas.width;
+                    newcanv.height=canvas.height;
+                    newcanv.context = newcanv.getContext("2d");
+                    newcanv.context.scale(newcanv.width/tmp_c.width,newcanv.height/tmp_c.height);
+                    newcanv.context.drawImage(tmp_c,0,0);
+                    canvas.context.drawImage(newcanv,0,0);
+                    delete newcanv;
+
+                    resizing=false;
+                },1500,tmp_c,canvas.getAttribute("peer-id"),canvas.getAttribute("drawer"));
+            }
             //リサイズ
             canvas.width=entry.target.clientWidth;
             canvas.height=entry.target.clientHeight; 
-            //復元
-            if(!resizing){
-                setTimeout((tmp_c,canvas)=>{
-                    canvas.context.scale(canvas.width/tmp_c.width,canvas.height/tmp_c.height);
-                    canvas.context.drawImage(tmp_c,0,0);
-                    canvas.context.scale(tmp_c.width/canvas.width,tmp_c.height/canvas.height);
-                    delete tmp_c;
-                    resizing=false;
-                },300,tmp_c,canvas);
-            }
+            
         }
     }
     resizing=true;
+    console.warn("1cycle");
 
 });
 window.resizing =false;
@@ -88,9 +97,9 @@ window.canvasControl = {
         console.log(canvases);
 
         for (canvas of canvases){
-            canvas.width = canvas.width+1;
-            canvas.width = canvas.width-1;    
-        }
+            canvas.context.clearRect(0,0,canvas.width,canvas.height);
+            if(canvas.pause!=undefined){canvas.pause=false;}
+            }
         var id= div.getAttribute("content-peer-id");
         room.send({clear:id});
     }
@@ -99,9 +108,8 @@ window.canvasControl = {
 function clearAll(){
     var canvases = document.getElementsByTagName("canvas");
     room.send({clearAll:true});
-    for (canvas in canvases){
-        canvas.width = canvas.width+1;
-        canvas.width = canvas.width-1;
+    for (canvas of canvases){
+        canvas.context.clearRect(0,0,canvas.width,canvas.height);
         if(canvas.pause!=undefined){canvas.pause=false;}
     } 
     
@@ -231,20 +239,19 @@ window.onDataRcv ={
         var canvases = div.getElementsByTagName("canvas");
         console.warn(canvases);
         for (canvas of canvases){
-            canvas.width = canvas.width+1;
-            canvas.width = canvas.width-1;    
-        }
+            canvas.context.clearRect(0,0,canvas.width,canvas.height);
+            if(canvas.pause!=undefined){canvas.pause=false;}
+            }
         /*
         */  
     },
     clearAll: function(src,data){
         var canvases = document.getElementsByTagName("canvas");
-        for (canvas in canvases){
-            canvas.width = canvas.width+1;
-            canvas.width = canvas.width-1;
+        for (canvas of canvases){
+            canvas.context.clearRect(0,0,canvas.width,canvas.height);
             if(canvas.pause!=undefined){canvas.pause=false;}
         } 
-    },
+        },
     pause: function(src,data){
         if(data.pause){
             //停止処理
@@ -303,6 +310,12 @@ window.onDataRcv ={
                 div.setAttribute("init","done");
             }
         }
+        //名前を更新
+        var mem = document.querySelector(`[member-peer-id="${src}"]`);
+        mem.querySelector("div").style.backgroundImage="url('"+data.icon+"')";
+        mem.querySelector("div").style.backgroundColor=data.color;
+        mem.querySelector("span").innerHTML=data.name;
+        
         //最初のお知らせ部分の文字更新
         setTimeout((src,data)=>{
             var doms = document.getElementsByClassName(src);
@@ -314,18 +327,22 @@ window.onDataRcv ={
     }
 }
 function initNewUser(div,data){
+    console.log(data);
     if(data.img!=undefined){
-        /*var vgdraw = div.querySelector("[drawer='vgdraw']");
+        var img = new Image();
+        img.src= data.img;
+        var vgdraw = div.querySelector("[drawer='vgdraw']");
         vgdraw.context.scale(vgdraw.width/data.w,vgdraw.height/data.h);
-        vgdraw.context.drawImage(data.img,0,0);
+        vgdraw.context.drawImage(img,0,0);
         vgdraw.context.scale(data.w/vgdraw.width,data.h/vgdraw.height);
-        */ //img読み込みが変
     }
     if(data.bg!=undefined){
+        var bgimg = new Image();
+        bgimg.src= data.img;
         var bg = div.querySelector("[drawer='bg']");
         bg.pause = true;
         bg.context.scale(bg.width/data.w,bg.height/data.h);
-        bg.context.drawImage(img,0,0);
+        bg.context.drawImage(bgimg,0,0);
         bg.context.scale(data.w/bg.width,data.h/bg.height);
     }
     if(data.focus){

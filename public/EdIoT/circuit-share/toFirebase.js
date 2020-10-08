@@ -11,7 +11,7 @@ function upload(url,filename,path){
     ref.putString(url,'data_url').then(function(snapshot){
         addMsg("回路のセーブに成功しました。<br>Path:"+path+"/"+filename);
     }).catch(function(e){
-        addMsg("<span style='color:red font-weight:bold'>回路のセーブに失敗しました！</span>");
+        addMsg("<span style='color:red font-weight:bold'>回路のセーブに失敗しました！<br>下の画像から直接端末に保存してください。</span>");
         console.error(e);
     });
 }

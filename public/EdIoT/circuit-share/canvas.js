@@ -85,7 +85,9 @@ window.canvasControl = {
     clear: function(e){
         var div = e.target.parentNode.parentNode.parentNode;
         var canvases = div.getElementsByTagName("canvas");
-        for (canvas in canvases){
+        console.log(canvases);
+
+        for (canvas of canvases){
             canvas.width = canvas.width+1;
             canvas.width = canvas.width-1;    
         }
@@ -224,9 +226,11 @@ window.onDataRcv ={
     },
     clear: function(src,canvas){
         var div = streams.querySelector(`[content-peer-id="${canvas}"]`);
+        console.log(div);
         //保存するならここで
         var canvases = div.getElementsByTagName("canvas");
-        for (canvas in canvases){
+        console.warn(canvases);
+        for (canvas of canvases){
             canvas.width = canvas.width+1;
             canvas.width = canvas.width-1;    
         }
@@ -311,10 +315,11 @@ window.onDataRcv ={
 }
 function initNewUser(div,data){
     if(data.img!=undefined){
-        var vgdraw = div.querySelector("[drawer='vgdraw']");
+        /*var vgdraw = div.querySelector("[drawer='vgdraw']");
         vgdraw.context.scale(vgdraw.width/data.w,vgdraw.height/data.h);
-        vgdraw.context.drawImage(img,0,0);
+        vgdraw.context.drawImage(data.img,0,0);
         vgdraw.context.scale(data.w/vgdraw.width,data.h/vgdraw.height);
+        */ //img読み込みが変
     }
     if(data.bg!=undefined){
         var bg = div.querySelector("[drawer='bg']");

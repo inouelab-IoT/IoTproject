@@ -1,5 +1,17 @@
 //Observer
 window.resizeObserver = new ResizeObserver(async entries=>{
+    if(streams.querySelector(".full-screen")!=null){
+        console.warn("full-screen");
+        var div = streams.querySelector(".full-screen");
+        var video = div.querySelector("video");
+        if((div.clientWidth/video.videoWidth)*video.videoHeight  < div.clientHeight){
+            div.classList.remove("height-100");
+            div.classList.add("width-100");
+        }else{
+            div.classList.add("height-100");
+            div.classList.remove("width-100");
+        }
+    }
     for (entry of entries){
         let canvases = entry.target.parentNode.getElementsByTagName("canvas");
         let canvas0 = canvases[0];

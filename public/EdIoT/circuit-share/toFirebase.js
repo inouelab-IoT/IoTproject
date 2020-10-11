@@ -1,6 +1,6 @@
 //ログイン
 function getNames(){
-    if(document.getElementById("user_name").innerHTML.substr(5)!="Guest"){
+    if(document.getElementById("user_name").innerHTML.substr(5)!="ゲスト"){
         document.getElementsByName("icon")[0].value=document.getElementById("user_icon").src;
         document.getElementsByName("name")[0].value=document.getElementById("user_name").innerHTML.substr(5);    
     }

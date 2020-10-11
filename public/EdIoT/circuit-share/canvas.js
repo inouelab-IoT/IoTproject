@@ -1,7 +1,7 @@
 //Observer
 window.resizeObserver = new ResizeObserver(async entries=>{
+    //フルスクリーン
     if(streams.querySelector(".full-screen")!=null){
-        console.warn("full-screen");
         var div = streams.querySelector(".full-screen");
         var video = div.querySelector("video");
         if((div.clientWidth/video.videoWidth)*video.videoHeight  < div.clientHeight){
@@ -12,10 +12,11 @@ window.resizeObserver = new ResizeObserver(async entries=>{
             div.classList.remove("width-100");
         }
     }
+    //canvasのリサイズ
     for (entry of entries){
         let canvases = entry.target.parentNode.getElementsByTagName("canvas");
         let canvas0 = canvases[0];
-        if(Math.abs(((canvas0.width/canvas0.height)/(entry.target.clientWidth/entry.target.clientheight))-1)>0.1){
+        if(Math.abs(((canvas0.width/canvas0.height)/(entry.target.clientWidth/entry.target.clientheight))-1)>0.05){
         //縦横比が大きく変化したとき =　スマホ等の画面が回転したときは、描画内容を保存しない
         canvas0.width=entry.target.clientWidth;
         canvas0.height=entry.target.clientHeight; 
@@ -24,8 +25,8 @@ window.resizeObserver = new ResizeObserver(async entries=>{
         //作業内容を保存
         for (canvas of canvases){
             let tmp_c = document.createElement("canvas");
-            tmp_c.width = entry.target.clientWidth;
-            tmp_c.height=entry.target.clientHeight;    
+            tmp_c.width = canvas.width;
+            tmp_c.height=canvas.height;    
             let ctx = tmp_c.getContext("2d");
             ctx.drawImage(canvas,0,0); 
             //復元
@@ -43,7 +44,7 @@ window.resizeObserver = new ResizeObserver(async entries=>{
                     delete newcanv;
 
                     resizing=false;
-                },1500,tmp_c,canvas.getAttribute("peer-id"),canvas.getAttribute("drawer"));
+                },1000,tmp_c,canvas.getAttribute("peer-id"),canvas.getAttribute("drawer"));
             }
             //リサイズ
             canvas.width=entry.target.clientWidth;
@@ -52,7 +53,6 @@ window.resizeObserver = new ResizeObserver(async entries=>{
         }
     }
     resizing=true;
-    console.warn("1cycle");
 
 });
 window.resizing =false;
@@ -81,7 +81,6 @@ window.canvasControl = {
         }
     },
     save:  function(e){
-        console.warn("save",e);
         var div = e.target.parentNode.parentNode.parentNode;
         var video = div.querySelector("video");
         var v_info = video.srcObject.getVideoTracks()[0].getSettings();
@@ -253,7 +252,7 @@ window.onDataRcv ={
                 console.log({beg:true,x:xcvs,y:ycvs});
               }else{
                 mycnvs.lineTo(xcvs,ycvs);
-                console.log({beg:false,x:xcvs,y:ycvs});
+                //console.log({beg:false,x:xcvs,y:ycvs});
               } 
               mycnvs.stroke();
         }
@@ -268,7 +267,6 @@ window.onDataRcv ={
         console.log(div);
         //保存するならここで
         var canvases = div.querySelectorAll("canvas:not([drawer='bg'])")
-        console.warn(canvases);
         for (canvas of canvases){
             canvas.context.clearRect(0,0,canvas.width,canvas.height);
             }
@@ -345,7 +343,7 @@ window.onDataRcv ={
             video = video.parentNode;
             video.querySelector(".control").style.backgroundColor=data.color;
             video.querySelector(".name").innerHTML=data.name;
-            var div = video.parentNode;
+            let div = video;
             if(div.getAttribute("init")==null){
                 initNewUser(div,data);
                 div.setAttribute("init","done");
@@ -355,7 +353,7 @@ window.onDataRcv ={
         //名前を更新
         var mem = document.querySelector(`[member-peer-id="${src}"]`);
         mem.querySelector("div").style.backgroundImage="url('"+data.icon+"')";
-        mem.querySelector("div").style.backgroundColor=data.color;
+        mem.querySelector("div").style.border="solid 5px "+data.color;
         mem.querySelector("span").innerHTML=data.name;
         
         //最初のお知らせ部分の文字更新
@@ -370,30 +368,38 @@ window.onDataRcv ={
 }
 function initNewUser(div,data){
     console.log(data);
-    var tmp_c= document.createElement("canvas");
     if(data.img!=undefined){
+        
         var img = new Image();
         img.src= data.img;
-        console.log(img);
-        var vgdraw = div.querySelector("[drawer='vgdraw']");
-        tmp_c.width=vgdraw.width;
-        tmp_c.height=vgdraw.height;
-        tmp_c.context=tmp_c.getContext("2d");
-        tmp_c.context.scale(tmp_c.width/data.w,tmp_c.height/data.h);
-        tmp_c.context.drawImage(img,0,0);
-        vgdraw.context.drawImage(tmp_c,0,0);
-        console.log("drawImg");
+        img.onload=()=>{
+            var vgdraw = div.querySelector("[drawer='vgdraw']");
+            var tmp_c= document.createElement("canvas");
+            tmp_c.width=vgdraw.width;
+            tmp_c.height=vgdraw.height;
+            tmp_c.context=tmp_c.getContext("2d");
+            tmp_c.context.scale(tmp_c.width/data.w,tmp_c.height/data.h);
+            tmp_c.context.drawImage(img,0,0);
+            vgdraw.context.drawImage(tmp_c,0,0);
+            delete tmp_c;
+        };
     }
     if(data.bg!=undefined){
         var bgimg = new Image();
-        bgimg.src= data.img;
-        var bg = div.querySelector("[drawer='bg']");
-        bg.pause = true;
-        tmp_c.context.crearRect(0,0,tmp_c.width,tmp_c.height);
-        tmp_c.context.drawImage(bgimg,0,0);
-        bg.context.drawImage(tmp_c,0,0);
+        bgimg.src= data.bg;
+        bgimg.onload = ()=>{
+            var bg = div.querySelector("[drawer='bg']");
+            bg.pause = true;
+            var tmp_c= document.createElement("canvas");
+            tmp_c.width=bg.width;
+            tmp_c.height=bg.height;
+            tmp_c.context=tmp_c.getContext("2d");
+            tmp_c.context.scale(tmp_c.width/data.bgw,tmp_c.height/data.bgh);
+            tmp_c.context.drawImage(bgimg,0,0);
+            bg.context.drawImage(tmp_c,0,0);
+            delete tmp_c;
+        };
     }
-    delete tmp_c;
     if(data.fullscreen){
         div.classList.add("full-screen");
     }

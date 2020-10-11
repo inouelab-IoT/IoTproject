@@ -25,6 +25,7 @@ async function main() {
 
   var localStream = null;
   setTimeout(()=>{getNames();},1000);
+  setTimeout(()=>{getNames();},2000);
   // Render local stream
   // eslint-disable-next-line require-atomic-updates
   const peer = (window.peer = new Peer({
@@ -113,7 +114,9 @@ joinTrigger.addEventListener("click",localStreamOn);
       if(localStream!=null){
         addArea(localStream,peer.id,profile.name+" (自分)",profile.color);
       }
+
       addPointer(peer.id,profile.color,profile.icon,profile.name+"(自分)");
+      streams.querySelector(`[content-peer-id="${peer.id}"]`).setAttribute("init","done");
       room.send({profile:profile});
     });
     room.on('peerJoin', peerId => {
@@ -127,6 +130,7 @@ joinTrigger.addEventListener("click",localStreamOn);
       for(cv of current){
         canvas.context.drawImage(cv,0,0);
       }
+
       var newProf = JSON.parse(JSON.stringify(profile));
       newProf.img = canvas.toDataURL();
       newProf.w = canvas.width;
@@ -135,6 +139,13 @@ joinTrigger.addEventListener("click",localStreamOn);
         newProf.fullscreen = true
 
       }
+      if(streams.querySelector(`[peer-id="${peer.id}"][drawer="bg"]`).pause){
+        var bgCanvas = streams.querySelector(`[peer-id="${peer.id}"][drawer="bg"]`);
+        newProf.bg = bgCanvas.toDataURL();
+        newProf.bgw= bgCanvas.width;
+        newProf.bgh= bgCanvas.height;
+      }
+
       room.send({profile:newProf});
       delete canvas;
 
@@ -157,8 +168,6 @@ joinTrigger.addEventListener("click",localStreamOn);
       var name = streams.querySelector(`[content-peer-id="${peerId}"]`).querySelector(".name").innerHTML;
       addMsg(name+" さん が退出しました。");
       removeElements(peerId);
-      //ユーザー一覧から削除
-      //todo
     });
 
     // for closing myself
@@ -201,7 +210,7 @@ joinTrigger.addEventListener("click",localStreamOn);
       room.send({save:v});
       onDataRcv.save(null,v);
   
-  }
+    }
   }
   peer.on('error', console.error);
 

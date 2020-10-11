@@ -49,8 +49,6 @@ window.canvasControl = {
     pause: function(e){
         var div = e.target.parentNode.parentNode.parentNode;
         var video = div.querySelector("video");
-        var v_info = video.srcObject.getVideoTracks()[0].getSettings();
-        console.log(v_info);
         var canvas = div.querySelector("[drawer='bg']");
         
         if(canvas.pause){
@@ -58,12 +56,16 @@ window.canvasControl = {
             room.send({pause:{canvas:canvas.getAttribute("peer-id"),pause:false}});
             canvas.pause=false;
         }else{
-            canvas.context.scale(canvas.width/v_info.width,canvas.width/v_info.width);
-            canvas.context.drawImage(video,0,0);
-            canvas.context.scale(v_info.width/canvas.width,v_info.width/canvas.width);
+            let tmp_c =document.createElement("canvas");
+            tmp_c.width=canvas.width;
+            tmp_c.height=canvas.height;
+            tmp_c.context=tmp_c.getContext("2d");
+            tmp_c.context.scale(canvas.width/video.videoWidth,canvas.height/video.videoHeight);
+            tmp_c.context.drawImage(video,0,0);
+            canvas.context.drawImage(tmp_c,0,0);
             canvas.pause=true;
             room.send({pause:{canvas:canvas.getAttribute("peer-id"),pause:true}});
-
+            delete tmp_c;
         }
     },
     save:  function(e){
@@ -74,11 +76,11 @@ window.canvasControl = {
         console.log(v_info);
         var canvas = div.getElementsByTagName("canvas");
         var tmp_c = document.createElement("canvas");
-        tmp_c.width = v_info.width ;
-        tmp_c.height = v_info.height;
+        tmp_c.width = video.videoWidth ;
+        tmp_c.height = video.videoHeight;
         tmp_c.context=tmp_c.getContext("2d");
         tmp_c.context.drawImage(video,0,0);
-        tmp_c.context.scale(v_info.width/canvas[0].width,v_info.height/canvas[0].height);
+        tmp_c.context.scale(video.videoWidth/canvas[0].width,video.videoHeight/canvas[0].height);
         for(var i = 0;i<canvas.length;i++){
             tmp_c.context.drawImage(canvas[i],0,0);
 
@@ -102,7 +104,21 @@ window.canvasControl = {
             }
         var id= div.getAttribute("content-peer-id");
         room.send({clear:id});
+    },
+    fullscreen:function(e){
+        var div = e.target.parentNode.parentNode.parentNode;
+        var fullscreen={target:div.getAttribute("content-peer-id")};
+        if(!div.classList.contains("full-screen")){
+            div.classList.add("full-screen");
+            fullscreen.status=true;
+        }else{
+            div.classList.remove("full-screen");
+            fullscreen.status=false;
+        }
+        room.send({fullscreen:fullscreen});
+
     }
+
 };
 //新canvasのクリア完了
 function clearAll(){
@@ -167,8 +183,11 @@ function drawInitialize(e){
         addCanvas(peerId,peerId);
     }*/
     let mycnvs = e.target.context;
+    let color = pointers.querySelector(`[peer-id="${e.target.getAttribute("drawer")}"]`).style.backgroundColor;
+
+    console.log(color);
     mycnvs.lineWidth=3;
-    mycnvs.strokeStyle="red";
+    mycnvs.strokeStyle=color;
     mycnvs.beginPath();
     mycnvs.moveTo(x,y);
     drawing.push({"peer-id":e.target.getAttribute('peer-id'),x:x,y:y,w:w,h:h,begin:true});
@@ -214,9 +233,10 @@ window.onDataRcv ={
             let xcvs = (canvas.clientWidth/obj.w )*obj.x;
             let ycvs = (canvas.clientHeight/obj.h)*obj.y;
             let mycnvs=canvas.context;
+            let color = pointers.querySelector(`[peer-id="${canvas.getAttribute("drawer")}"]`).style.backgroundColor;
             if(obj.begin){
                 mycnvs.lineWidth=3;
-                mycnvs.strokeStyle="red";//色の選択を後ほど考える
+                mycnvs.strokeStyle=color;
                 mycnvs.beginPath();
                 mycnvs.moveTo(xcvs,ycvs);
                 console.log({beg:true,x:xcvs,y:ycvs});
@@ -259,9 +279,9 @@ window.onDataRcv ={
             var v_info = video.srcObject.getVideoTracks()[0].getSettings();
             var canvas = streams.querySelector(`[peer-id="${data.canvas}"][drawer="bg"]`);
             canvas.pause =true;
-            canvas.context.scale(canvas.width/v_info.width,canvas.width/v_info.width);
+            canvas.context.scale(canvas.width/video.videoWidth,canvas.Height/video.videoHeight);
             canvas.context.drawImage(video,0,0);
-            canvas.context.scale(v_info.width/canvas.width,v_info.width/canvas.width);
+            canvas.context.scale(video.videoWidth/canvas.width,video.videoHeight/canvas.height);
 
         }else{
             //解除処理
@@ -271,7 +291,12 @@ window.onDataRcv ={
         }
         //hoge
     },
-    focus: function focus(src,data){
+    fullscreen: function focus(src,data){
+        if(data.status){
+            streams.querySelector(`[data-peer-id="${data.target}"]`).parentNode.classList.add("full-screen");
+        }else{
+            streams.querySelector(`[data-peer-id="${data.target}"]`).parentNode.classList.remove("full-screen");
+        }
 
     },
     profile: function(src,data){
@@ -309,6 +334,7 @@ window.onDataRcv ={
                 initNewUser(div,data);
                 div.setAttribute("init","done");
             }
+            
         }
         //名前を更新
         var mem = document.querySelector(`[member-peer-id="${src}"]`);
@@ -328,25 +354,32 @@ window.onDataRcv ={
 }
 function initNewUser(div,data){
     console.log(data);
+    var tmp_c= document.createElement("canvas");
     if(data.img!=undefined){
         var img = new Image();
         img.src= data.img;
+        console.log(img);
         var vgdraw = div.querySelector("[drawer='vgdraw']");
-        vgdraw.context.scale(vgdraw.width/data.w,vgdraw.height/data.h);
-        vgdraw.context.drawImage(img,0,0);
-        vgdraw.context.scale(data.w/vgdraw.width,data.h/vgdraw.height);
+        tmp_c.width=vgdraw.width;
+        tmp_c.height=vgdraw.height;
+        tmp_c.context=tmp_c.getContext("2d");
+        tmp_c.context.scale(tmp_c.width/data.w,tmp_c.height/data.h);
+        tmp_c.context.drawImage(img,0,0);
+        vgdraw.context.drawImage(tmp_c,0,0);
+        console.log("drawImg");
     }
     if(data.bg!=undefined){
         var bgimg = new Image();
         bgimg.src= data.img;
         var bg = div.querySelector("[drawer='bg']");
         bg.pause = true;
-        bg.context.scale(bg.width/data.w,bg.height/data.h);
-        bg.context.drawImage(bgimg,0,0);
-        bg.context.scale(data.w/bg.width,data.h/bg.height);
+        tmp_c.context.crearRect(0,0,tmp_c.width,tmp_c.height);
+        tmp_c.context.drawImage(bgimg,0,0);
+        bg.context.drawImage(tmp_c,0,0);
     }
-    if(data.focus){
-        //focusの内容 todo
+    delete tmp_c;
+    if(data.fullscreen){
+        div.classList.add("full-screen");
     }
 }
 function saveImg(url,name){

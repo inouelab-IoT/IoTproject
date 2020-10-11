@@ -79,6 +79,9 @@
             <a href="/EdIoT/ediot_comu.html">
                 <button id=menu>コミュニケーション</button>
             </a><br>
+            <a href="/EdIoT/circuit-share/index.html?room=" id="circuit-share">
+                <button id=menu>回路共有システム</button>
+            </a><br>
             <a href="/EdIoT/ediot_download.html">
                 <button id=menu>ダウンロード</button>
             </a><br>
@@ -115,6 +118,11 @@
         </footer>
 
     </footer>
+    <script>
+        setTimeout(()=>{
+            document.getElementById("circuit-share").href+=document.getElementById("group_name").value;
+        },1500);
+    </script>
 </body>
 
 </html>

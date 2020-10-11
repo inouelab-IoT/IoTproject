@@ -24,7 +24,7 @@ async function main() {
 
 
   var localStream = null;
-  setTimeout(()=>{getNames();},500);
+  setTimeout(()=>{getNames();},1000);
   // Render local stream
   // eslint-disable-next-line require-atomic-updates
   const peer = (window.peer = new Peer({
@@ -94,7 +94,9 @@ joinTrigger.addEventListener("click",localStreamOn);
     profile.color=color||profile.color;
     profile.icon=icon||profile.icon;
     history.replaceState("",roomName+" | 回路共有システム","?room="+roomName);
-    stream.getVideoTracks()[0].stop();
+    if(stream!=undefined){
+      stream.getVideoTracks()[0].stop();
+    }
     document.querySelector(".init").remove();
     // Note that you need to ensure the peer has connected to signaling server
     // before using methods of peer instance.
@@ -128,6 +130,10 @@ joinTrigger.addEventListener("click",localStreamOn);
       newProf.img = canvas.toDataURL();
       newProf.w = canvas.width;
       newProf.h = canvas.height;
+      if(streams.querySelector(`[content-peer-id="${peer.id}"]`).classList.contains("full-screen")){
+        newProf.fullscreen = true
+
+      }
       room.send({profile:newProf});
       delete canvas;
 

@@ -411,7 +411,14 @@ button{
     max-width: 500px;
     border-radius: 1em;
     z-index:26;
+    opacity: .5;
+    pointer-events: none;
 }
+.full-screen .control button{
+    opacity: 1;
+    pointer-events: auto;
+}
+
 .full-screen video{
     border: solid 2px white;
 }

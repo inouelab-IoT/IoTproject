@@ -107,12 +107,11 @@ window.canvasControl = {
         },
     clear: function(e){
         var div = e.target.parentNode.parentNode.parentNode;
-        var canvases = div.getElementsByTagName("canvas");
+        var canvases = div.querySelectorAll("canvas:not([drawer='bg'])");
         console.log(canvases);
 
         for (canvas of canvases){
             canvas.context.clearRect(0,0,canvas.width,canvas.height);
-            if(canvas.pause!=undefined){canvas.pause=false;}
             }
         var id= div.getAttribute("content-peer-id");
         room.send({clear:id});
@@ -268,11 +267,10 @@ window.onDataRcv ={
         var div = streams.querySelector(`[content-peer-id="${canvas}"]`);
         console.log(div);
         //保存するならここで
-        var canvases = div.getElementsByTagName("canvas");
+        var canvases = div.querySelectorAll("canvas:not([drawer='bg'])")
         console.warn(canvases);
         for (canvas of canvases){
             canvas.context.clearRect(0,0,canvas.width,canvas.height);
-            if(canvas.pause!=undefined){canvas.pause=false;}
             }
         /*
         */  
@@ -290,10 +288,16 @@ window.onDataRcv ={
             var video = streams.querySelector(`[data-peer-id="${data.canvas}"]`);
             var v_info = video.srcObject.getVideoTracks()[0].getSettings();
             var canvas = streams.querySelector(`[peer-id="${data.canvas}"][drawer="bg"]`);
+            var tmp_c = document.createElement("canvas");
+            tmp_c.width = canvas.width;
+            tmp_c.height= canvas.height;
+            tmp_c.context = tmp_c.getContext("2d");
             canvas.pause =true;
-            canvas.context.scale(canvas.width/video.videoWidth,canvas.Height/video.videoHeight);
-            canvas.context.drawImage(video,0,0);
-            canvas.context.scale(video.videoWidth/canvas.width,video.videoHeight/canvas.height);
+            console.log({"canvas.width":canvas.width,"canvas.height":canvas.height,"tmp_c.width":tmp_c.width,"video.videoWidth":video.videoWidth,"tmp_c.Height":tmp_c.height,"video.videoHeight":video.videoHeight,"scale-x":tmp_c.width/video.videoWidth,"scale-y":tmp_c.Height/video.videoHeight});
+            tmp_c.context.scale(tmp_c.width/video.videoWidth,tmp_c.height/video.videoHeight);
+            tmp_c.context.drawImage(video,0,0);
+            canvas.context.drawImage(tmp_c,0,0);
+            delete tmp_c;
 
         }else{
             //解除処理

@@ -109,6 +109,7 @@ joinTrigger.addEventListener("click",localStreamOn);
     });
     room.once('open', () => {
       addMsg(roomName+"に入室しました");
+      document.getElementById("h2_roomId").innerHTML=roomName;
       if(localStream!=null){
         addArea(localStream,peer.id,profile.name+" (自分)",profile.color);
       }

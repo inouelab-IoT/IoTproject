@@ -11,7 +11,7 @@
     <link rel="icon" type="image/png" href="/img/icon.png">
     <link rel="shortcut icon" href="/img/icon.png" />
     <link rel="apple-touch-icon" href="/img/icon.png" />
-    <title>inouelab_IoT</title>
+    <title>保存回路</title>
 
     <!-- firebase_SDK -->
     <script src="/__/firebase/6.2.0/firebase-app.js"></script>
@@ -23,16 +23,15 @@
     <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css" />
 
     <!-- js & css -->
-    <script type="text/javascript" src="js/ediot_run.js"></script>
 
-    <link rel="stylesheet" type="text/css" href="css/ediot.css">
-    <link rel="stylesheet" type="text/css" href="css/run.css">
+    <link rel="stylesheet" type="text/css" href="../css/ediot.css">
+    <link rel="stylesheet" type="text/css" href="./gallery.css">
 </head>
 
 <body>
     <header>
         <div id=title>
-            <h1>実行</h1>
+            <h1>保存回路の閲覧</h1>
         </div>
         <div align="right">
             <button id="sign_button" onclick="sign_button()">Sign in</button>
@@ -42,53 +41,19 @@
         </div>
         <center>
             <a href="/">
-                <img src="./img/top.jpg" alt="title" width="100%" height="100">
+                <img src="/EdIoT/img/top.jpg" alt="title" width="100%" height="100">
             </a>
         </center>
     </header>
     <hr>
     <main>
-        <br> javascript or HTML ファイルのみ実行可<br>
-        <h3> 〜デバイスリスト〜</h3>
-        folder :
-        <select id="src_dir" onchange="open_srclist()">
-            <option value="----">----</option>
-            <option value="sample">sample</option>
-            <option value="user">user</option>
-            <option value="group">group</option>
-        </select><br> file :
-        <select id="src_list">
-            <option value="----">----</option>
-        </select>
-        <h4></h4><var id="scriptstate"></var></h4>
-        <br>
-        <button id="startstop" onclick="startstop()">実行</button>
-        <br>
-
-        <iframe id="app_frame" name="app_frame" frameborder="0" allow="geolocation; microphone; camera; midi; encrypted-media;"></iframe>
-        <br>
-        <h4>console log</h4>
-        <textarea readonly id="console_log"></textarea>
-        <input type="button" value="クリア" onclick="console_clear()">
-
-        <br>
-
-        <br>
-        <h4>free space</h4>
-        （&lt;div id = "free_space"&gt;&lt;/div&gt;） この要素を使って入力 html5 言語<br>
-        <div id="free_space"></div>
-
-        <br>
-
-
-        <hr>
-        <a name="other-webapp">
-            <font size="4">■その他アプリ■</font><br>
-            <ul>
-                <li><a href="/EdIoT/other_webapp/device-motion.html">モーションキャプチャ</a></li>
-                <li><a href="/EdIoT/other_webapp/info_sensor.html">センサ情報</a></li>
-                <li><a href="/EdIoT/other_webapp/face_detect.html">顔検出</a></li>
-            </ul>
+        <div id="imgs">
+        </div>
+        <div id="popup" class="">
+            <div class="content">
+            </div>
+        <div class="close" onclick="this.parentNode.className='';">×</div>
+        </div>
 
     </main>
     <hr>
@@ -103,7 +68,7 @@
         <a href="/EdIoT/ediot_top.html">トップ</a><br>
         <a href="/EdIoT/ediot_chat.html">問い合わせ</a><br>
     </footer>
-    <div id=addscript></div>
+    <script src="./gallery.js"></script>
 </body>
 
 </html>

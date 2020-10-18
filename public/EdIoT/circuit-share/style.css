@@ -1,18 +1,8 @@
-/*#js-local-stream{
-    width:100px;
-    position: fixed;
-    display: block;
-    right:10px;
-    bottom:10px;
-    border-radius: 10px;
-    border: 1px solid rgba(128,128,128,.7);
-    padding: 0;
-    background: rgba(128,128,128,.7) ;
-}*/
 body{
     overflow:hidden scroll;
     user-select: none;
     background: #FFFFF5;
+    width:100%;
 }
 .remote-streams{
     display: grid;
@@ -41,7 +31,7 @@ canvas{
     left:0;
 
 }
-.room{margin-top: 4em;}
+.room{margin-top: 2em;}
 .stream > img{
     background-color: #FFFFFF00;
     position: absolute;
@@ -61,7 +51,7 @@ canvas{
     font-size: 1.5em;
     background-color:red;
     pointer-events: none;
-    z-index: 20;
+    z-index: 80;
     transform-origin: 0px 0px 0px;
     transform: rotate(-45deg);
     overflow: hidden;
@@ -125,11 +115,12 @@ canvas{
 #touchcontrol{
     display: block;
     position: fixed;
-    right:0;
-    bottom:3em;
-    border-radius: 2em 0 0 2em ;
+    left:calc(100% - 4em);
+    bottom:50%;
+    transform: translateY(55%);
+    border-radius: 1.5em 0 0 1.5em ;
     width:3em;
-    height:20em;
+    height:13em;
     padding: .5em;
     background:#FFAA00AA;
     z-index: 50;
@@ -142,7 +133,7 @@ canvas{
     width: 2em;
     height:2em;
     padding: .5em;
-    margin: 1.5em auto;
+    margin: 1em auto;
     text-align: center;
     transition: background .3s, width .3s;
 }
@@ -399,4 +390,59 @@ button{
 }
 .img img{
     width: 40%;
+}
+/*フルスクリーン*/
+.full-screen{
+    position: fixed !important;
+    top :3em;
+    left: 0;
+    display: block;
+    width:100%;
+    height: calc(100vh - 3em);
+    background-color: #000000CC;
+    z-index:25;
+}
+.full-screen .control{
+    position: fixed !important;
+    bottom:0;
+    top:auto;
+    left:50%;
+    transform: translate(-50%);
+    height:auto;
+    width:70%;
+    max-width: 500px;
+    border-radius: 1em;
+    z-index:26;
+    opacity: .8;
+    pointer-events: none;
+    transition: all .3s;
+    font-size: 70%;
+}
+.full-screen .control button{
+    pointer-events: auto;
+}
+
+.full-screen video{
+    border: solid 2px white;
+}
+.full-screen video , .full-screen canvas{
+    position: absolute;
+    left:50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+}
+
+.full-screen.width-100 video{
+    width: calc(100% - 6px);
+    height: auto;
+}
+.full-screen.height-100 video{
+    width: auto;
+    height:calc(100% - 3em);
+}
+.full-screen.height-100 .control{
+    opacity:.6;
+    left:0;
+    transform: translate(0%);
+    width:auto;
 }

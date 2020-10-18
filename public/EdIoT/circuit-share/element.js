@@ -6,7 +6,7 @@ addPointer(peerId,color,icon,name)
 */
 window.pointers = document.getElementById("pointers");
 window.streams = document.getElementById("js-remote-streams");
-window.members = document.getElementById("js-remote-streams"); 
+window.members = document.getElementsByClassName("member")[0]; 
 setTimeout(()=>{
     document.getElementById("js-join-trigger").disabled= false;
     document.getElementById("js-join-trigger-without-camera").disabled= false;   
@@ -101,14 +101,33 @@ async function addArea(stream,peerId,name=peerId,color="lightgray"){
 function addPointer(peerId,color="light-gray",icon='img/man.png',name=""){
     var pointer = document.createElement("div");
     var div = document.createElement("div");
-    div.innerHTML=name;
     div.style.backgroundImage="url("+icon+")";
     pointer.className="pointer display-none";
     pointer.setAttribute('peer-id',peerId);
     pointer.style.backgroundColor=color;
-    pointer.innerHTML=name;
     pointer.append(div);
     document.getElementById("pointers").append(pointer);
+    //名前欄も一緒に
+    var user = document.createElement("div");
+    user.setAttribute("member-peer-id",peerId);
+    var img = document.createElement("div");
+    img.style.width="2em";
+    img.style.height="2em";
+    img.style.borderRadius="1.5em";
+    img.style.backgroundSize="contain";
+    img.style.backgroundImage="url('"+icon+"')";
+    img.style.display="inline-block";
+    img.style.border="solid 5px "+color;
+    var span = document.createElement("span");
+    span.style.padding="1em";
+    span.innerHTML=name;
+    span.style.fontSize="1.5em";
+    span.style.display="inline-block";
+
+    user.style.margin=".5em";
+    user.append(img);
+    user.append(span);
+    members.append(user);
     return pointer;
 }
 function addCanvas(target,drawer){
@@ -125,5 +144,5 @@ function removeElements(peerId){
     video.srcObject = null;
     streams.querySelector(`[content-peer-id="${peerId}"]`).remove();
     pointers.querySelector(`[peer-id="${peerId}"]`).remove();
-    members.querySelector(`[peer-id="${peerId}"]`).remove();
+    members.querySelector(`[member-peer-id="${peerId}"]`).remove();
 }

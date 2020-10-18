@@ -120,15 +120,12 @@ function run_src(srctext, filepath) {
         return false;
     } else {
         if (get_extension(filepath) == "html") {
-            //var w;
-            //w = window.open("https://ediotwebserver.web.app/index.html");
-            //w.focus();
-            document.open();
-            document.clear();
-            document.writeln(srctext);
-            document.writeln('<hr><br><textarea readonly id="console_log"></textarea>')
-            document.writeln("<br><a href='javascript:window.location.reload(true);;'>戻る<\/a>");
-            document.close();
+            var w;
+            w = window.open(null, "app_frame");
+            w.location.reload();
+            w.document.writeln(srctext);
+            w.document.close();
+            document.getElementById("app_frame").className = "popup";
         }
         if (get_extension(filepath) == "js") {
             appendScript(srctext);
@@ -175,21 +172,18 @@ function console_clear() {
 }
 
 console.log = function(log) {
-    var obj = document.getElementById('console_log');
-    obj.innerHTML += log + "\n";
-    obj.scrollTop = obj.scrollHeight;
+    document.getElementById('console_log').innerHTML += log + "\n";
+    document.getElementById('console_log').innerHTML.scrollTop = document.getElementById('console_log').innerHTML.scrollHeight;
 }
 
 console.error = function(error) {
-    var obj = document.getElementById('console_log');
-    obj.innerHTML += error.message + "\n";
-    obj.scrollTop = obj.scrollHeight;
+    document.getElementById('console_log').innerHTML += error.message + "\n";
+    document.getElementById('console_log').innerHTML.scrollTop = document.getElementById('console_log').innerHTML.scrollHeight;
 }
 
 console.warn = function(warn) {
-    var obj = document.getElementById('console_log');
-    obj.innerHTML += warn + "\n";
-    obj.scrollTop = obj.scrollHeight;
+    document.getElementById('console_log').innerHTML += warn + "\n";
+    document.getElementById('console_log').scrollTop = document.getElementById('console_log').innerHTML.scrollHeight;
 }
 
 function get_extension(filename) {

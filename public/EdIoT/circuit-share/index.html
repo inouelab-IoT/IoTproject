@@ -36,14 +36,9 @@
   </header>
     <div class="header">
       <div>
-        <h2 name="h2_roomId">Room_id</h2><button id="js-leave-trigger">退出</button>
+        <h2 id="h2_roomId">Room_id</h2><button id="js-leave-trigger">退出</button>
       </div>
 
-      <!--<div>▼</div>
-      <div class="hover">
-        <button id="clearAll">全ての書込をクリア</button>
-        <button id="saveAll">全ての回路を保存</button>  
-      </div>-->
     </div>
     <div class="left">
       <input type="checkbox" id="show_menu">
@@ -62,7 +57,7 @@
         <div class="right-button"></div>
         <h3>オプション</h3>
         <button>全ての回路を保存(未実装)</button>
-        <button onclick="clearAll">全ての描画・ポーズをクリア</button>
+        <button onclick="clearAll()">全ての描画・ポーズをクリア</button>
       </div>
     </div>
     <div class="init">
@@ -77,12 +72,12 @@
             <span>表示色</span>
             <form>
               <label><input type="radio" name="color" value="red"><span style="background-color: red;"></span></label>
-              <label><input type="radio" name="color" value="pink"><span style="background-color: pink;"></span></label>
-              <label><input type="radio" name="color" value="orange"><span style="background-color: orange;"></span></label>
-              <label><input type="radio" name="color" value="yellow"><span style="background-color: yellow;"></span></label>
+              <label><input type="radio" name="color" value="deeppink"><span style="background-color: deeppink;"></span></label>
+              <label><input type="radio" name="color" value="darkorange"><span style="background-color: darkorange;"></span></label>
+              <label><input type="radio" name="color" value="gold"><span style="background-color:gold;"></span></label>
               <label><input type="radio" name="color" value="lightgreen"><span style="background-color: lightgreen;"></span></label>
-              <label><input type="radio" name="color" value="lightblue"><span style="background-color: lightblue;"></span></label>
-              <label><input type="radio" name="color" value="plum"><span style="background-color:plum;"></span></label>
+              <label><input type="radio" name="color" value="deepskyblue"><span style="background-color:deepskyblue;"></span></label>
+              <label><input type="radio" name="color" value="darkorchid"><span style="background-color:darkorchid;"></span></label>
             </form>
           </div>
         </div>

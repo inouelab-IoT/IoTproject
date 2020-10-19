@@ -1,0 +1,101 @@
+body{
+    overflow-x: hidden;
+}
+#imgs{
+    margin: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(300px , 1fr));
+    grid-template-rows: repeat(auto-fit,minmax(400px , 1fr));
+    gap: 5px;
+    vertical-align: middle;
+    width: calc(100% - 40px);
+    transition: all .3s;
+}
+#imgs .tile{
+    margin: 0px;
+    height: 400px;
+    padding: 10px;
+    transition: all .3s;
+    border-radius: 20px;
+    text-align: center;
+}
+.tile img{
+    pointer-events: none;
+    width: 100%;
+    height: calc(390px - 3em);
+    object-fit: contain;
+}
+.tile p{
+    pointer-events: none;
+    margin: 0;
+}
+
+.tile:nth-child(2n){
+    background-color:#E0E0E0;
+
+}
+.tile:nth-child(2n+1){
+    background-color:#F6F6F6;
+
+}
+.tile:hover{
+    background-color:#C0C0FF;
+}
+.tile:active{
+    background-color:#F0F0FF;
+}
+#popup{
+    overflow: hidden;
+    position: fixed;
+    z-index: 30;
+    margin: 0;
+    padding: 0;
+    top: 80%;
+    left:50%;
+    width: 0%;
+    height:0%;
+    transform: translate(-50%,-80%);
+    background-color: #000B;
+    transition: all .3s;
+}
+#popup.show{
+    width: 100%;
+    height:100%;
+
+}
+#popup .content img{
+    position: fixed;
+    width: 99%;
+    height:99%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    object-fit: contain;
+}
+#popup .content p{
+    position: fixed;
+    bottom:10px;
+    right:50%;
+    transform: translate(50%,0%);
+    background-color: #FFFC;
+    border-radius: 1em;
+    padding: 20px;
+}
+#popup .close{
+    position: fixed;
+    top: 0;
+    right:0;
+    font-weight: 900;
+    margin: 20px;
+    width: 1.5em;
+    -moz-user-select: none;
+    user-select: none;
+    text-align: center;
+    vertical-align: middle;
+    height: 1.5em;
+    border-radius: 50%;
+    font-size: 2em;
+    background-color: #FFFC;
+}
+#popup .close:hover{
+    background-color: #FFF;

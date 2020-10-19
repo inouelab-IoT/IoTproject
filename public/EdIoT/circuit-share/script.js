@@ -105,7 +105,7 @@ joinTrigger.addEventListener("click",localStreamOn);
       return;
     }
     window.room = peer.joinRoom(roomName, {
-      mode: "mesh",
+      mode: "sfh",
       stream: localStream,
     });
     room.once('open', () => {
@@ -113,15 +113,26 @@ joinTrigger.addEventListener("click",localStreamOn);
       document.getElementById("h2_roomId").innerHTML=roomName;
       if(localStream!=null){
         addArea(localStream,peer.id,profile.name+" (自分)",profile.color);
+        streams.querySelector(`[content-peer-id="${peer.id}"]`).setAttribute("init","done");
       }
 
       addPointer(peer.id,profile.color,profile.icon,profile.name+"(自分)");
+<<<<<<< HEAD
       streams.querySelector(`[content-peer-id="${peer.id}"]`).setAttribute("init","done");
+=======
+>>>>>>> 1f73fc1233013fbf22f2eded611deeb7ab0275a7
       room.send({profile:profile});
     });
     room.on('peerJoin', peerId => {
       addMsg("<span class='"+peerId+"'>"+peerId+"</span>が入室しました");
       addPointer(peerId);
+      if(streams.querySelector(`[content-peer-id="${peer.id}"]`)==null){
+        console.warn("sent");
+        room.send({profile:profile});
+        return;
+      }
+      console.warn("sent with canvas");
+
       var canvas = document.createElement("canvas");
       canvas.context = canvas.getContext("2d");
       var current = streams.querySelectorAll(`[peer-id="${peer.id}"]:not([drawer="bg"])`);

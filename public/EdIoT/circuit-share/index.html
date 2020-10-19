@@ -28,11 +28,6 @@
           <div id="user_name">ユーザ名：ゲスト</div>
           グループ名：<input type="text" id="group_name" size="7" placeholder="未所属" onchange="update_group()">
       </div>
-      <center>
-          <a href="/">
-              <img src="./img/top.jpg" alt="title" width="100%" height="100">
-          </a>
-      </center>
   </header>
     <div class="header">
       <div>
@@ -58,6 +53,10 @@
         <h3>オプション</h3>
         <button>全ての回路を保存(未実装)</button>
         <button onclick="clearAll()">全ての描画・ポーズをクリア</button>
+<<<<<<< HEAD
+=======
+        <button onclick='location.href="/EdIoT/ediot_top.html";'>TOPページ</button>
+>>>>>>> 1f73fc1233013fbf22f2eded611deeb7ab0275a7
       </div>
     </div>
     <div class="init">
@@ -84,10 +83,11 @@
         <button id="js-join-trigger" type="button" disabled>ビデオをONにする</button>
         <button id="js-join-trigger-without-camera" style="background-color: lightgray;" disabled>ビデオなしで参加</button>  
       </div>
+      <div style="bottom: 5px;right: 5px;position: fixed; color:lightcyan;z-index: 101;"><a href="/EdIoT/ediot_top.html" style="color: lightcyan;display: inline-block;padding:5px;">▲TOPページ</a></div>
     </div>
 
       <div class="room">
-        <div class="remote-streams" id="js-remote-streams">
+        <div class="remote-streams" id="js-remote-streams"></div>
         </div>
 
       <p class="meta" id="js-meta"></p>
@@ -96,7 +96,7 @@
     </div>
     <div class="img">
       <h2>保存した回路</h2>
-      <p>保存された回路は<a href="#">こちら</a>に保存されます。PCやスマートフォンに以下から直接保存することもできます。</p>
+      <p>保存された回路は<a href="./gallery.html">こちら</a>に保存されます。PCやスマートフォンに以下から直接保存することもできます。</p>
     </div>
     <form id ="touchcontrol" class="display-none">
       <input type="radio" name="touchAction" value="scroll" id="scroll"><label for="scroll"><img src="img/scroll.svg"></label>
@@ -109,7 +109,7 @@
     <script src="./canvas.js"></script>
     <script src="./element.js"></script>
     <script src="./toFirebase.js"></script>
-    <script src="./script.js"></script>    
+    <script src="./script.js?ver=sfh"></script>    
     <script src="./smartphone.js"></script>
   </body>
 </html>

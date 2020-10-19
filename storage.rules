@@ -4,6 +4,13 @@ service firebase.storage {
     match /source_code/{all=**}{
       allow read: if request.auth!=null;
     }
+    match /circuits/{all=**}{
+      allow read: if request.auth!=null;
+    }
+    match /circuits/{userId}/{fileName} {
+      allow read, write: if request.auth.uid == userId
+    }
+
     match /source_code/users/{userId}/{fileName} {
       allow read, write: if request.auth.uid == userId
     }

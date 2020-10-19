@@ -43,6 +43,9 @@ function startstop() {
         removeChildren(document.getElementById("addscript"));
         //window.location.reload(true);
         //sensor_off(); //停止
+        document.getElementById("app_frame").className = "";
+        w = window.open(null, "app_frame");
+        w.location.reload();
         document.getElementById("startstop").innerHTML = "実行";
         document.getElementById("scriptstate").innerHTML = "";
     }

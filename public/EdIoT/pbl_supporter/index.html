@@ -2,12 +2,41 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>My test page</title>
+    <title>PBLサポートシステム</title>
   </head>
   <body>
     <img src="C:\khcoder3\data\20201018\20201018_181656_cod1.png" alt="My test image1">
     <p>2020/10/18 18:16:56</p>
     <img src="C:\khcoder3\data\20201018\20201018_181931_cod1.png" alt="My test image2">
     <p>2020/10/18 18:19:31</p>
+    <script>
+      function fileListDirectory(files) {
+        var filesNumber = files.length;
+        var filesName = new Array();
+        var pass     = new Array();
+        for(i=0; i<filesNumber; i++){
+          filesName[i] = files[i].name;
+          pass[i] = files[i].webkitRelativePath; 
+        }
+        var show = "";
+            for (i=0; i<filesNumber; i++) {
+            if (filesName[i] == ".") {                  
+              show += "フォルダ：";
+            }
+            else {
+              show += "ファイル：";
+            }
+            show += pass[i] + "<br>";
+        }
+        document.getElementById('表示場所').innerHTML = show;
+    }
+  </script>
+  <p><input  type="file"
+    webkitdirectory directory                             
+    onChange="fileListDirectory(this.files)"></p>
+
+  <!--file:///C:/khcoder3/data/20201018-->
+  <!--<button type=“更新” onclick="fileListDirectory(this.files)">更新！</button>-->
+  <div id="表示場所" class="red">結果がここに表示されます。</div>
   </body>
 </html>

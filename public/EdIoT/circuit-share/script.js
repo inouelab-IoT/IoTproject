@@ -117,10 +117,6 @@ joinTrigger.addEventListener("click",localStreamOn);
       }
 
       addPointer(peer.id,profile.color,profile.icon,profile.name+"(自分)");
-<<<<<<< HEAD
-      streams.querySelector(`[content-peer-id="${peer.id}"]`).setAttribute("init","done");
-=======
->>>>>>> 1f73fc1233013fbf22f2eded611deeb7ab0275a7
       room.send({profile:profile});
     });
     room.on('peerJoin', peerId => {

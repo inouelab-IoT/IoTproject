@@ -3,6 +3,39 @@
   <head>
     <meta charset="utf-8">
     <title>PBLサポートシステム</title>
+
+    <script type="text/javascript">
+        myCnt = 0;
+        myTim = 0;
+         
+        function myGo1(){
+          myCnt = eval ( document.myForm.mySetTime1.value ) * 60;
+          myTim = setInterval ( "myTimer1()", 1000 );
+        }function myTimer1(){
+          myCnt = myCnt - 1;
+          document.getElementById( "countdown" ).innerHTML = "1の終了時刻まで " + Math.floor(myCnt/60) + " 分 " + myCnt%60 + " 秒 です。";
+          if ( myCnt == 0 ){
+            clearInterval( myTim );
+            alert("時間が経過しました！" );
+          }
+        }
+  
+        function myGo2(){
+          myCnt = eval ( document.myForm.mySetTime2.value ) * 60;
+          myTim = setInterval ( "myTimer2()", 1000 );
+        }function myTimer2(){
+          myCnt = myCnt - 1;
+          document.getElementById( "countdown" ).innerHTML = "2の終了時刻まで " + Math.floor(myCnt/60) + " 分 " + myCnt%60 + " 秒 です。";
+          if ( myCnt == 0 ){
+            clearInterval( myTim );
+            alert("時間が経過しました！" );
+          }
+        }
+        function myStop(){
+            clearInterval( myTim );
+            document.getElementById("countdown").innerHTML = "Clear";
+         }
+      </script>
   </head>
   <body>
 
@@ -10,22 +43,36 @@
       <button type="button">戻る</button>
     </a>
 
-    <p>発散/収束</p>
-    <p>現在</p>
+    <BR><BR><strong>発散/収束</strong><BR><BR>
+    <p>↓現在</p>
     <img src="https://drive.google.com/uc?export=view&id=1awx0ThR4EiXtK9dlz5SqlGUmFO9uuRgo&usp=sharing">
-    <p>2分前</p>
+    <p>↓2分前</p>
     <img src="https://drive.google.com/uc?export=view&id=1vV79UqvrbCcAsKo_lVLQmT82ij-cC23z&usp=sharing">
-    <p>4分前</p>
+    <p>↓4分前</p>
     <img src="https://drive.google.com/uc?export=view&id=1neerQPGs8zSkGw_F3ZHtsw_nAwKJqRs3&usp=sharing">
 
-    <p>順調</p>
-    <p>現在</p>
+    <BR><BR><strong>順調</strong><BR><BR>
+    <p>↓現在</p>
     <img src="https://drive.google.com/uc?export=view&id=1pJh7vcpGznEW7rFzwhfC_USE9j-sVKzx&usp=sharing">
-    <p>2分前</p>
+    <p>↓2分前</p>
     <img src="https://drive.google.com/uc?export=view&id=1YO6iDm9tbf2BbnljW-PGoelK4rqZf0up&usp=sharing">
-    <p>4分前</p>
+    <p>↓4分前</p>
     <img src="https://drive.google.com/uc?export=view&id=1tx-xEUucFCrs6WxBwPjSNPU2XkJAe9E9&usp=sharing">
 
+    <form name="myForm">
+        <strong>タイマー</strong><BR><BR>
+  
+        <SPAN ID="countdown"></SPAN><BR><BR>
+        1. <textarea cols="50" rows="1">アイデア出し</textarea><BR>
+        <input type="text" name="mySetTime1" size="10">分　
+        <input type="button" value="Start" onclick="myGo1()">
+        <input type="button" value="Stop/Reset" onclick="myStop()"><BR><BR>
+  
+        2. <textarea cols="50" rows="1">まとめ</textarea><BR>
+        <input type="text" name="mySetTime2" size="10">分　
+        <input type="button" value="Start" onclick="myGo2()">
+        <input type="button" value="Stop/Reset" onclick="myStop()"><BR><BR>
+    </form>
 
   </body>
 </html>

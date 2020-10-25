@@ -3,6 +3,87 @@
   <head>
     <meta charset="utf-8">
     <title>PBLサポートシステム</title>
+    <script type="text/javascript">
+      myCnt = 0;
+      myTim = 0;
+       
+      function myGo1(){
+        myCnt = eval ( document.myForm.mySetTime1.value ) * 60;
+        myTim = setInterval ( "myTimer1()", 1000 );
+      }function myTimer1(){
+        myCnt = myCnt - 1;
+        document.getElementById( "countdown" ).innerHTML = "1の終了時刻まで " + Math.floor(myCnt/60) + " 分 " + myCnt%60 + " 秒 です。";
+        if ( myCnt == 0 ){
+          clearInterval( myTim );
+          alert("時間が経過しました！" );
+        }
+      }
+
+      function myGo2(){
+        myCnt = eval ( document.myForm.mySetTime2.value ) * 60;
+        myTim = setInterval ( "myTimer2()", 1000 );
+      }function myTimer2(){
+        myCnt = myCnt - 1;
+        document.getElementById( "countdown" ).innerHTML = "2の終了時刻まで " + Math.floor(myCnt/60) + " 分 " + myCnt%60 + " 秒 です。";
+        if ( myCnt == 0 ){
+          clearInterval( myTim );
+          alert("時間が経過しました！" );
+        }
+      }
+
+      function myGo3(){
+        myCnt = eval ( document.myForm.mySetTime3.value ) * 60;
+        myTim = setInterval ( "myTimer3()", 1000 );
+      }function myTimer3(){
+        myCnt = myCnt - 1;
+        document.getElementById( "countdown" ).innerHTML = "3の終了時刻まで " + Math.floor(myCnt/60) + " 分 " + myCnt%60 + " 秒 です。";
+        if ( myCnt == 0 ){
+          clearInterval( myTim );
+          alert("時間が経過しました！" );
+        }
+      }
+
+      function myGo4(){
+        myCnt = eval ( document.myForm.mySetTime4.value ) * 60;
+        myTim = setInterval ( "myTimer4()", 1000 );
+      }function myTimer4(){
+        myCnt = myCnt - 1;
+        document.getElementById( "countdown" ).innerHTML = "4の終了時刻まで " + Math.floor(myCnt/60) + " 分 " + myCnt%60 + " 秒 です。";
+        if ( myCnt == 0 ){
+          clearInterval( myTim );
+          alert("時間が経過しました！" );
+        }
+      }
+
+      function myGo5(){
+        myCnt = eval ( document.myForm.mySetTime5.value ) * 60;
+        myTim = setInterval ( "myTimer5()", 1000 );
+      }function myTimer5(){
+        myCnt = myCnt - 1;
+        document.getElementById( "countdown" ).innerHTML = "5の終了時刻まで " + Math.floor(myCnt/60) + " 分 " + myCnt%60 + " 秒 です。";
+        if ( myCnt == 0 ){
+          clearInterval( myTim );
+          alert("時間が経過しました！" );
+        }
+      }
+
+      function myGo6(){
+        myCnt = eval ( document.myForm.mySetTime6.value ) * 60;
+        myTim = setInterval ( "myTimer6()", 1000 );
+      }function myTimer6(){
+        myCnt = myCnt - 1;
+        document.getElementById( "countdown" ).innerHTML = "6の終了時刻まで " + Math.floor(myCnt/60) + " 分 " + myCnt%60 + " 秒 です。";
+        if ( myCnt == 0 ){
+          clearInterval( myTim );
+          alert("時間が経過しました！" );
+        }
+      }
+
+      function myStop(){
+        clearInterval( myTim );
+        document.getElementById("countdown").innerHTML = "Clear";
+      }
+      </script>
   </head>
   <body>
 
@@ -11,7 +92,43 @@
     </a><br>
     <a href="/EdIoT/pbl_supporter/team2.html">
       <button type="button">Team2の分析結果</button>
-    </a>
+    </a><br><br><br>
+
+    <form name="myForm">
+      <strong>アジェンダ</strong><BR><BR>
+
+      <SPAN ID="countdown"></SPAN><BR><BR>
+      1. <textarea cols="50" rows="1">目的・目標設定</textarea><BR>
+      <input type="text" name="mySetTime1" size="10">分　
+      <input type="button" value="Start" onclick="myGo1()">
+      <input type="button" value="Stop/Reset" onclick="myStop()"><BR><BR>
+
+      2. <textarea cols="50" rows="1">問題分析</textarea><BR>
+      <input type="text" name="mySetTime2" size="10">分　
+      <input type="button" value="Start" onclick="myGo2()">
+      <input type="button" value="Stop/Reset" onclick="myStop()"><BR><BR>
+
+      3. <textarea cols="50" rows="1">原因分析</textarea><BR>
+      <input type="text" name="mySetTime3" size="10">分　
+      <input type="button" value="Start" onclick="myGo3()">
+      <input type="button" value="Stop/Reset" onclick="myStop()"><BR><BR>
+
+      4. <textarea cols="50" rows="1">解決策創造</textarea><BR>
+      <input type="text" name="mySetTime4" size="10">分　
+      <input type="button" value="Start" onclick="myGo4()">
+      <input type="button" value="Stop/Reset" onclick="myStop()"><BR><BR>
+
+      5. <textarea cols="50" rows="1">行動計画作成</textarea><BR>
+      <input type="text" name="mySetTime5" size="10">分　
+      <input type="button" value="Start" onclick="myGo5()">
+      <input type="button" value="Stop/Reset" onclick="myStop()"><BR><BR>
+
+      6. <textarea cols="50" rows="1">その他</textarea><BR>
+      <input type="text" name="mySetTime6" size="10">分　
+      <input type="button" value="Start" onclick="myGo6()">
+      <input type="button" value="Stop/Reset" onclick="myStop()"><BR><BR>
+
+    </form>
 
   </body>
 </html>

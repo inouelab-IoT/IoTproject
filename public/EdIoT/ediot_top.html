@@ -83,7 +83,7 @@
                 <button id=menu>回路共有システム</button>
             </a><br>
             <a href="/EdIoT/pbl_supporter/index.html">
-                <button id=menu>PBLサポートシステム</button>
+                <button id=menu disabled>PBLサポートシステム</button>
             </a><br>
             <a href="/EdIoT/ediot_download.html">
                 <button id=menu>ダウンロード</button>
@@ -122,9 +122,9 @@
 
     </footer>
     <script>
-        setTimeout(() => {
-            document.getElementById("circuit-share").href += document.getElementById("group_name").value;
-        }, 1500);
+        setTimeout(()=>{
+            document.getElementById("circuit-share").href+=document.getElementById("group_name").value;
+        },1500);
     </script>
 </body>
 

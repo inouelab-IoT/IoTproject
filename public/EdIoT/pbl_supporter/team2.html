@@ -3,39 +3,6 @@
   <head>
     <meta charset="utf-8">
     <title>PBLサポートシステム</title>
-
-    <script type="text/javascript">
-        myCnt = 0;
-        myTim = 0;
-         
-        function myGo1(){
-          myCnt = eval ( document.myForm.mySetTime1.value ) * 60;
-          myTim = setInterval ( "myTimer1()", 1000 );
-        }function myTimer1(){
-          myCnt = myCnt - 1;
-          document.getElementById( "countdown" ).innerHTML = "1の終了時刻まで " + Math.floor(myCnt/60) + " 分 " + myCnt%60 + " 秒 です。";
-          if ( myCnt == 0 ){
-            clearInterval( myTim );
-            alert("時間が経過しました！" );
-          }
-        }
-  
-        function myGo2(){
-          myCnt = eval ( document.myForm.mySetTime2.value ) * 60;
-          myTim = setInterval ( "myTimer2()", 1000 );
-        }function myTimer2(){
-          myCnt = myCnt - 1;
-          document.getElementById( "countdown" ).innerHTML = "2の終了時刻まで " + Math.floor(myCnt/60) + " 分 " + myCnt%60 + " 秒 です。";
-          if ( myCnt == 0 ){
-            clearInterval( myTim );
-            alert("時間が経過しました！" );
-          }
-        }
-        function myStop(){
-            clearInterval( myTim );
-            document.getElementById("countdown").innerHTML = "Clear";
-         }
-      </script>
   </head>
   <body>
 
@@ -48,13 +15,13 @@
     <img src="https://drive.google.com/uc?export=view&id=17xVeHeo3-4dQVb9Xh_YiftfED8Mn362c&usp=sharing">
 
     <BR><BR><strong>順調</strong><BR><BR>
-    <p>↓現在</p>
     <img src="https://drive.google.com/uc?export=view&id=106VE3Z0cUqXG-0nsIC9XAbJf21_sr-Hs&usp=sharing">
+    <!--
     <p>↓2分前</p>
     <img src="https://drive.google.com/uc?export=view&id=1y3yh5fJ5H7TwL2wjsiPV-H38-3T1vdCj&usp=sharing">
     <p>↓4分前</p>
     <img src="https://drive.google.com/uc?export=view&id=1kIpZIF28cxxsvDJdiAUjdFMO-XI-jk0A&usp=sharing">
-   
+    -->
     </form>
 
   </body>

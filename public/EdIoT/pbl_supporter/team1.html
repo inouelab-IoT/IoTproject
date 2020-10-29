@@ -7,7 +7,7 @@
     <script type="text/javascript">
         myCnt = 0;
         myTim = 0;
-         
+
         function myGo1(){
           myCnt = eval ( document.myForm.mySetTime1.value ) * 60;
           myTim = setInterval ( "myTimer1()", 1000 );
@@ -35,13 +35,10 @@
             clearInterval( myTim );
             document.getElementById("countdown").innerHTML = "Clear";
          }
+
       </script>
   </head>
   <body>
-
-    <a href="/EdIoT/pbl_supporter/index.html">
-      <button type="button">戻る</button>
-    </a>
 
     <BR><BR><strong>発散/収束</strong><BR><BR>
     <p>↓現在</p>
@@ -58,20 +55,6 @@
     <img src="https://drive.google.com/uc?export=view&id=1YO6iDm9tbf2BbnljW-PGoelK4rqZf0up&usp=sharing">
     <p>↓4分前</p>
     <img src="https://drive.google.com/uc?export=view&id=1tx-xEUucFCrs6WxBwPjSNPU2XkJAe9E9&usp=sharing">
-
-    <form name="myForm">
-        <strong>タイマー</strong><BR><BR>
-  
-        <SPAN ID="countdown"></SPAN><BR><BR>
-        1. <textarea cols="50" rows="1">アイデア出し</textarea><BR>
-        <input type="text" name="mySetTime1" size="10">分　
-        <input type="button" value="Start" onclick="myGo1()">
-        <input type="button" value="Stop/Reset" onclick="myStop()"><BR><BR>
-  
-        2. <textarea cols="50" rows="1">まとめ</textarea><BR>
-        <input type="text" name="mySetTime2" size="10">分　
-        <input type="button" value="Start" onclick="myGo2()">
-        <input type="button" value="Stop/Reset" onclick="myStop()"><BR><BR>
     </form>
 
   </body>

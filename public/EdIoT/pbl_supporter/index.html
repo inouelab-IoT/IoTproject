@@ -5,11 +5,28 @@
     <title>PBLサポートシステム</title>
     <script type="text/javascript">
     //disabled
+      myCntM = 0;
+      myTimM = 0;   
       myCnt = 0;
       myTim = 0;
-      myClear();
       myCnt2 = 0;
       myTim2 = 0;
+
+      function myGoMAX(){
+        myCntM = eval ( document.myForm.mySetTimeMAX.value ) * 60;
+        myTimM = setInterval ( "myTimerMAX()", 1000 );
+      }function myTimerMAX(){
+        myCntM = myCntM - 1;
+        document.getElementById( "countdownMAX" ).innerHTML = "議論の終了時刻まで " + Math.floor(myCntM/60) + " 分 " + myCntM%60 + " 秒 です。";
+        if ( myCntM == 0 ){
+          clearInterval( myTimM );
+          alert("時間が経過しました！" );
+        }
+      }
+      function myStopMAX(){
+        clearInterval( myTimM );
+        document.getElementById("countdownMAX").innerHTML = "Clear";
+      }
        
       function myGo1(){
         myCnt = eval ( document.myForm.mySetTime1.value ) * 60;
@@ -116,45 +133,32 @@
         document.getElementById("countdownre").innerHTML = "Clear";
       }
 
-      function myClear(){
-        document.getElementById("p1").style.visibility="hidden";
-        document.getElementById("p2").style.visibility="hidden";
-        document.getElementById("p3").style.visibility="hidden";
-        document.getElementById("p4").style.visibility="hidden";
-        document.getElementById("p5").style.visibility="hidden";
-        document.getElementById("p6").style.visibility="hidden";
-        document.getElementById("p7").style.visibility="hidden";
-        document.getElementById("p8").style.visibility="hidden";
-      }
-
       function myPoint1(){
-        document.getElementById("p1").style.visibility="visible";
+       document.getElementById("point").innerHTML = "<strong>1. 目的・目標設定</strong><BR>✓まず初めにゴールを明らかにすべき！<BR>✓目的と目標を区別して決めることが重要である<BR>✓目的に近づくために「いつまでに何をしてどこまで近づく」という具体的な目標が必要である";
       }
       function myPoint2(){
-        document.getElementById("p2").style.visibility="visible";
+        document.getElementById("point").innerHTML = "<strong>2. 問題設定</strong><BR>✓目標達成を阻害する主要な問題は何か、一つ仮に特定する<BR>✓複数の候補が出たら、基準を設けて一つに収束する<BR>Ex1. 自社で解決可能なもの<BR>Ex2. 解決すると大きな効果が出そうなもの<BR>Ex3. 問題の深刻度が高いもの<BR>Ex4. 影響度が高いもの<BR>✓問題についての情報を把握することも必要である<BR>Ex. いつから低下？どれほど低下？どこが悪い？どういう状態？…etc.";
       }
       function myPoint3(){
-        document.getElementById("p3").style.visibility="visible";
+        document.getElementById("point").innerHTML = "<strong>3. 原因分析</strong><BR>✓4M+Eを切り口に分析するとよい<BR>・Material モノに関わること<BR>・Man 人に関わること<BR>・Method　方法・仕組みに関わること<BR>・Machine　設備に関わること<BR>・Environment　環境に関わること<BR><BR>✓「それは違う」ではなく、「それなら、こんなこともあるよ」(YES AND法)と話を加えるとよい<BR>✓対策とれるほどの具体的な原因や根本原因が具体化できるとよい<BR>(他に「なぜなぜ」や5W1Hを深堀する方法も)<BR><BR>✓発散で明らかになったさまざまな原因からより重要な原因を選ぶ(原因の仮説を立てる)<BR>✓以下に、原因の収束の方法を示す<BR>1. 制御因子(コントロール可能)と誤差因子(コントロール不可能)に分ける<BR>・誤差因子を削除する<BR>2. 原因に関わるデータを集める<BR>・影響度の高い原因を特定する<BR>3. ペイオフマトリクスで絞り込む<BR>・「解決した時の効果」と「解決の難易度」を軸に整理する<BR>・解決が容易で解決した時の効果が大きいものが、チームが解決すべき原因である";
       }
       function myPoint4(){
-        document.getElementById("p4").style.visibility="visible";
+        document.getElementById("point").innerHTML = "<strong>4. 解決策創造</strong><BR>✓これまでに検証した原因を乗り越え、目標に近づくための対策を創造する<BR>✓よい解決策を決めるためには、アイデアの発散と収束をきっちりと時間で分けることが大切である<BR><BR>✓ 発散の場面では、実現性やコストなどにこだわらず、大量のアイデアが出されることが重要である<BR>✓ロジックツリーとブロック法を用いて解決策創造<BR><BR>✓解決策を整理した後、その解決策を評価し、収束する<BR>1. 各組織での生産性を考慮して収束する<BR>・効果は高いか<BR>・安価にできるか<BR>・簡単にできるか<BR>・すぐできるか<BR>より具体的な数字を決めて検討するとよい<BR>2. 技術の実現性を考えて収束する<BR>・効果の大きさ<BR>・実現の難易度<BR>会議の目的・目標に合わせた具体的な検討することが重要である";
       }
       function myPoint5(){
-        document.getElementById("p5").style.visibility="visible";
-      }
-      function myPoint6(){
-        document.getElementById("p6").style.visibility="visible";
+        document.getElementById("point").innerHTML = "<strong>5. 行動計画作成</strong><BR>✓個々の行動計画に落とし込む作業を行う<BR>✓どの部署が、誰が、いつまでに、何をするかを表にまとめる(5W1H) <BR><BR>✓最後に、決定事項やそれが会議の目的・目標に合致しているかを確認する<BR>✓会議の振り返りをする";
       }
       function myPoint7(){
-        document.getElementById("p7").style.visibility="visible";
+        document.getElementById("point").innerHTML = "(実装中)";
       }
       function myPoint8(){
-        document.getElementById("p8").style.visibility="visible";
+        document.getElementById("point").innerHTML = "(実装中)";
       }
       </script>
   </head>
   <body>
-    <strong>分析結果の表示</strong><BR><BR>
+    <div style="height: 12px;"><span style="background: #808080; padding: 6px 10px; border-radius: 5px; color: #ffffff; font-weight: bold; margin-left: 10px;">分析結果の表示</span></div>
+    <div style="padding: 30px 15px 10px; border-radius: 5px; border: 2px solid #808080;">
     <p>チームを選択してください</p>
     <p>(演習時のみ使用)</p><BR>
 
@@ -163,11 +167,21 @@
     </a><br>
     <a href="/EdIoT/pbl_supporter/team2.html" target="_blank" rel="noopener noreferrer">
       <button type="button">Team2の分析結果</button>
-    </a><br><br><br>
+    </a><br>
+    </div><br><br><br>
 
     <form name="myForm">
-      <strong>アジェンダ</strong><BR><BR>
-      <SPAN ID="countdown"></SPAN><BR>
+      <div style="height: 12px;"><span style="background: #808080; padding: 6px 10px; border-radius: 5px; color: #ffffff; font-weight: bold; margin-left: 10px;">アジェンダ</span></div>
+      <div style="padding: 30px 15px 10px; border-radius: 5px; border: 2px solid #808080;">
+      <br>
+      <SPAN ID="countdownMAX"></SPAN><BR><BR>
+      全体の時間　
+      <input type="text" name="mySetTimeMAX" size="10">分　
+      <input type="button" value="Start" onclick="myGoMAX()">
+      <input type="button" value="Stop/Reset" onclick="myStopMAX()">
+
+      <HR SIZE="1">
+      <SPAN ID="countdown"></SPAN><BR><BR>
 
       1. <textarea cols="50" rows="1">目的・目標設定</textarea><BR>
       <input type="text" name="mySetTime1" size="10">分　
@@ -203,10 +217,10 @@
       <input type="text" name="mySetTime6" size="10">分　
       <input type="button" value="Start" onclick="myGo6()">
       <input type="button" value="Stop/Reset" onclick="myStop()">
-      <input type="button" value="Point" onclick="myPoint6()"><BR><BR>
+      <!--<input type="button" value="Point" onclick="myPoint6()"><BR><BR>-->
 
-      <strong>Point</strong><BR><BR>
-      <SPAN ID="countdownre"></SPAN><BR>
+      <HR SIZE="1">
+      <SPAN ID="countdownre"></SPAN><BR><BR>
 
       1. <textarea cols="50" rows="1">アイデア出し</textarea><BR>
       <input type="text" name="mySetTime7" size="10">分　
@@ -220,13 +234,19 @@
       <input type="button" value="Stop/Reset" onclick="myStopRe()">
       <input type="button" value="Point" onclick="myPoint8()"><BR><BR>
 
-      <input type="button" value="Clear" onclick="myClear()"><BR><BR>
+      <HR SIZE="1">
+      <SPAN ID="point"></SPAN><BR>
+      </div><br><br><br>
+
+      <div style="height: 12px;"><span style="background: #808080; padding: 6px 10px; border-radius: 5px; color: #ffffff; font-weight: bold; margin-left: 10px;">Point一覧</span></div>
+      <div style="padding: 30px 15px 10px; border-radius: 5px; border: 2px solid #808080;">
       <div id="p1">
         <strong>1. 目的・目標設定</strong><BR>
         ✓まず初めにゴールを明らかにすべき！<BR>
         ✓目的と目標を区別して決めることが重要である<BR>
         ✓目的に近づくために「いつまでに何をしてどこまで近づく」という具体的な目標が必要である<BR><BR>
       </div>
+      <HR SIZE="1">
       <div id="p2">
         <strong>2. 問題設定</strong><BR>
         ✓目標達成を阻害する主要な問題は何か、一つ仮に特定する<BR>
@@ -238,6 +258,7 @@
         ✓問題についての情報を把握することも必要である<BR>
           Ex. いつから低下？どれほど低下？どこが悪い？どういう状態？…etc.<BR><BR>
       </div>
+      <HR SIZE="1">
       <div id="p3">
         <strong>3. 原因分析</strong><BR>
         ✓4M+Eを切り口に分析するとよい<BR>
@@ -260,6 +281,7 @@
         ・「解決した時の効果」と「解決の難易度」を軸に整理する<BR>
         ・解決が容易で解決した時の効果が大きいものが、チームが解決すべき原因である<BR><BR>
       </div>
+      <HR SIZE="1">
       <div id="p4">
         <strong>4. 解決策創造</strong><BR>
         ✓これまでに検証した原因を乗り越え、目標に近づくための対策を創造する<BR>
@@ -280,6 +302,7 @@
         ・実現の難易度<BR>
         会議の目的・目標に合わせた具体的な検討することが重要である<BR><BR>
       </div>
+      <HR SIZE="1">
       <div id="p5">
         <strong>5. 行動計画作成</strong><BR>
         ✓個々の行動計画に落とし込む作業を行う<BR>
@@ -288,10 +311,15 @@
         ✓最後に、決定事項やそれが会議の目的・目標に合致しているかを確認する<BR>
         ✓会議の振り返りをする<BR><BR>
       </div>
-      <div id="p6">(実装中)</div>
-
-      <div id="p7">(実装中)</div>
-      <div id="p8">(実装中)</div>
+      <HR SIZE="1">
+      <div id="p7">
+        (実装中)
+      </div>
+      <HR SIZE="1">
+      <div id="p8">
+        (実装中)
+      </div>
+      </div>
     </form>
 
   </body>

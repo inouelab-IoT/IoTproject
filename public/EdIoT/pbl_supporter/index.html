@@ -248,39 +248,19 @@
       </script>
   </head>
   <body>
-    <div style="height: 12px;"><span style="background: #808080; padding: 6px 10px; border-radius: 5px; color: #ffffff; font-weight: bold; margin-left: 10px;">分析結果の表示</span></div>
-    <div style="padding: 30px 15px 10px; border-radius: 5px; border: 2px solid #808080;">
-    <p>チームを選択してください</p>
-    <p>(演習時のみ使用)</p><BR>
-
-    <a href="/EdIoT/pbl_supporter/team1.html" target="_blank" rel="noopener noreferrer">
-      <button type="button" style="font-size:15px;">「ゲムドンドン」の分析結果</button>
-    </a><br>
-    <a href="/EdIoT/pbl_supporter/team2.html" target="_blank" rel="noopener noreferrer">
-      <button type="button" style="font-size:15px;">「ねこまんま」　の分析結果</button>
-    </a><br>
-    <a href="/EdIoT/pbl_supporter/team3.html" target="_blank" rel="noopener noreferrer">
-      <button type="button" style="font-size:15px;">(予備)</button>
-    </a><br>
-    </div><br><br><br>
-
     <form name="myForm">
-      <div style="height: 12px;"><span style="background: #808080; padding: 6px 10px; border-radius: 5px; color: #ffffff; font-weight: bold; margin-left: 10px;">議論</span></div>
+      <div style="height: 12px;"><span style="background: #808080; padding: 6px 10px; border-radius: 5px; color: #ffffff; font-weight: bold; margin-left: 10px;">アジェンダ</span></div>
       <div style="padding: 30px 15px 10px; border-radius: 5px; border: 2px solid #808080;">
-
+      <p>最初に、今日の進行予定表を作ってください。</p>
+      <p>代表者1名がタイムキーパを担い、適宜タイムマネジメントをしてください。</p>
       <u>全体の時間:</u><BR>
       <SPAN ID="countdownMAX"></SPAN>
       <input type="button" value="Stop" onclick="myStopMAX()" style="font-size:15px;"><BR><BR>　
       <input type="text" name="mySetTimeMAX" size="10" style="font-size:15px;">分　
       <input type="button" value="Start/Reset" onclick="myTime0()" style="font-size:15px;">
       <HR SIZE="1">
-      <u>ポイント: </u>
-      <SPAN ID="point"></SPAN><BR><BR>
-      </div><br><br>
 
-    <form name="myForm">
-      <div style="height: 12px;"><span style="background: #808080; padding: 6px 10px; border-radius: 5px; color: #ffffff; font-weight: bold; margin-left: 10px;">アジェンダ</span></div>
-      <div style="padding: 30px 15px 10px; border-radius: 5px; border: 2px solid #808080;">
+      <u>アジェンダ:</u><BR>        
       <SPAN ID="countdown"></SPAN>
       <input type="button" value="Stop" onclick="myStop()" style="font-size:15px;"><BR><BR>
 
@@ -315,6 +295,7 @@
       <!--<input type="button" value="Point" onclick="myPoint6()" style="font-size:15px;"><BR><BR>-->
 
       <HR SIZE="1">
+      <u>その他:</u><BR>
       <SPAN ID="countdownre"></SPAN>
       <input type="button" value="Stop" onclick="myStopRe()" style="font-size:15px;"><BR><BR>
 
@@ -328,6 +309,31 @@
       <input type="button" value="Start/Reset" onclick="myTime8()" style="font-size:15px;">
       <input type="button" value="Point" onclick="myPoint8()" style="font-size:15px;"><BR>
       </div><br><br><br>
+
+    <form name="myForm">
+      <div style="height: 12px;"><span style="background: #808080; padding: 6px 10px; border-radius: 5px; color: #ffffff; font-weight: bold; margin-left: 10px;">議論のポイント</span></div>
+      <div style="padding: 30px 15px 10px; border-radius: 5px; border: 2px solid #808080;">
+      <p>該当の「Point」ボタンを押してください</p>
+      <SPAN ID="point"></SPAN><BR><BR>
+      </div><br><br>
+
+
+      <div style="height: 12px;"><span style="background: #808080; padding: 6px 10px; border-radius: 5px; color: #ffffff; font-weight: bold; margin-left: 10px;">分析結果の表示</span></div>
+      <div style="padding: 30px 15px 10px; border-radius: 5px; border: 2px solid #808080;">
+      <p>チームを選択してください(演習時のみ使用)</p>
+      <p>5分後から分析を開始します。</p><BR>
+  
+      <a href="/EdIoT/pbl_supporter/team1.html" target="_blank" rel="noopener noreferrer">
+        <button type="button" style="font-size:15px;">「ゲムドンドン」の分析結果</button>
+      </a><br>
+      <a href="/EdIoT/pbl_supporter/team2.html" target="_blank" rel="noopener noreferrer">
+        <button type="button" style="font-size:15px;">「ねこまんま」　の分析結果</button>
+      </a><br>
+      <a href="/EdIoT/pbl_supporter/team3.html" target="_blank" rel="noopener noreferrer">
+        <button type="button" style="font-size:15px;">(予備)</button>
+      </a><br>
+      </div><br><br><br><br><br>      
+
 
       <div style="height: 12px;"><span style="background: #808080; padding: 6px 10px; border-radius: 5px; color: #ffffff; font-weight: bold; margin-left: 10px;">Point一覧</span></div>
       <div style="padding: 30px 15px 10px; border-radius: 5px; border: 2px solid #808080;">

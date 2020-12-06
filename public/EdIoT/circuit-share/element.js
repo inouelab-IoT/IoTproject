@@ -84,7 +84,8 @@ async function addArea(stream,peerId,name=peerId,color="lightgray"){
         let button = document.createElement("button");
         button.classList.add("button");
         button.classList.add(action[act]);
-        button.innerHTML=action[act];
+        button.dataset['i18n']=action[act];
+        button.innerHTML=dict[action[act]][lang];
         button.addEventListener("pointerdown",canvasControl[action[act]]);
         buttons.append(button);
     }

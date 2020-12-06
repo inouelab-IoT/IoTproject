@@ -4,6 +4,7 @@ var profile={
   color:"pink",
   icon:"img/man.png"
 };
+lang = "ja";
 var _GET = window.location.search.substring(1);
 var params=_GET.split("&");
 var param={};
@@ -45,6 +46,7 @@ async function main() {
 
   }
   async function localStreamOn(e){
+  document.getElementById("init-popup").classList.remove("display-none");
   e.target.removeEventListener("click",localStreamOn);
   initStream = document.getElementById('init-stream');
   stream= await navigator.mediaDevices
@@ -81,8 +83,9 @@ async function main() {
     video: {facingMode:"environment"}
   })
   .catch(console.error);
-  e.target.innerHTML = "ビデオありで参加";
-  e.target.addEventListener("click",startSharing);
+  e.target.innerHTML = dict.join_with_video[lang];
+  e.target.dataset['i18n']="join_with_video";
+  document.getElementById("start").addEventListener("click",startSharing);
   }
 joinTrigger.addEventListener("click",localStreamOn);
   // Register join handler
@@ -94,7 +97,7 @@ joinTrigger.addEventListener("click",localStreamOn);
     profile.name=name||profile.name;
     profile.color=color||profile.color;
     profile.icon=icon||profile.icon;
-    history.replaceState("",roomName+" | 回路共有システム","?room="+roomName);
+    history.replaceState("",roomName+" | ShareHandy","?room="+roomName);
     if(stream!=undefined){
       stream.getVideoTracks()[0].stop();
     }
@@ -109,18 +112,19 @@ joinTrigger.addEventListener("click",localStreamOn);
       stream: localStream,
     });
     room.once('open', () => {
-      addMsg(roomName+"に入室しました");
+      addMsg(roomName+"<span data-i18n='you_enter_room'>"+dict.you_enter_room[lang]+"</span>");
       document.getElementById("h2_roomId").innerHTML=roomName;
       if(localStream!=null){
-        addArea(localStream,peer.id,profile.name+" (自分)",profile.color);
+        addArea(localStream,peer.id,profile.name+" (You)",profile.color);
         streams.querySelector(`[content-peer-id="${peer.id}"]`).setAttribute("init","done");
       }
 
-      addPointer(peer.id,profile.color,profile.icon,profile.name+"(自分)");
+      addPointer(peer.id,profile.color,profile.icon,profile.name+"(You)");
       room.send({profile:profile});
+      registerLogging();
     });
     room.on('peerJoin', peerId => {
-      addMsg("<span class='"+peerId+"'>"+peerId+"</span>が入室しました");
+      addMsg("<span class='"+peerId+"'>"+peerId+"</span><span data-i18n='anyone_enters_room'>"+dict.anyone_enters_room[lang]+"</span>");
       addPointer(peerId);
       if(streams.querySelector(`[content-peer-id="${peer.id}"]`)==null){
         console.warn("sent");
@@ -173,25 +177,25 @@ joinTrigger.addEventListener("click",localStreamOn);
     // for closing room members
     room.on('peerLeave', peerId => {
       var name = streams.querySelector(`[content-peer-id="${peerId}"]`).querySelector(".name").innerHTML;
-      addMsg(name+" さん が退出しました。");
+      addMsg(name+"<span i18n='anyone_left_room'>"+dict.anyone_left_room[lang]+"</span>");
       removeElements(peerId);
     });
 
     // for closing myself
     room.once('close', () => {
-      addMsg("退出しました。");
+      addMsg("<span i18n='you_left_room'>"+dict.you_left_room[lang]+"</span>");
       console.log(streams);
       streams.querySelectorAll('[content-peer-id]').forEach(stream => {
         console.log("close");
         console.log(stream.getAttribute("content-peer-id"));
         removeElements(stream.getAttribute("content-peer-id"));
       });
-      alert("退出しました。");
+      alert(dict.you_left_room[lang]);
       //ユーザー一覧を削除
       //todo
 
     });
-    leaveTrigger.addEventListener('click', () => room.close(), { once: true });
+    leaveTrigger.addEventListener('click', () =>{ room.close(); leaveTrigger.disabled=true;}, { once: true });
 
     //完全なる独自関数
 

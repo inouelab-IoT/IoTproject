@@ -1,9 +1,8 @@
 body{
     overflow:hidden scroll;
     user-select: none;
-    background: #f5f5f5;
+    background: #FFFFF5;
     width:100%;
-    font-family: "M PLUS 1p";
 }
 .remote-streams{
     display: grid;
@@ -192,17 +191,6 @@ button:not(.button){
     bottom:10px;
 
 }
-.leave_btn::before{
-    content: "";
-    width: 1em;
-    height: 1em;
-    display: inline-block;
-    background: url("./img/baseline_exit_to_app_white_18dp.png");
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position:center center;
-    
-}
 button:disabled{
     background-color: gray !important;
     color: white;
@@ -213,9 +201,7 @@ button:disabled{
     position: fixed;
     width:100%;
     height:auto;
-    color: #5f5f5f;
-    background-color:#f5f5f5;
-    box-shadow:0 2px 2px 0 rgba(0,0,0,.14), 0 3px 1px -2px rgba(0,0,0,.2), 0 1px 5px 0 rgba(0,0,0,.12);
+    background-color:#CCCCCC;
     top:0;
     left:0;
     z-index: 50;
@@ -231,16 +217,11 @@ button:disabled{
     position: absolute;
     width:auto;
     height:1.8em;
-    font-weight: 700;
     top:0px;
     margin-top: 3px;
     padding: .2em .5em;
     right:5px;
-    background: #ff0447;
-    color: #ffeaf0;
-    border-radius: .4em;
-    box-shadow:1px 1px 1px 1px rgba(100,0,0,.14), 0 3px 1px -2px rgba(100,0,0,.2), 0 1px 5px 0 rgba(100,0,0,.12);
-
+    background: #fd7096;
 }
 /*レフトボタン*/
 .left > div{
@@ -303,19 +284,20 @@ button:disabled{
     top:5px;
     left:5px;
     font-size: 1.6em;
-    width:1.6em;
+    width:4em;
     height: 1.5em;
-    border-radius: .2em;
-    z-index: 51;
-    box-shadow:1px 1px 1px 1px rgba(0,0,0,.14), 0 3px 1px -2px rgba(0,0,0,.2), 0 1px 5px 0 rgba(0,0,0,.12);
+    border-radius: 1em;
+    background-color: lightcyan;
+    border: black solid 1px;
 
+    z-index: 51;
 }
 .left label:before{
     display: inline-block;
-    content: "≡";
+    content: "menu";
 }
 #show_menu:checked  +label:before{
-    content: "×";
+    content: "close";
 }
 #show_menu:checked ~ div .right-button{
     left: 100%;

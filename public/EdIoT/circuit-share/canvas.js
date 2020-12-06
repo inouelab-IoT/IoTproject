@@ -101,6 +101,7 @@ window.canvasControl = {
         var img = document.createElement("img");
         img.src = url;
         document.querySelector("div.img").append(img);
+        addMsg("<span data-i18n='save_complete'>"+dict.save_complete[lang]+"</span>");
         saveImg(url, document.querySelector(".name").innerHTML);
         tmp_c.remove();
     },
@@ -126,7 +127,6 @@ window.canvasControl = {
             fullscreen.status = false;
         }
         room.send({ fullscreen: fullscreen });
-
     }
 
 };
@@ -139,6 +139,15 @@ function clearAll() {
         if (canvas.pause != undefined) { canvas.pause = false; }
     }
 
+}
+//全保存
+function saveAll(){
+    var saveNode = document.getElementsByClassName("save");
+    for(var node of saveNode){
+        canvasControl.save({target:node});
+        console.log("Clicked");
+        console.dir(node);
+    }
 }
 //local drawing
 var clicked = false;
@@ -363,11 +372,18 @@ window.onDataRcv = {
         setTimeout((src, data) => {
             var doms = document.getElementsByClassName(src);
             for (dom of doms) {
-                dom.innerHTML = data.name + " さん ";
+                dom.innerHTML = data.name ;
+                dom.className = "";
+            }
+            var doms = document.getElementsByClassName(src);
+            console.warn(doms);
+            for (dom of doms) {
+                dom.innerHTML = data.name ;
                 dom.className = "";
             }
         }, 500, src, data);
-    }
+    },
+    snapshot: function(){}
 }
 
 function initNewUser(div, data) {
